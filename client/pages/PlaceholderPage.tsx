@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Construction } from "lucide-react";
 
 interface PlaceholderPageProps {

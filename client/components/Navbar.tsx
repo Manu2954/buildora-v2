@@ -10,7 +10,10 @@ import {
   ShoppingBag, 
   ClipboardList, 
   Info, 
-  Phone 
+  Phone,
+  Settings,
+  LogOut,
+  ChevronDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +21,6 @@ const navigationItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Services", href: "/services", icon: ShoppingBag },
   { name: "Orders", href: "/orders", icon: ClipboardList },
-  { name: "Profile", href: "/profile", icon: User },
   { name: "About", href: "/about", icon: Info },
   { name: "Contact", href: "/contact", icon: Phone },
 ];
@@ -27,6 +29,8 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Demo state
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
 
   // Handle scroll effect
@@ -42,7 +46,20 @@ export function Navbar() {
   // Close menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsProfileDropdownOpen(false);
   }, [location.pathname]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isProfileDropdownOpen && !(event.target as Element).closest('.profile-dropdown')) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isProfileDropdownOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -51,7 +68,11 @@ export function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
-    // Implement search functionality here
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsProfileDropdownOpen(false);
   };
 
   return (
@@ -110,6 +131,11 @@ export function Navbar() {
 
             {/* Right Side Icons */}
             <div className="flex items-center space-x-4">
+              {/* Get Free Quote Button */}
+              <button className="hidden sm:inline-flex items-center px-4 py-2 bg-buildora-gold text-white font-medium rounded-lg hover:bg-buildora-gold-dark transition-colors text-sm">
+                Get Free Quote
+              </button>
+
               {/* Search Icon (Mobile) */}
               <button 
                 className="md:hidden p-2 text-foreground hover:text-buildora-gold transition-colors"
@@ -129,15 +155,62 @@ export function Navbar() {
                 </span>
               </button>
 
-              {/* Profile Avatar */}
-              <button 
-                className="p-1 rounded-full border-2 border-transparent hover:border-buildora-gold transition-colors"
-                aria-label="User profile"
-              >
-                <div className="w-8 h-8 bg-buildora-gold rounded-full flex items-center justify-center">
-                  <User className="h-4 w-4 text-white" />
+              {/* User Profile / Auth */}
+              {isLoggedIn ? (
+                <div className="relative profile-dropdown">
+                  <button 
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    className="flex items-center space-x-2 p-1 rounded-full border-2 border-transparent hover:border-buildora-gold transition-colors"
+                    aria-label="User profile menu"
+                  >
+                    <div className="w-8 h-8 bg-buildora-gold rounded-full flex items-center justify-center">
+                      <User className="h-4 w-4 text-white" />
+                    </div>
+                    <ChevronDown className={cn(
+                      "h-4 w-4 text-muted-foreground transition-transform hidden sm:block",
+                      isProfileDropdownOpen && "transform rotate-180"
+                    )} />
+                  </button>
+
+                  {/* Profile Dropdown */}
+                  {isProfileDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-border py-2 z-50">
+                      <Link 
+                        to="/orders" 
+                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <ClipboardList className="h-4 w-4 mr-3" />
+                        My Orders
+                      </Link>
+                      <Link 
+                        to="/profile" 
+                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Settings className="h-4 w-4 mr-3" />
+                        Settings
+                      </Link>
+                      <hr className="my-2 border-border" />
+                      <button 
+                        onClick={handleLogout}
+                        className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <LogOut className="h-4 w-4 mr-3" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
-              </button>
+              ) : (
+                <div className="hidden sm:flex items-center space-x-2">
+                  <button className="text-sm font-medium text-foreground hover:text-buildora-gold transition-colors">
+                    Sign In
+                  </button>
+                  <span className="text-muted-foreground">/</span>
+                  <button className="text-sm font-medium text-buildora-gold hover:text-buildora-gold-dark transition-colors">
+                    Create Account
+                  </button>
+                </div>
+              )}
 
               {/* Mobile Menu Button */}
               <button
@@ -220,21 +293,59 @@ export function Navbar() {
                   </Link>
                 );
               })}
+              
+              {/* Mobile Get Quote Button */}
+              <div className="px-6 py-4">
+                <button className="w-full bg-buildora-gold text-white font-medium py-3 rounded-lg hover:bg-buildora-gold-dark transition-colors">
+                  Get Free Quote
+                </button>
+              </div>
             </div>
 
             {/* Bottom Section */}
             <div className="border-t border-border p-6">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-12 h-12 bg-buildora-gold rounded-full flex items-center justify-center">
-                  <User className="h-6 w-6 text-white" />
-                </div>
+              {isLoggedIn ? (
                 <div>
-                  <p className="font-medium text-foreground">Welcome Back!</p>
-                  <p className="text-sm text-muted-foreground">Transform your space</p>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-buildora-gold rounded-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Welcome Back!</p>
+                      <p className="text-sm text-muted-foreground">Transform your space</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Link to="/orders" className="flex items-center text-foreground hover:text-buildora-gold transition-colors">
+                      <ClipboardList className="h-5 w-5 mr-2" />
+                      <span className="font-medium">My Orders</span>
+                    </Link>
+                    <Link to="/profile" className="flex items-center text-foreground hover:text-buildora-gold transition-colors">
+                      <Settings className="h-5 w-5 mr-2" />
+                      <span className="font-medium">Settings</span>
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center text-foreground hover:text-buildora-gold transition-colors"
+                    >
+                      <LogOut className="h-5 w-5 mr-2" />
+                      <span className="font-medium">Logout</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-3">
+                  <button className="w-full bg-buildora-gold text-white font-medium py-3 rounded-lg hover:bg-buildora-gold-dark transition-colors">
+                    Sign In
+                  </button>
+                  <button className="w-full border border-buildora-gold text-buildora-gold font-medium py-3 rounded-lg hover:bg-buildora-gold hover:text-white transition-colors">
+                    Create Account
+                  </button>
+                </div>
+              )}
               
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                 <button className="flex items-center text-foreground hover:text-buildora-gold transition-colors">
                   <ShoppingCart className="h-5 w-5 mr-2" />
                   <span className="font-medium">Cart (3)</span>

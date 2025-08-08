@@ -8,34 +8,39 @@ import { Footer } from "@/components/Footer";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar Navigation - Hidden on mobile */}
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
-
-      {/* Main Content */}
-      <main className="flex-1 lg:ml-64">
-        <div className="min-h-screen flex flex-col">
-          {/* Hero Banner */}
-          <HeroBanner />
-
-          {/* Categories Section */}
-          <CategoriesSection />
-
-          {/* Featured Designs */}
-          <FeaturedDesigns />
-
-          {/* Quick Actions */}
-          <QuickActions />
-
-          {/* Packages Section */}
-          <PackagesSection />
-
-          {/* Footer */}
-          <Footer />
+    <div className="min-h-screen bg-background">
+      {/* Add top margin for fixed navbar */}
+      <div className="pt-16">
+        <div className="flex">
+          {/* Sidebar Navigation - Optional on desktop for quick access */}
+          <div className="hidden xl:block">
+            <Sidebar />
+          </div>
+          
+          {/* Main Content */}
+          <main className="flex-1 xl:ml-64">
+            <div className="min-h-screen flex flex-col">
+              {/* Hero Banner */}
+              <HeroBanner />
+              
+              {/* Categories Section */}
+              <CategoriesSection />
+              
+              {/* Featured Designs */}
+              <FeaturedDesigns />
+              
+              {/* Quick Actions */}
+              <QuickActions />
+              
+              {/* Packages Section */}
+              <PackagesSection />
+              
+              {/* Footer */}
+              <Footer />
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

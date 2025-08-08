@@ -20,9 +20,9 @@ const quickActions = [
 
 export function QuickActions() {
   return (
-    <section className="px-6 py-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Quick Actions</h2>
+    <section className="px-4 lg:px-6 py-6 lg:py-8">
+      <div className="mb-6 lg:mb-8">
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">Quick Actions</h2>
         <p className="text-muted-foreground text-lg">Get started with your dream space transformation</p>
       </div>
 

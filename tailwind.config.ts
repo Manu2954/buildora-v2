@@ -94,7 +94,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       spacing: {
-        'safe-area-inset-bottom': 'env(safe-area-inset-bottom)',
+        "safe-area-inset-bottom": "env(safe-area-inset-bottom)",
       },
     },
   },

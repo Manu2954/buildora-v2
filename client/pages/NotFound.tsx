@@ -24,17 +24,22 @@ const NotFound = () => {
           <div className="hidden xl:block">
             <Sidebar />
           </div>
-          
+
           <main className="flex-1 xl:ml-64">
             <div className="min-h-screen flex flex-col pb-16 md:pb-0">
               <div className="flex-1 flex items-center justify-center p-8">
                 <div className="text-center max-w-md">
                   <div className="w-24 h-24 bg-buildora-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-6xl font-bold text-buildora-gold">404</span>
+                    <span className="text-6xl font-bold text-buildora-gold">
+                      404
+                    </span>
                   </div>
-                  <h1 className="text-3xl font-bold text-foreground mb-4">Page Not Found</h1>
+                  <h1 className="text-3xl font-bold text-foreground mb-4">
+                    Page Not Found
+                  </h1>
                   <p className="text-muted-foreground mb-6 leading-relaxed">
-                    The page you're looking for doesn't exist. Let's get you back to exploring beautiful designs.
+                    The page you're looking for doesn't exist. Let's get you
+                    back to exploring beautiful designs.
                   </p>
                   <Link
                     to="/"

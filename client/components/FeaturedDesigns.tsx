@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Star, Heart, Calendar, ArrowRight, Filter, SlidersHorizontal } from "lucide-react";
+import {
+  Star,
+  Heart,
+  Calendar,
+  ArrowRight,
+  Filter,
+  SlidersHorizontal,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const featuredDesigns = [
@@ -14,7 +21,7 @@ const featuredDesigns = [
     duration: 21,
     isWishlisted: false,
     style: "Modern",
-    budget: "Premium"
+    budget: "Premium",
   },
   {
     id: 2,
@@ -27,7 +34,7 @@ const featuredDesigns = [
     duration: 28,
     isWishlisted: true,
     style: "Luxury",
-    budget: "Luxury"
+    budget: "Luxury",
   },
   {
     id: 3,
@@ -40,7 +47,7 @@ const featuredDesigns = [
     duration: 18,
     isWishlisted: false,
     style: "Traditional",
-    budget: "Basic"
+    budget: "Basic",
   },
   {
     id: 4,
@@ -53,7 +60,7 @@ const featuredDesigns = [
     duration: 15,
     isWishlisted: false,
     style: "Modern",
-    budget: "Premium"
+    budget: "Premium",
   },
   {
     id: 5,
@@ -66,7 +73,7 @@ const featuredDesigns = [
     duration: 14,
     isWishlisted: true,
     style: "Contemporary",
-    budget: "Basic"
+    budget: "Basic",
   },
   {
     id: 6,
@@ -79,14 +86,22 @@ const featuredDesigns = [
     duration: 20,
     isWishlisted: false,
     style: "Traditional",
-    budget: "Premium"
+    budget: "Premium",
   },
 ];
 
 const filterOptions = {
-  categories: ["All", "Living Room", "Kitchen", "Bedroom", "Bathroom", "Study Room", "Dining Room"],
+  categories: [
+    "All",
+    "Living Room",
+    "Kitchen",
+    "Bedroom",
+    "Bathroom",
+    "Study Room",
+    "Dining Room",
+  ],
   budgets: ["All", "Basic", "Premium", "Luxury"],
-  styles: ["All", "Modern", "Traditional", "Contemporary", "Luxury"]
+  styles: ["All", "Modern", "Traditional", "Contemporary", "Luxury"],
 };
 
 export function FeaturedDesigns() {
@@ -95,7 +110,7 @@ export function FeaturedDesigns() {
   const [selectedStyle, setSelectedStyle] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [wishlistedItems, setWishlistedItems] = useState(
-    new Set(featuredDesigns.filter(d => d.isWishlisted).map(d => d.id))
+    new Set(featuredDesigns.filter((d) => d.isWishlisted).map((d) => d.id)),
   );
 
   const toggleWishlist = (id: number) => {
@@ -108,10 +123,12 @@ export function FeaturedDesigns() {
     setWishlistedItems(newWishlisted);
   };
 
-  const filteredDesigns = featuredDesigns.filter(design => {
-    return (selectedCategory === "All" || design.category === selectedCategory) &&
-           (selectedBudget === "All" || design.budget === selectedBudget) &&
-           (selectedStyle === "All" || design.style === selectedStyle);
+  const filteredDesigns = featuredDesigns.filter((design) => {
+    return (
+      (selectedCategory === "All" || design.category === selectedCategory) &&
+      (selectedBudget === "All" || design.budget === selectedBudget) &&
+      (selectedStyle === "All" || design.style === selectedStyle)
+    );
   });
 
   return (
@@ -125,7 +142,7 @@ export function FeaturedDesigns() {
             Handpicked designs from our expert curators
           </p>
         </div>
-        <button 
+        <button
           className="inline-flex items-center text-buildora-gold hover:text-buildora-gold-dark font-medium transition-colors text-sm md:text-base"
           aria-label="View all featured designs"
         >
@@ -147,34 +164,44 @@ export function FeaturedDesigns() {
         </button>
 
         {/* Filter Options */}
-        <div className={cn(
-          "space-y-4 md:space-y-0 md:flex md:space-x-6",
-          showFilters ? "block" : "hidden md:flex"
-        )}>
+        <div
+          className={cn(
+            "space-y-4 md:space-y-0 md:flex md:space-x-6",
+            showFilters ? "block" : "hidden md:flex",
+          )}
+        >
           {/* Category Filter */}
           <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-foreground">Category</label>
+            <label className="text-sm font-medium text-foreground">
+              Category
+            </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
             >
-              {filterOptions.categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+              {filterOptions.categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Budget Filter */}
           <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-foreground">Budget</label>
+            <label className="text-sm font-medium text-foreground">
+              Budget
+            </label>
             <select
               value={selectedBudget}
               onChange={(e) => setSelectedBudget(e.target.value)}
               className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
             >
-              {filterOptions.budgets.map(budget => (
-                <option key={budget} value={budget}>{budget}</option>
+              {filterOptions.budgets.map((budget) => (
+                <option key={budget} value={budget}>
+                  {budget}
+                </option>
               ))}
             </select>
           </div>
@@ -187,8 +214,10 @@ export function FeaturedDesigns() {
               onChange={(e) => setSelectedStyle(e.target.value)}
               className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
             >
-              {filterOptions.styles.map(style => (
-                <option key={style} value={style}>{style}</option>
+              {filterOptions.styles.map((style) => (
+                <option key={style} value={style}>
+                  {style}
+                </option>
               ))}
             </select>
           </div>
@@ -208,7 +237,7 @@ export function FeaturedDesigns() {
             className={cn(
               "bg-card rounded-xl border border-border overflow-hidden",
               "hover:shadow-lg hover:border-buildora-gold/20 transition-all duration-300",
-              "group cursor-pointer"
+              "group cursor-pointer",
             )}
             role="button"
             tabIndex={0}
@@ -222,7 +251,7 @@ export function FeaturedDesigns() {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute top-3 right-3">
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleWishlist(design.id);
@@ -230,12 +259,21 @@ export function FeaturedDesigns() {
                   className={cn(
                     "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors min-h-[44px]",
                     wishlistedItems.has(design.id)
-                      ? "bg-buildora-gold text-white" 
-                      : "bg-white/90 text-gray-600 hover:bg-white"
+                      ? "bg-buildora-gold text-white"
+                      : "bg-white/90 text-gray-600 hover:bg-white",
                   )}
-                  aria-label={wishlistedItems.has(design.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  aria-label={
+                    wishlistedItems.has(design.id)
+                      ? "Remove from wishlist"
+                      : "Add to wishlist"
+                  }
                 >
-                  <Heart className={cn("h-5 w-5", wishlistedItems.has(design.id) && "fill-current")} />
+                  <Heart
+                    className={cn(
+                      "h-5 w-5",
+                      wishlistedItems.has(design.id) && "fill-current",
+                    )}
+                  />
                 </button>
               </div>
               <div className="absolute bottom-3 left-3">
@@ -250,14 +288,18 @@ export function FeaturedDesigns() {
               <h3 className="text-lg md:text-xl font-semibold text-card-foreground mb-2 line-clamp-2">
                 {design.title}
               </h3>
-              
+
               {/* Rating */}
               <div className="flex items-center gap-2 mb-3">
                 <div className="flex items-center">
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-sm font-medium text-foreground ml-1">{design.rating}</span>
+                  <span className="text-sm font-medium text-foreground ml-1">
+                    {design.rating}
+                  </span>
                 </div>
-                <span className="text-sm text-muted-foreground">({design.reviews} reviews)</span>
+                <span className="text-sm text-muted-foreground">
+                  ({design.reviews} reviews)
+                </span>
               </div>
 
               {/* Price and Duration */}

@@ -18,7 +18,7 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
           <div className="hidden xl:block">
             <Sidebar />
           </div>
-          
+
           <main className="flex-1 xl:ml-64">
             <div className="min-h-screen flex flex-col pb-16 md:pb-0">
               <div className="flex-1 flex items-center justify-center p-8">
@@ -26,8 +26,12 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
                   <div className="w-24 h-24 bg-buildora-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Construction className="h-12 w-12 text-buildora-gold" />
                   </div>
-                  <h1 className="text-3xl font-bold text-foreground mb-4">{title}</h1>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">{description}</p>
+                  <h1 className="text-3xl font-bold text-foreground mb-4">
+                    {title}
+                  </h1>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {description}
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     Continue prompting to have this page content generated!
                   </p>

@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Linkedin, 
-  Mail, 
-  Phone, 
-  MapPin, 
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
   Send,
   ArrowRight,
   Award,
   Shield,
-  Clock
+  Clock,
 } from "lucide-react";
 
 const footerLinks = {
@@ -82,10 +82,14 @@ export function Footer() {
               Get Design Inspiration
             </h3>
             <p className="text-white/90 mb-6 text-base md:text-lg">
-              Subscribe to our newsletter for exclusive design tips, trends, and special offers
+              Subscribe to our newsletter for exclusive design tips, trends, and
+              special offers
             </p>
-            
-            <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
+
+            <form
+              onSubmit={handleNewsletterSubmit}
+              className="max-w-md mx-auto"
+            >
               <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
@@ -112,7 +116,7 @@ export function Footer() {
                 </button>
               </div>
             </form>
-            
+
             <p className="text-white/70 text-sm mt-3">
               Join 10,000+ subscribers. No spam, unsubscribe anytime.
             </p>
@@ -127,24 +131,33 @@ export function Footer() {
               <div className="w-10 h-10 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">B</span>
               </div>
-              <span className="text-2xl font-bold text-card-foreground">Buildora</span>
+              <span className="text-2xl font-bold text-card-foreground">
+                Buildora
+              </span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
-              Transform your space with professional interior design & execution packages. 
-              From supplies to architects, we handle everything for your dream space.
+              Transform your space with professional interior design & execution
+              packages. From supplies to architects, we handle everything for
+              your dream space.
             </p>
-            
+
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
               <div className="flex items-center text-muted-foreground">
                 <Mail className="h-5 w-5 mr-3 text-buildora-gold flex-shrink-0" />
-                <a href="mailto:hello@buildora.com" className="hover:text-buildora-gold transition-colors">
+                <a
+                  href="mailto:hello@buildora.com"
+                  className="hover:text-buildora-gold transition-colors"
+                >
                   hello@buildora.com
                 </a>
               </div>
               <div className="flex items-center text-muted-foreground">
                 <Phone className="h-5 w-5 mr-3 text-buildora-gold flex-shrink-0" />
-                <a href="tel:+919876543210" className="hover:text-buildora-gold transition-colors">
+                <a
+                  href="tel:+919876543210"
+                  className="hover:text-buildora-gold transition-colors"
+                >
                   +91 98765 43210
                 </a>
               </div>
@@ -157,11 +170,18 @@ export function Footer() {
             {/* Trust Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-2">
               {trustBadges.map((badge, index) => (
-                <div key={index} className="flex items-center space-x-2 text-sm">
+                <div
+                  key={index}
+                  className="flex items-center space-x-2 text-sm"
+                >
                   <badge.icon className="h-4 w-4 text-buildora-gold" />
                   <div>
-                    <div className="font-medium text-card-foreground">{badge.text}</div>
-                    <div className="text-xs text-muted-foreground">{badge.subtext}</div>
+                    <div className="font-medium text-card-foreground">
+                      {badge.text}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {badge.subtext}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -174,8 +194,8 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.about.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-muted-foreground hover:text-buildora-gold transition-colors text-sm"
                   >
                     {link.name}
@@ -186,12 +206,14 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-card-foreground font-semibold mb-4">Services</h3>
+            <h3 className="text-card-foreground font-semibold mb-4">
+              Services
+            </h3>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-muted-foreground hover:text-buildora-gold transition-colors text-sm"
                   >
                     {link.name}
@@ -206,8 +228,8 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-muted-foreground hover:text-buildora-gold transition-colors text-sm"
                   >
                     {link.name}
@@ -218,12 +240,14 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-card-foreground font-semibold mb-4">Resources</h3>
+            <h3 className="text-card-foreground font-semibold mb-4">
+              Resources
+            </h3>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-muted-foreground hover:text-buildora-gold transition-colors text-sm"
                   >
                     {link.name}
@@ -241,23 +265,34 @@ export function Footer() {
               © 2024 Buildora. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <Link to="/privacy" className="hover:text-buildora-gold transition-colors">
+              <Link
+                to="/privacy"
+                className="hover:text-buildora-gold transition-colors"
+              >
                 Privacy Policy
               </Link>
               <span>•</span>
-              <Link to="/terms" className="hover:text-buildora-gold transition-colors">
+              <Link
+                to="/terms"
+                className="hover:text-buildora-gold transition-colors"
+              >
                 Terms of Service
               </Link>
               <span>•</span>
-              <Link to="/cookies" className="hover:text-buildora-gold transition-colors">
+              <Link
+                to="/cookies"
+                className="hover:text-buildora-gold transition-colors"
+              >
                 Cookie Policy
               </Link>
             </div>
           </div>
-          
+
           {/* Social Links */}
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-muted-foreground mr-2">Follow us:</span>
+            <span className="text-sm text-muted-foreground mr-2">
+              Follow us:
+            </span>
             {socialLinks.map((social) => (
               <div key={social.name} className="group relative">
                 <a
@@ -278,7 +313,8 @@ export function Footer() {
         {/* Mobile App Promotion */}
         <div className="mt-8 p-4 bg-muted/30 rounded-lg text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            Get the Buildora mobile app for exclusive deals and easy project tracking
+            Get the Buildora mobile app for exclusive deals and easy project
+            tracking
           </p>
           <button className="inline-flex items-center text-buildora-gold hover:text-buildora-gold-dark font-medium text-sm">
             Download App

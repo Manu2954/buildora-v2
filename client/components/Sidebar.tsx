@@ -21,7 +21,9 @@ export function Sidebar() {
             <div className="w-8 h-8 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">B</span>
             </div>
-            <span className="text-xl font-bold text-sidebar-foreground">Buildora</span>
+            <span className="text-xl font-bold text-sidebar-foreground">
+              Buildora
+            </span>
           </Link>
         </div>
 
@@ -37,7 +39,7 @@ export function Sidebar() {
                   "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors",
                   isActive
                     ? "bg-sidebar-accent text-buildora-gold border border-buildora-gold/20"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 )}
                 aria-label={item.name}
               >
@@ -55,8 +57,12 @@ export function Sidebar() {
               <User className="h-4 w-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground">Welcome!</p>
-              <p className="text-xs text-muted-foreground">Transform your space</p>
+              <p className="text-sm font-medium text-sidebar-foreground">
+                Welcome!
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Transform your space
+              </p>
             </div>
           </div>
         </div>

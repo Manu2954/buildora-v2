@@ -7,28 +7,28 @@ const categories = [
     icon: Sofa,
     description: "Comfortable & stylish living spaces",
     count: "240+ designs",
-    color: "from-blue-500 to-blue-600"
+    color: "from-blue-500 to-blue-600",
   },
   {
     name: "Kitchen",
     icon: ChefHat,
     description: "Modern & functional kitchen designs",
     count: "180+ designs",
-    color: "from-green-500 to-green-600"
+    color: "from-green-500 to-green-600",
   },
   {
     name: "Bedroom",
     icon: Bed,
     description: "Relaxing & cozy bedroom spaces",
     count: "320+ designs",
-    color: "from-purple-500 to-purple-600"
+    color: "from-purple-500 to-purple-600",
   },
   {
     name: "Bathroom",
     icon: Bath,
     description: "Elegant & spa-like bathrooms",
     count: "150+ designs",
-    color: "from-teal-500 to-teal-600"
+    color: "from-teal-500 to-teal-600",
   },
 ];
 
@@ -43,7 +43,7 @@ export function CategoriesSection() {
           Explore our curated collections for every space
         </p>
       </div>
-      
+
       {/* Desktop: Grid layout, Mobile: Horizontal scrollable */}
       <div className="relative">
         {/* Mobile: Horizontal scroll */}
@@ -56,11 +56,14 @@ export function CategoriesSection() {
               tabIndex={0}
               aria-label={`Browse ${category.name} designs`}
             >
-              <div className={cn(
-                "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
-                "bg-gradient-to-br", category.color,
-                "group-hover:scale-110"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
+                  "bg-gradient-to-br",
+                  category.color,
+                  "group-hover:scale-110",
+                )}
+              >
                 <category.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-card-foreground mb-2">
@@ -86,11 +89,14 @@ export function CategoriesSection() {
               tabIndex={0}
               aria-label={`Browse ${category.name} designs`}
             >
-              <div className={cn(
-                "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
-                "bg-gradient-to-br", category.color,
-                "group-hover:scale-110"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
+                  "bg-gradient-to-br",
+                  category.color,
+                  "group-hover:scale-110",
+                )}
+              >
                 <category.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-card-foreground mb-2">
@@ -109,10 +115,7 @@ export function CategoriesSection() {
         {/* Mobile scroll indicators */}
         <div className="flex justify-center mt-4 space-x-2 md:hidden">
           {categories.map((_, index) => (
-            <div
-              key={index}
-              className="w-2 h-2 bg-muted rounded-full"
-            />
+            <div key={index} className="w-2 h-2 bg-muted rounded-full" />
           ))}
         </div>
       </div>

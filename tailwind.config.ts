@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Buildora brand colors
+        buildora: {
+          background: "#e8e8e8",
+          text: "#333132",
+          gold: "#c59c46",
+          "gold-light": "#e6d09f",
+          "gold-dark": "#a17c36",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

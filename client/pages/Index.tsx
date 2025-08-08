@@ -4,7 +4,9 @@ import { CategoriesSection } from "@/components/CategoriesSection";
 import { FeaturedDesigns } from "@/components/FeaturedDesigns";
 import { QuickActions } from "@/components/QuickActions";
 import { PackagesSection } from "@/components/PackagesSection";
+import { WhyChooseBuildora } from "@/components/WhyChooseBuildora";
 import { Footer } from "@/components/Footer";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 export default function Index() {
   return (
@@ -19,7 +21,7 @@ export default function Index() {
           
           {/* Main Content */}
           <main className="flex-1 xl:ml-64">
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col pb-16 md:pb-0">
               {/* Hero Banner */}
               <HeroBanner />
               
@@ -35,12 +37,18 @@ export default function Index() {
               {/* Packages Section */}
               <PackagesSection />
               
+              {/* Why Choose Buildora Section */}
+              <WhyChooseBuildora />
+              
               {/* Footer */}
               <Footer />
             </div>
           </main>
         </div>
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 }

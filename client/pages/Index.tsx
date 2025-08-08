@@ -9,27 +9,29 @@ import { Footer } from "@/components/Footer";
 export default function Index() {
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Sidebar Navigation */}
-      <Sidebar />
-      
+      {/* Sidebar Navigation - Hidden on mobile */}
+      <div className="hidden lg:block">
+        <Sidebar />
+      </div>
+
       {/* Main Content */}
-      <main className="flex-1 ml-64">
+      <main className="flex-1 lg:ml-64">
         <div className="min-h-screen flex flex-col">
           {/* Hero Banner */}
           <HeroBanner />
-          
+
           {/* Categories Section */}
           <CategoriesSection />
-          
+
           {/* Featured Designs */}
           <FeaturedDesigns />
-          
+
           {/* Quick Actions */}
           <QuickActions />
-          
+
           {/* Packages Section */}
           <PackagesSection />
-          
+
           {/* Footer */}
           <Footer />
         </div>

@@ -72,10 +72,10 @@ const featuredDesigns = [
 
 export function FeaturedDesigns() {
   return (
-    <section className="px-6 py-8">
-      <div className="flex items-center justify-between mb-8">
+    <section className="px-4 lg:px-6 py-6 lg:py-8">
+      <div className="flex items-center justify-between mb-6 lg:mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Featured Designs</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">Featured Designs</h2>
           <p className="text-muted-foreground text-lg">Handpicked designs from our expert curators</p>
         </div>
         <button 

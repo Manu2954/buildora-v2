@@ -20,7 +20,7 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
           </div>
           
           <main className="flex-1 xl:ml-64">
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col pb-16 md:pb-0">
               <div className="flex-1 flex items-center justify-center p-8">
                 <div className="text-center max-w-md">
                   <div className="w-24 h-24 bg-buildora-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -38,6 +38,9 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
           </main>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 }

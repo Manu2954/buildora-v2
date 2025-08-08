@@ -32,8 +32,8 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="bg-card border-t border-border">
-      <div className="px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="px-4 lg:px-6 py-8 lg:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-4">

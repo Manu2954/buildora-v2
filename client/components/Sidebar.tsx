@@ -13,7 +13,7 @@ export function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border lg:block hidden">
+    <aside className="fixed inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border top-16">
       <div className="flex h-full flex-col">
         {/* Logo */}
         <div className="flex h-16 items-center border-b border-sidebar-border px-6">

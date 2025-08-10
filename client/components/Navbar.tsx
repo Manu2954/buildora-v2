@@ -266,7 +266,7 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-40 lg:hidden transition-all duration-300",
+          "fixed inset-0 z-[60] lg:hidden transition-all duration-300",
           isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >

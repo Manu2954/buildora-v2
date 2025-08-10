@@ -39,7 +39,7 @@ export function MobileBottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden">
       {/* App-like bottom navigation with rounded top corners */}
       <div className="bg-white border-t border-gray-200 rounded-t-2xl shadow-lg">
         <div className="grid grid-cols-5 h-20">

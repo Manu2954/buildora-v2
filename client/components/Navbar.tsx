@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Search, 
-  Menu, 
-  X, 
-  ShoppingCart, 
-  User, 
-  Home, 
-  ShoppingBag, 
-  ClipboardList, 
-  Info, 
+import {
+  Search,
+  Menu,
+  X,
+  ShoppingCart,
+  User,
+  Home,
+  ShoppingBag,
+  ClipboardList,
+  Info,
   Phone,
   Settings,
   LogOut,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -52,13 +52,16 @@ export function Navbar() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (isProfileDropdownOpen && !(event.target as Element).closest('.profile-dropdown')) {
+      if (
+        isProfileDropdownOpen &&
+        !(event.target as Element).closest(".profile-dropdown")
+      ) {
         setIsProfileDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileDropdownOpen]);
 
   const toggleMenu = () => {
@@ -77,10 +80,12 @@ export function Navbar() {
 
   return (
     <>
-      <nav className={cn(
-        "fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 transition-all duration-300",
-        isScrolled ? "shadow-lg" : "shadow-sm"
-      )}>
+      <nav
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 transition-all duration-300",
+          isScrolled ? "shadow-lg" : "shadow-sm",
+        )}
+      >
         <div className="px-5 lg:px-8">
           <div className="flex items-center justify-between h-16 py-3">
             {/* Left: Logo */}
@@ -89,7 +94,9 @@ export function Navbar() {
                 <div className="w-10 h-10 bg-gradient-to-br from-[#c59c46] to-[#e6d09f] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-xl">B</span>
                 </div>
-                <span className="text-2xl font-bold text-[#333132]">Buildora</span>
+                <span className="text-2xl font-bold text-[#333132]">
+                  Buildora
+                </span>
               </Link>
             </div>
 
@@ -104,9 +111,9 @@ export function Navbar() {
                       to={item.href}
                       className={cn(
                         "text-sm font-medium transition-all duration-200 py-2 relative",
-                        isActive 
-                          ? "text-[#c59c46]" 
-                          : "text-[#333132] hover:text-[#c59c46]"
+                        isActive
+                          ? "text-[#c59c46]"
+                          : "text-[#333132] hover:text-[#c59c46]",
                       )}
                     >
                       {item.name}
@@ -145,7 +152,7 @@ export function Navbar() {
               </button>
 
               {/* Search Icon (Mobile) */}
-              <button 
+              <button
                 className="md:hidden p-2 text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
                 aria-label="Search"
               >
@@ -153,7 +160,7 @@ export function Navbar() {
               </button>
 
               {/* Cart/Order Icon */}
-              <button 
+              <button
                 className="relative p-2 text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
                 aria-label="View cart"
               >
@@ -166,39 +173,43 @@ export function Navbar() {
               {/* User Profile / Auth */}
               {isLoggedIn ? (
                 <div className="relative profile-dropdown">
-                  <button 
-                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  <button
+                    onClick={() =>
+                      setIsProfileDropdownOpen(!isProfileDropdownOpen)
+                    }
                     className="flex items-center space-x-2 p-1 rounded-lg border-2 border-transparent hover:border-[#c59c46] transition-all duration-200"
                     aria-label="User profile menu"
                   >
                     <div className="w-8 h-8 bg-[#c59c46] rounded-full flex items-center justify-center">
                       <User className="h-4 w-4 text-white" />
                     </div>
-                    <ChevronDown className={cn(
-                      "h-4 w-4 text-[#666666] transition-transform duration-200 hidden sm:block",
-                      isProfileDropdownOpen && "transform rotate-180"
-                    )} />
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 text-[#666666] transition-transform duration-200 hidden sm:block",
+                        isProfileDropdownOpen && "transform rotate-180",
+                      )}
+                    />
                   </button>
 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                      <Link 
-                        to="/orders" 
+                      <Link
+                        to="/orders"
                         className="flex items-center px-4 py-2 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200"
                       >
                         <ClipboardList className="h-4 w-4 mr-3" />
                         My Orders
                       </Link>
-                      <Link 
-                        to="/profile" 
+                      <Link
+                        to="/profile"
                         className="flex items-center px-4 py-2 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200"
                       >
                         <Settings className="h-4 w-4 mr-3" />
                         Settings
                       </Link>
                       <hr className="my-2 border-gray-200" />
-                      <button 
+                      <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200"
                       >
@@ -225,7 +236,11 @@ export function Navbar() {
                 className="lg:hidden p-2 text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
                 aria-label="Toggle menu"
               >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
               </button>
             </div>
           </div>
@@ -233,20 +248,26 @@ export function Navbar() {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={cn(
-        "fixed inset-0 z-40 lg:hidden transition-opacity duration-300",
-        isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      )}>
-        <div 
+      <div
+        className={cn(
+          "fixed inset-0 z-40 lg:hidden transition-opacity duration-300",
+          isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+        )}
+      >
+        <div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           onClick={() => setIsMenuOpen(false)}
         />
-        
+
         {/* Slide-out Panel from Left */}
-        <div className={cn(
-          "absolute top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out",
-          isMenuOpen ? "transform translate-x-0" : "transform -translate-x-full"
-        )}>
+        <div
+          className={cn(
+            "absolute top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out",
+            isMenuOpen
+              ? "transform translate-x-0"
+              : "transform -translate-x-full",
+          )}
+        >
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -292,7 +313,7 @@ export function Navbar() {
                       "flex items-center px-6 py-4 text-lg font-medium transition-colors duration-200",
                       isActive
                         ? "text-[#c59c46] bg-[#f2f2f2] border-r-4 border-[#c59c46]"
-                        : "text-[#333132] hover:text-[#c59c46] hover:bg-[#f8f8f8]"
+                        : "text-[#333132] hover:text-[#c59c46] hover:bg-[#f8f8f8]",
                     )}
                   >
                     <item.icon className="mr-4 h-5 w-5" />
@@ -300,7 +321,7 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              
+
               {/* Mobile Get Quote Button */}
               <div className="px-6 py-4">
                 <button className="w-full bg-[#c59c46] text-white font-medium py-3 rounded-lg hover:bg-[#a17c36] transition-colors duration-200">
@@ -318,21 +339,31 @@ export function Navbar() {
                       <User className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#333132]">Welcome Back!</p>
-                      <p className="text-sm text-[#666666]">Transform your space</p>
+                      <p className="font-semibold text-[#333132]">
+                        Welcome Back!
+                      </p>
+                      <p className="text-sm text-[#666666]">
+                        Transform your space
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <Link to="/orders" className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200">
+                    <Link
+                      to="/orders"
+                      className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
+                    >
                       <ClipboardList className="h-5 w-5 mr-2" />
                       <span className="font-medium">My Orders</span>
                     </Link>
-                    <Link to="/profile" className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200">
+                    <Link
+                      to="/profile"
+                      className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
+                    >
                       <Settings className="h-5 w-5 mr-2" />
                       <span className="font-medium">Settings</span>
                     </Link>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200"
                     >
@@ -351,7 +382,7 @@ export function Navbar() {
                   </button>
                 </div>
               )}
-              
+
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                 <button className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200">
                   <ShoppingCart className="h-5 w-5 mr-2" />

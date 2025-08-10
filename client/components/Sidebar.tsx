@@ -38,14 +38,18 @@ export function Sidebar() {
                       "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 relative",
                       isActive
                         ? "bg-[#f2f2f2] text-[#c59c46] border-l-4 border-[#c59c46] ml-0 pl-3"
-                        : "text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46]"
+                        : "text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46]",
                     )}
                     aria-label={item.name}
                   >
-                    <item.icon className={cn(
-                      "mr-3 h-5 w-5 transition-colors",
-                      isActive ? "text-[#c59c46]" : "text-[#666666] hover:text-[#c59c46]"
-                    )} />
+                    <item.icon
+                      className={cn(
+                        "mr-3 h-5 w-5 transition-colors",
+                        isActive
+                          ? "text-[#c59c46]"
+                          : "text-[#666666] hover:text-[#c59c46]",
+                      )}
+                    />
                     <span className="font-medium">{item.name}</span>
                     {isActive && (
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#c59c46] rounded-r-full"></div>

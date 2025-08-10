@@ -7,9 +7,9 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { WhyChooseBuildora } from "@/components/WhyChooseBuildora";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext";
+import { useSidebar } from "@/contexts/SidebarContext";
 
-function IndexContent() {
+export default function Index() {
   const { isCollapsed, toggle } = useSidebar();
 
   return (
@@ -83,13 +83,5 @@ function IndexContent() {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>
-  );
-}
-
-export default function Index() {
-  return (
-    <SidebarProvider>
-      <IndexContent />
-    </SidebarProvider>
   );
 }

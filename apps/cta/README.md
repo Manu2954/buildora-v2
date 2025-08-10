@@ -20,17 +20,20 @@ npm run build
 ### Setup Instructions
 
 1. **Create New Project**
+
    - Go to Vercel dashboard
    - Click "New Project"
    - Import your Git repository
 
 2. **Configure Project Settings**
+
    - **Root Directory**: `apps/cta`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
    - **Install Command**: `npm install`
 
 3. **Deploy**
+
    - Click "Deploy"
    - Wait for build to complete
 
@@ -51,10 +54,11 @@ npm run build
 
 ```tsx
 // Replace this line in Banner.tsx:
-src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=60"
+src =
+  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=60";
 
 // With this:
-src="/banner.jpg"
+src = "/banner.jpg";
 ```
 
 ## Features

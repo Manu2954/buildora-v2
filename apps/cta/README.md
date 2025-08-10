@@ -1,14 +1,6 @@
-# Buildora Enterprise CTA Micro-Site
+# Buildora Enterprise CTA Site
 
-A responsive Call-To-Action page for Buildora Enterprise built with React + TypeScript + Vite + TailwindCSS.
-
-## Features
-
-- **Responsive Design**: Mobile-first design with desktop two-column layout
-- **Brand Consistent**: Uses Buildora Enterprise colors and typography
-- **Form Validation**: Client-side validation with error handling
-- **Trust Indicators**: Professional trust badges and social proof
-- **Optimized**: Fast loading with proper SEO and OG tags
+A responsive call-to-action micro-site for Buildora Enterprise, built with React, TypeScript, Vite, and TailwindCSS.
 
 ## Development
 
@@ -17,64 +9,93 @@ npm install
 npm run dev
 ```
 
-## Deployment to Vercel
+## Building
 
-### Option 1: Via Vercel Dashboard
+```bash
+npm run build
+```
 
-1. Create new project in Vercel dashboard
-2. Import the same repository
-3. Configure build settings:
+## Vercel Deployment
+
+### Setup Instructions
+
+1. **Create New Project**
+   - Go to Vercel dashboard
+   - Click "New Project"
+   - Import your Git repository
+
+2. **Configure Project Settings**
    - **Root Directory**: `apps/cta`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-4. Deploy
+   - **Install Command**: `npm install`
 
-### Option 2: Via Vercel CLI
+3. **Deploy**
+   - Click "Deploy"
+   - Wait for build to complete
 
-```bash
-cd apps/cta
-npx vercel --prod
+4. **Custom Domain (Optional)**
+   - Go to Project Settings → Domains
+   - Add `cta.buildoraenterprise.com`
+   - Create CNAME record in your DNS settings pointing to Vercel
+
+### Post-Deployment TODO
+
+**Important**: After the initial deployment, you need to add the banner image manually:
+
+1. Add `/apps/cta/public/banner.jpg` to your repository
+2. Update `/apps/cta/src/components/Banner.tsx`:
+   - Replace the remote URL with `/banner.jpg`
+   - Remove the TODO comment
+3. Commit and push the changes
+
+```tsx
+// Replace this line in Banner.tsx:
+src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=60"
+
+// With this:
+src="/banner.jpg"
 ```
 
-### Custom Domain Setup
+## Features
 
-1. In Vercel project settings, add custom domain: `cta.buildoraenterprise.com`
-2. Create DNS CNAME record pointing to Vercel:
-   ```
-   CNAME cta.buildoraenterprise.com -> cname.vercel-dns.com
-   ```
+- ✅ Responsive design (mobile-first)
+- ✅ Form validation and submission
+- ✅ SEO optimized with meta tags
+- ✅ Accessible components
+- ✅ Brand-consistent styling
+- ✅ TypeScript for type safety
+- ✅ Fast build with Vite
 
-## TODO
+## Tech Stack
 
-- [ ] **Replace Banner Image**: After deployment, replace the remote banner URL with `/public/banner.jpg`
-  - Current: Remote Unsplash URL (temporary)
-  - Target: `/public/banner.jpg` (upload actual project image)
-  - Location: `src/components/Banner.tsx` line 7
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **TailwindCSS** - Styling
+- **Vercel** - Deployment platform
 
-## File Structure
+## Project Structure
 
 ```
 apps/cta/
+├── public/
+│   ├── logo-wordmark.svg     # Buildora Enterprise text logo
+│   └── logo-monogram.svg     # BE monogram logo
 ├── src/
 │   ├── components/
-│   │   ├── Header.tsx      # Logo and branding
-│   │   ├── Hero.tsx        # Main headline
-│   │   ├── TrustTags.tsx   # Trust indicators
-│   │   ├── Form.tsx        # Lead capture form
-│   │   └── Banner.tsx      # Bottom banner image
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── styles.css
-├── public/
-│   ├── logo-wordmark.svg   # Buildora Enterprise logo
-│   └── logo-monogram.svg   # BE monogram
-└── package.json
+│   │   ├── Header.tsx        # Site header with logos
+│   │   ├── Hero.tsx          # Main headline section
+│   │   ├── TrustTags.tsx     # Trust indicators
+│   │   ├── Form.tsx          # Lead capture form
+│   │   ├── Banner.tsx        # Bottom banner image
+│   │   └── Footer.tsx        # Site footer
+│   ├── App.tsx               # Main app component
+│   ├── main.tsx              # React entry point
+│   └── styles.css            # Global styles + Tailwind
+├── index.html                # HTML template with SEO tags
+├── package.json              # Dependencies and scripts
+├── tailwind.config.js        # Tailwind configuration
+├── vite.config.ts            # Vite configuration
+└── README.md                 # This file
 ```
-
-## Colors
-
-- **Gold**: #C69B4B (primary brand color)
-- **Gold Hover**: #B1873E
-- **Background**: #e8e8e8
-- **Text**: #333132
-- **White**: #FFFFFF

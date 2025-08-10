@@ -103,7 +103,7 @@ export function Navbar() {
                 {/* Brand Wordmark Logo */}
                 <img
                   src="../buildora-icon-v1.jpeg"
-                  alt="Buildora"
+                  alt="Buildora - banner"
                   className="h-6 md:h-8 w-auto object-contain"
                   draggable="false"
                 />

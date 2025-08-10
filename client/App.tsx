@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
+import CTA from "./pages/CTA";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

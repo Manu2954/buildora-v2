@@ -1,28 +1,39 @@
 const tags = [
   {
-    text: "Trusted by 50+ dealers & professionals"
+    text: "Trusted by 50+ dealers",
+    sub: "& professionals",
+    color: "from-blue-500 to-blue-600"
   },
   {
-    text: "Verified Manufacturer Partner"
+    text: "Verified Manufacturer",
+    sub: "Partner",
+    color: "from-green-500 to-green-600"
   },
   {
-    text: "Fast Delivery | Best Prices | South India Coverage"
+    text: "Fast Delivery",
+    sub: "Best Prices",
+    color: "from-purple-500 to-purple-600"
+  },
+  {
+    text: "South India",
+    sub: "Coverage",
+    color: "from-orange-500 to-orange-600"
   }
 ];
 
 export default function TrustTags() {
   return (
-    <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      {tags.map((tag) => (
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {tags.map(({ text, sub, color }) => (
         <div
-          key={tag.text}
-          className="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-2 text-sm"
+          key={text}
+          className={`rounded-2xl p-4 text-white flex items-center gap-3 bg-gradient-to-r ${color}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className="h-5 w-5 text-brand-gold"
+            className="h-5 w-5 flex-shrink-0"
           >
             <path
               fillRule="evenodd"
@@ -30,7 +41,10 @@ export default function TrustTags() {
               clipRule="evenodd"
             />
           </svg>
-          <span>{tag.text}</span>
+          <div className="leading-tight">
+            <p className="font-medium">{text}</p>
+            <p className="text-sm opacity-90">{sub}</p>
+          </div>
         </div>
       ))}
     </section>

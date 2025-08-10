@@ -1,7 +1,7 @@
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext";
+import { useSidebar } from "@/contexts/SidebarContext";
 import { Construction } from "lucide-react";
 
 interface PlaceholderPageProps {
@@ -9,7 +9,7 @@ interface PlaceholderPageProps {
   description: string;
 }
 
-function PlaceholderContent({ title, description }: PlaceholderPageProps) {
+export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
   const { isCollapsed, toggle } = useSidebar();
 
   return (
@@ -49,13 +49,5 @@ function PlaceholderContent({ title, description }: PlaceholderPageProps) {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>
-  );
-}
-
-export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
-  return (
-    <SidebarProvider>
-      <PlaceholderContent title={title} description={description} />
-    </SidebarProvider>
   );
 }

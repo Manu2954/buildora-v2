@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext";
+import { useSidebar } from "@/contexts/SidebarContext";
 import { Home } from "lucide-react";
 
-function NotFoundContent() {
+const NotFound = () => {
   const location = useLocation();
   const { isCollapsed, toggle } = useSidebar();
 
@@ -60,14 +60,6 @@ function NotFoundContent() {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>
-  );
-}
-
-const NotFound = () => {
-  return (
-    <SidebarProvider>
-      <NotFoundContent />
-    </SidebarProvider>
   );
 };
 

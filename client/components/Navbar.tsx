@@ -278,13 +278,13 @@ export function Navbar() {
         {/* Slide-out Panel from Left with app-like design */}
         <div
           className={cn(
-            "absolute top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out rounded-r-2xl",
+            "absolute top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out rounded-r-2xl z-[70] overflow-y-auto",
             isMenuOpen
               ? "transform translate-x-0"
               : "transform -translate-x-full",
           )}
         >
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col min-h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">

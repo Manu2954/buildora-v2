@@ -1,17 +1,6 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background rounded square -->
-  <rect width="64" height="64" rx="12" fill="url(#gradient)"/>
-  
-  <!-- BE letters -->
-  <text x="32" y="42" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="700" fill="white" text-anchor="middle">
+<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="40" height="40" rx="8" fill="#C69B4B"/>
+  <text x="20" y="28" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="white">
     BE
   </text>
-  
-  <!-- Gradient definition -->
-  <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#C69B4B"/>
-      <stop offset="100%" style="stop-color:#B1873E"/>
-    </linearGradient>
-  </defs>
 </svg>

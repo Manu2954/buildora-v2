@@ -95,15 +95,15 @@ export function Navbar() {
               <Link to="/" className="flex items-center space-x-3">
                 {/* Brand Icon Logo */}
                 <img
-                  src="/buildora-icon.png"
+                  src="../buildora-icon.png"
                   alt="Buildora Icon"
                   className="h-8 md:h-10 w-auto object-contain"
                   draggable="false"
                 />
                 {/* Brand Wordmark Logo */}
                 <img
-                  src="/buildora-logo.png"
-                  alt="Buildora"
+                  src="../buildora-icon-v1.jpeg"
+                  alt="Buildora - banner"
                   className="h-6 md:h-8 w-auto object-contain"
                   draggable="false"
                 />

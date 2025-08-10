@@ -1,64 +1,24 @@
 function Header() {
   return (
-<<<<<<< HEAD
-    <header className="py-6 lg:py-8">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-center space-x-4">
-          {/* BE Monogram */}
-          <div className="logo">
-            <img
-              src="/logo-monogram.svg"
-              alt="BE Monogram"
-              className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
-              draggable="false"
-            />
-          </div>
-
-          {/* Buildora Enterprise Wordmark */}
-          <div className="logo">
-            <img
-              src="/logo-wordmark.svg"
-              alt="Buildora Enterprise"
-              className="h-8 md:h-10 lg:h-12 w-auto"
-              draggable="false"
-            />
-          </div>
-        </div>
-=======
     <header className="bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img
-            src="https://placehold.co/40x40/C69B4B/FFFFFF?text=BE"
-            alt="Buildora Enterprise monogram"
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center gap-3">
+          <img 
+            src="/logo-monogram.svg" 
+            alt="Buildora Enterprise" 
+            className="h-10 w-10" 
             draggable="false"
-            className="h-10 w-auto select-none"
           />
-          <img
-            src="https://placehold.co/200x40/C69B4B/FFFFFF?text=Buildora%20Enterprise"
-            alt="Buildora Enterprise"
+          <img 
+            src="/logo-wordmark.svg" 
+            alt="Buildora Enterprise" 
+            className="h-8" 
             draggable="false"
-            className="h-6 w-auto select-none"
           />
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-sm text-[#333132]">
-          <a href="#" className="hover:text-brand-gold transition-colors">
-            Home
-          </a>
-          <a href="#" className="hover:text-brand-gold transition-colors">
-            Products
-          </a>
-          <a href="#" className="hover:text-brand-gold transition-colors">
-            About
-          </a>
-          <a href="#" className="hover:text-brand-gold transition-colors">
-            Contact
-          </a>
-        </nav>
->>>>>>> 8da4524291465d29c466603cbe0176fa558b0eeb
       </div>
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

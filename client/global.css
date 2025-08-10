@@ -130,9 +130,80 @@
     -webkit-line-clamp: 2;
   }
 
-  /* Touch-friendly tap targets */
+  /* Touch-friendly tap targets for mobile app feel */
   .tap-target {
     min-height: 44px;
     min-width: 44px;
+  }
+
+  /* Mobile app-like interactions */
+  @media (max-width: 768px) {
+    .app-button {
+      min-height: 52px;
+      border-radius: 16px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .app-button:active {
+      transform: scale(0.95);
+    }
+
+    .app-card {
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .app-card:active {
+      transform: scale(0.98);
+    }
+
+    /* Smooth page transitions */
+    .page-transition {
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  /* Ensure smooth scrolling on all devices */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced focus states for accessibility */
+  .focus-visible {
+    outline: 2px solid #c59c46;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* Better touch targets on mobile */
+  @media (max-width: 768px) {
+    button,
+    [role="button"],
+    input[type="submit"],
+    input[type="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Larger text inputs on mobile */
+    input[type="text"],
+    input[type="email"],
+    input[type="search"],
+    textarea {
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
   }
 }

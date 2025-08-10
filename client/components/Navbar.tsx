@@ -157,10 +157,13 @@ export function Navbar() {
               </div>
 
               {/* Get Free Quote Button (hidden on small mobile) */}
-              <button className="hidden sm:inline-flex items-center px-4 lg:px-6 py-2 bg-[#c59c46] text-white font-medium rounded-lg hover:bg-[#a17c36] transition-colors duration-200 text-sm min-h-[44px]">
+              <Link
+                to="/cta"
+                className="hidden sm:inline-flex items-center px-4 lg:px-6 py-2 bg-[#c59c46] text-white font-medium rounded-lg hover:bg-[#a17c36] transition-colors duration-200 text-sm min-h-[44px]"
+              >
                 <span className="hidden lg:inline">Get Free Quote</span>
                 <span className="lg:hidden">Quote</span>
-              </button>
+              </Link>
 
               {/* Cart/Order Icon */}
               <button className="relative p-3 text-[#333132] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center">

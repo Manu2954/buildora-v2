@@ -20,6 +20,7 @@ npm run dev
 ## Deployment to Vercel
 
 ### Option 1: Via Vercel Dashboard
+
 1. Create new project in Vercel dashboard
 2. Import the same repository
 3. Configure build settings:
@@ -29,12 +30,14 @@ npm run dev
 4. Deploy
 
 ### Option 2: Via Vercel CLI
+
 ```bash
 cd apps/cta
 npx vercel --prod
 ```
 
 ### Custom Domain Setup
+
 1. In Vercel project settings, add custom domain: `cta.buildoraenterprise.com`
 2. Create DNS CNAME record pointing to Vercel:
    ```

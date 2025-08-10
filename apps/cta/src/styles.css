@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --gold: #C69B4B;
-  --gold-600: #B1873E;
+  --gold: #c69b4b;
+  --gold-600: #b1873e;
   --bg-base: #e8e8e8;
   --text-base: #333132;
 }
@@ -16,17 +16,29 @@ html {
 body {
   background: var(--bg-base);
   color: var(--text-base);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif;
 }
 
-img, svg {
+img,
+svg {
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
 }
 
 /* Make logos draggable false but keep interactive elements working */
-.logo img, .logo svg {
+.logo img,
+.logo svg {
   pointer-events: none;
 }
 
@@ -43,7 +55,9 @@ img, svg {
 
 /* Form styling */
 .form-input {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-input:focus {
@@ -54,7 +68,9 @@ img, svg {
 /* Button hover effects */
 .btn-primary {
   background-color: var(--gold);
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .btn-primary:hover {

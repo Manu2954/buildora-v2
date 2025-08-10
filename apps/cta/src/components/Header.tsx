@@ -5,19 +5,19 @@ function Header() {
         <div className="flex items-center justify-center space-x-4">
           {/* BE Monogram */}
           <div className="logo">
-            <img 
-              src="/logo-monogram.svg" 
-              alt="BE Monogram" 
+            <img
+              src="/logo-monogram.svg"
+              alt="BE Monogram"
               className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
               draggable="false"
             />
           </div>
-          
+
           {/* Buildora Enterprise Wordmark */}
           <div className="logo">
-            <img 
-              src="/logo-wordmark.svg" 
-              alt="Buildora Enterprise" 
+            <img
+              src="/logo-wordmark.svg"
+              alt="Buildora Enterprise"
               className="h-8 md:h-10 lg:h-12 w-auto"
               draggable="false"
             />
@@ -25,7 +25,7 @@ function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

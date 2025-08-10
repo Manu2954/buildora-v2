@@ -331,9 +331,12 @@ export function Navbar() {
 
               {/* Mobile Get Quote Button */}
               <div className="px-6 py-4">
-                <button className="w-full bg-[#c59c46] text-white font-semibold py-4 rounded-xl hover:bg-[#a17c36] transition-all duration-300 min-h-[52px] active:scale-95 shadow-lg">
+                <Link
+                  to="/cta"
+                  className="block w-full bg-[#c59c46] text-white font-semibold py-4 rounded-xl hover:bg-[#a17c36] transition-all duration-300 min-h-[52px] active:scale-95 shadow-lg text-center"
+                >
                   Get Free Quote
-                </button>
+                </Link>
               </div>
             </div>
 

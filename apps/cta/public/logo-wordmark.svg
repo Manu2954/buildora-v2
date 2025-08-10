@@ -1,0 +1,15 @@
+<svg width="280" height="48" viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Buildora text -->
+  <text x="0" y="32" font-family="ui-sans-serif, system-ui, sans-serif" font-size="28" font-weight="700" fill="#333132">
+    Buildora
+  </text>
+  
+  <!-- Enterprise text -->
+  <text x="140" y="32" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600" fill="#C69B4B">
+    Enterprise
+  </text>
+  
+  <!-- Decorative underline -->
+  <rect x="0" y="38" width="120" height="2" rx="1" fill="#C69B4B" opacity="0.6"/>
+  <rect x="140" y="38" width="80" height="1" rx="0.5" fill="#C69B4B"/>
+</svg>

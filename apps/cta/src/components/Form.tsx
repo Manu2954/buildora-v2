@@ -1,201 +1,268 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-type FormData = {
-  name: string;
-  phone: string;
-  location: string;
-  requirement: string;
-  other: string;
-  interests: string[];
-  consent: boolean;
-};
+interface FormData {
+  fullName: string
+  mobileNumber: string
+  location: string
+  requirement: string
+  requirements: string[]
+  otherRequirement: string
+  consent: boolean
+}
+
+interface FormErrors {
+  fullName?: string
+  mobileNumber?: string
+  location?: string
+  requirement?: string
+  consent?: string
+}
 
 const requirementOptions = [
-  "Interior Supplies/Products",
-  "Modular Kitchen",
-  "Wardrobe or Storage",
-  "TV Unit or Showcase",
-  "Full Home Interiors",
-  "Other"
-];
+  'Interior Supplies/Products',
+  'Modular Kitchen',
+  'Wardrobe or Storage',
+  'TV Unit or Showcase',
+  'Full Home Interiors',
+  'Other'
+]
 
-export default function Form() {
-  const [form, setForm] = useState<FormData>({
-    name: "",
-    phone: "",
-    location: "",
-    requirement: "",
-    other: "",
-    interests: [],
+function Form() {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    mobileNumber: '',
+    location: '',
+    requirement: '',
+    requirements: [],
+    otherRequirement: '',
     consent: false
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [success, setSuccess] = useState(false);
+  })
 
-  const toggleInterest = (value: string) => {
-    setForm((f) => {
-      const interests = f.interests.includes(value)
-        ? f.interests.filter((i) => i !== value)
-        : [...f.interests, value];
-      return { ...f, interests };
-    });
-  };
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors: Record<string, string> = {};
-    if (!form.name.trim()) newErrors.name = "Full Name is required";
-    if (!form.phone.trim()) newErrors.phone = "Mobile Number is required";
-    if (!form.location.trim()) newErrors.location = "Location is required";
-    if (!form.requirement) newErrors.requirement = "Please select a requirement";
-    if (form.requirement === "Other" && !form.other.trim())
-      newErrors.other = "Please describe your requirement";
-    if (!form.consent) newErrors.consent = "Consent is required";
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {}
 
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      setSuccess(true);
-      setForm({
-        name: "",
-        phone: "",
-        location: "",
-        requirement: "",
-        other: "",
-        interests: [],
-        consent: false
-      });
-    } else {
-      setSuccess(false);
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required'
     }
-  };
+
+    if (!formData.mobileNumber.trim()) {
+      newErrors.mobileNumber = 'Mobile number is required'
+    } else if (!/^[6-9]\d{9}$/.test(formData.mobileNumber.replace(/\D/g, ''))) {
+      newErrors.mobileNumber = 'Please enter a valid 10-digit mobile number'
+    }
+
+    if (!formData.location.trim()) {
+      newErrors.location = 'Location is required'
+    }
+
+    if (!formData.requirement && formData.requirements.length === 0) {
+      newErrors.requirement = 'Please select at least one requirement'
+    }
+
+    if (!formData.consent) {
+      newErrors.consent = 'You must agree to be contacted'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!validateForm()) {
+      return
+    }
+
+    setIsSubmitting(true)
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitted(true)
+      setIsSubmitting(false)
+      // Reset form
+      setFormData({
+        fullName: '',
+        mobileNumber: '',
+        location: '',
+        requirement: '',
+        requirements: [],
+        otherRequirement: '',
+        consent: false
+      })
+    }, 1500)
+  }
+
+  const handleRequirementChange = (requirement: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      requirements: checked 
+        ? [...prev.requirements, requirement]
+        : prev.requirements.filter(r => r !== requirement)
+    }))
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg">
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-text-base mb-4">Thank You!</h3>
+            <p className="text-gray-600 leading-relaxed">
+              Our team will connect with you shortly to understand your requirement and begin your project.
+            </p>
+          </div>
+          <button 
+            onClick={() => setIsSubmitted(false)}
+            className="btn-primary text-white px-6 py-3 rounded-lg font-medium focus-ring"
+          >
+            Submit Another Request
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-3xl shadow-sm space-y-4"
-    >
-      {success && (
-        <p className="text-green-600 text-sm">
-          Thank you! Our team will connect with you shortly to understand your
-          requirement and begin your project.
-        </p>
-      )}
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="name">
-          Full Name
-        </label>
-        <input
-          id="name"
-          type="text"
-          className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        {errors.name && <p className="text-red-600 text-sm">{errors.name}</p>}
+    <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg">
+      <div className="mb-6">
+        <h2 className="text-2xl lg:text-3xl font-bold text-text-base mb-2">Get Started Today</h2>
+        <p className="text-gray-600">Fill out the form below and our team will reach out to you.</p>
       </div>
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="phone">
-          Mobile Number
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          pattern="[0-9]{10}"
-          className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-        />
-        {errors.phone && <p className="text-red-600 text-sm">{errors.phone}</p>}
-      </div>
-      <div>
-        <label
-          className="block text-sm font-medium mb-1"
-          htmlFor="location"
-        >
-          Your Location
-        </label>
-        <input
-          id="location"
-          type="text"
-          className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-          value={form.location}
-          onChange={(e) => setForm({ ...form, location: e.target.value })}
-        />
-        {errors.location && (
-          <p className="text-red-600 text-sm">{errors.location}</p>
-        )}
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="requirement">
-          Select or Describe Your Requirement
-        </label>
-        <select
-          id="requirement"
-          className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-          value={form.requirement}
-          onChange={(e) => setForm({ ...form, requirement: e.target.value })}
-        >
-          <option value="">Select...</option>
-          {requirementOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        {errors.requirement && (
-          <p className="text-red-600 text-sm">{errors.requirement}</p>
-        )}
-      </div>
-      {form.requirement === "Other" ? (
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="other">
-            Describe Your Requirement
+          <label className="block text-sm font-medium text-text-base mb-2">
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
-            id="other"
             type="text"
-            className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-            value={form.other}
-            onChange={(e) => setForm({ ...form, other: e.target.value })}
+            value={formData.fullName}
+            onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+            className={`w-full px-4 py-3 border rounded-lg form-input focus-ring ${errors.fullName ? 'border-red-300' : 'border-gray-300'}`}
+            placeholder="Enter your full name"
           />
-          {errors.other && <p className="text-red-600 text-sm">{errors.other}</p>}
+          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
         </div>
-      ) : (
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Additional Interests (optional)</p>
-          {requirementOptions
-            .filter((o) => o !== "Other")
-            .map((opt) => (
-              <label key={opt} className="flex items-center gap-2 text-sm">
+
+        {/* Mobile Number */}
+        <div>
+          <label className="block text-sm font-medium text-text-base mb-2">
+            Mobile Number <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="tel"
+            value={formData.mobileNumber}
+            onChange={(e) => setFormData({...formData, mobileNumber: e.target.value})}
+            className={`w-full px-4 py-3 border rounded-lg form-input focus-ring ${errors.mobileNumber ? 'border-red-300' : 'border-gray-300'}`}
+            placeholder="Enter your 10-digit mobile number"
+            maxLength={10}
+          />
+          {errors.mobileNumber && <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>}
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-sm font-medium text-text-base mb-2">
+            Your Location <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={formData.location}
+            onChange={(e) => setFormData({...formData, location: e.target.value})}
+            className={`w-full px-4 py-3 border rounded-lg form-input focus-ring ${errors.location ? 'border-red-300' : 'border-gray-300'}`}
+            placeholder="Enter your city/location"
+          />
+          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+        </div>
+
+        {/* Requirements */}
+        <div>
+          <label className="block text-sm font-medium text-text-base mb-3">
+            Select or Describe Your Requirement <span className="text-red-500">*</span>
+          </label>
+          
+          {/* Dropdown */}
+          <select
+            value={formData.requirement}
+            onChange={(e) => setFormData({...formData, requirement: e.target.value})}
+            className={`w-full px-4 py-3 border rounded-lg form-input focus-ring mb-4 ${errors.requirement ? 'border-red-300' : 'border-gray-300'}`}
+          >
+            <option value="">Select your primary requirement</option>
+            {requirementOptions.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+          
+          {/* Checkbox List */}
+          <div className="space-y-3">
+            <p className="text-sm text-gray-600">You can also select multiple interests:</p>
+            {requirementOptions.map((option) => (
+              <label key={option} className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={form.interests.includes(opt)}
-                  onChange={() => toggleInterest(opt)}
+                  checked={formData.requirements.includes(option)}
+                  onChange={(e) => handleRequirementChange(option, e.target.checked)}
+                  className="w-4 h-4 text-brand-gold bg-gray-100 border-gray-300 rounded focus:ring-brand-gold focus:ring-2"
                 />
-                <span>{opt}</span>
+                <span className="text-text-base">{option}</span>
               </label>
             ))}
+          </div>
+          
+          {/* Other Requirement Text Box */}
+          {(formData.requirement === 'Other' || formData.requirements.includes('Other')) && (
+            <div className="mt-4">
+              <input
+                type="text"
+                value={formData.otherRequirement}
+                onChange={(e) => setFormData({...formData, otherRequirement: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus-ring"
+                placeholder="Please specify your requirement"
+              />
+            </div>
+          )}
+          
+          {errors.requirement && <p className="text-red-500 text-sm mt-1">{errors.requirement}</p>}
         </div>
-      )}
-      <div>
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={form.consent}
-            onChange={(e) => setForm({ ...form, consent: e.target.checked })}
-          />
-          <span>I agree to be contacted by Buildora Enterprise for my inquiry.</span>
-        </label>
-        {errors.consent && (
-          <p className="text-red-600 text-sm">{errors.consent}</p>
-        )}
-      </div>
-      <button
-        type="submit"
-        className="w-full lg:w-auto bg-brand-gold hover:bg-brand-gold600 text-white rounded-2xl px-5 py-3 font-medium transition-colors"
-      >
-        Send My Requirement
-      </button>
-    </form>
-  );
+
+        {/* Consent Checkbox */}
+        <div>
+          <label className="flex items-start space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.consent}
+              onChange={(e) => setFormData({...formData, consent: e.target.checked})}
+              className={`w-4 h-4 text-brand-gold bg-gray-100 border-gray-300 rounded focus:ring-brand-gold focus:ring-2 mt-1 ${errors.consent ? 'border-red-300' : ''}`}
+            />
+            <span className="text-sm text-text-base leading-relaxed">
+              I agree to be contacted by Buildora Enterprise for my inquiry. <span className="text-red-500">*</span>
+            </span>
+          </label>
+          {errors.consent && <p className="text-red-500 text-sm mt-1">{errors.consent}</p>}
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full btn-primary text-white font-semibold py-4 px-6 rounded-lg focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? 'Sending...' : 'Send My Requirement'}
+        </button>
+      </form>
+    </div>
+  )
 }
+
+export default Form

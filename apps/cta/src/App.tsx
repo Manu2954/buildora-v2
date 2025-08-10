@@ -1,28 +1,35 @@
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import TrustTags from "./components/TrustTags";
-import Form from "./components/Form";
-import Banner from "./components/Banner";
+import Header from './components/Header'
+import Hero from './components/Hero'
+import TrustTags from './components/TrustTags'
+import Form from './components/Form'
+import Banner from './components/Banner'
 
-export default function App() {
+function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-bg-base fade-in">
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-8 lg:py-16 lg:flex lg:items-start lg:gap-12 fade-in">
-        <div className="lg:w-1/2 space-y-8">
-          <Hero />
-          <div className="lg:hidden">
-            <Form />
-          </div>
-          <TrustTags />
-        </div>
-        <div className="hidden lg:block lg:w-1/2">
-          <div className="sticky top-8">
-            <Form />
+      
+      <main className="px-4 py-8 lg:px-8 lg:py-12">
+        <div className="max-w-7xl mx-auto">
+          {/* Desktop: Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            {/* Left Column: Hero + Trust Tags */}
+            <div className="space-y-8 lg:space-y-12">
+              <Hero />
+              <TrustTags />
+            </div>
+            
+            {/* Right Column: Form */}
+            <div className="lg:sticky lg:top-8">
+              <Form />
+            </div>
           </div>
         </div>
       </main>
+      
       <Banner />
     </div>
-  );
+  )
 }
+
+export default App

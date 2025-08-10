@@ -288,9 +288,12 @@ export function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#c59c46] to-[#e6d09f] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">B</span>
-                </div>
+                <img
+                  src="/buildora-icon.png"
+                  alt="Buildora Icon"
+                  className="h-8 w-auto object-contain"
+                  draggable="false"
+                />
                 <span className="text-xl font-bold text-[#333132]">Menu</span>
               </div>
               <button

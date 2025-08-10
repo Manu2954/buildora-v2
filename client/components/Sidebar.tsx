@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, ClipboardList, User, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Home,
+  ShoppingBag,
+  ClipboardList,
+  User,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -19,10 +26,10 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
   const location = useLocation();
 
   return (
-    <aside 
+    <aside
       className={cn(
         "fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200 top-16 transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-16" : "w-[220px]"
+        isCollapsed ? "w-16" : "w-[220px]",
       )}
     >
       <div className="flex h-full flex-col">
@@ -56,19 +63,21 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                       isCollapsed ? "p-3 justify-center" : "px-3 py-2.5",
                       isActive
                         ? "text-[#c59c46] bg-[#c59c46]/10"
-                        : "text-[#333132] hover:text-[#c59c46]"
+                        : "text-[#333132] hover:text-[#c59c46]",
                     )}
                     aria-label={item.name}
                     title={isCollapsed ? item.name : undefined}
                   >
-                    <item.icon 
+                    <item.icon
                       className={cn(
                         "h-5 w-5 transition-colors flex-shrink-0",
-                        isActive ? "text-[#c59c46]" : "text-[#666666] group-hover:text-[#c59c46]",
-                        !isCollapsed && "mr-3"
-                      )} 
+                        isActive
+                          ? "text-[#c59c46]"
+                          : "text-[#666666] group-hover:text-[#c59c46]",
+                        !isCollapsed && "mr-3",
+                      )}
                     />
-                    
+
                     {!isCollapsed && (
                       <span className="font-medium truncate">{item.name}</span>
                     )}
@@ -100,8 +109,12 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                 <User className="h-4 w-4 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[#333132] truncate">Welcome!</p>
-                <p className="text-xs text-[#666666] truncate">Transform your space</p>
+                <p className="text-sm font-medium text-[#333132] truncate">
+                  Welcome!
+                </p>
+                <p className="text-xs text-[#666666] truncate">
+                  Transform your space
+                </p>
               </div>
             </div>
           </div>

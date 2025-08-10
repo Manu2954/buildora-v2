@@ -5,6 +5,7 @@ Please add the following logo files to the `/public` directory:
 ## Required Files:
 
 1. **buildora-icon.png** (or .svg)
+
    - Brand icon/symbol only
    - Recommended size: 120x120px minimum
    - Used in navbar at ~40px height (desktop), ~32px (mobile)
@@ -19,10 +20,12 @@ Please add the following logo files to the `/public` directory:
    - Transparent background recommended
 
 ## Current Implementation:
+
 - Both images are non-draggable for better UX
 - Responsive sizing across all devices
 - Clickable area links to homepage
 - Proper alt text for accessibility
 
 ## Fallback:
+
 If logo files are not available, the navbar will show broken image icons. You can temporarily use any PNG/SVG files with these names for testing.

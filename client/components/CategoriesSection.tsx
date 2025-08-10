@@ -7,28 +7,28 @@ const categories = [
     icon: Sofa,
     description: "Comfortable & stylish living spaces",
     count: "240+ designs",
-    color: "from-blue-500 to-blue-600"
+    color: "from-blue-500 to-blue-600",
   },
   {
     name: "Kitchen",
     icon: ChefHat,
     description: "Modern & functional kitchen designs",
     count: "180+ designs",
-    color: "from-green-500 to-green-600"
+    color: "from-green-500 to-green-600",
   },
   {
     name: "Bedroom",
     icon: Bed,
     description: "Relaxing & cozy bedroom spaces",
     count: "320+ designs",
-    color: "from-purple-500 to-purple-600"
+    color: "from-purple-500 to-purple-600",
   },
   {
     name: "Bathroom",
     icon: Bath,
     description: "Elegant & spa-like bathrooms",
     count: "150+ designs",
-    color: "from-teal-500 to-teal-600"
+    color: "from-teal-500 to-teal-600",
   },
 ];
 
@@ -45,7 +45,7 @@ export function CategoriesSection() {
             Explore our curated collections for every space
           </p>
         </div>
-        
+
         {/* Mobile: Vertical list with horizontal scroll for each category */}
         <div className="md:hidden space-y-4">
           {categories.map((category, index) => (
@@ -57,14 +57,17 @@ export function CategoriesSection() {
               aria-label={`Browse ${category.name} designs`}
             >
               <div className="flex items-center space-x-4">
-                <div className={cn(
-                  "flex items-center justify-center w-16 h-16 rounded-2xl transition-all duration-300",
-                  "bg-gradient-to-br", category.color,
-                  "group-hover:scale-110 shadow-lg"
-                )}>
+                <div
+                  className={cn(
+                    "flex items-center justify-center w-16 h-16 rounded-2xl transition-all duration-300",
+                    "bg-gradient-to-br",
+                    category.color,
+                    "group-hover:scale-110 shadow-lg",
+                  )}
+                >
                   <category.icon className="h-8 w-8 text-white" />
                 </div>
-                
+
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-[#333132] mb-1">
                     {category.name}
@@ -76,10 +79,20 @@ export function CategoriesSection() {
                     {category.count}
                   </span>
                 </div>
-                
+
                 <div className="text-[#c59c46] opacity-60 group-hover:opacity-100 transition-opacity">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </div>
               </div>
@@ -97,11 +110,14 @@ export function CategoriesSection() {
               tabIndex={0}
               aria-label={`Browse ${category.name} designs`}
             >
-              <div className={cn(
-                "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
-                "bg-gradient-to-br", category.color,
-                "group-hover:scale-110"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
+                  "bg-gradient-to-br",
+                  category.color,
+                  "group-hover:scale-110",
+                )}
+              >
                 <category.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#333132] mb-2">
@@ -127,11 +143,14 @@ export function CategoriesSection() {
               tabIndex={0}
               aria-label={`Browse ${category.name} designs`}
             >
-              <div className={cn(
-                "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
-                "bg-gradient-to-br", category.color,
-                "group-hover:scale-110"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-16 h-16 rounded-xl mb-4 transition-all duration-300",
+                  "bg-gradient-to-br",
+                  category.color,
+                  "group-hover:scale-110",
+                )}
+              >
                 <category.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#333132] mb-2">

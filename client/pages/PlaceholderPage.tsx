@@ -21,8 +21,8 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
           <div className="hidden xl:block">
             <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
           </div>
-          
-          <main 
+
+          <main
             className={`flex-1 transition-all duration-300 ease-in-out ${
               isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"
             }`}
@@ -33,8 +33,12 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
                   <div className="w-24 h-24 bg-[#c59c46]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Construction className="h-12 w-12 text-[#c59c46]" />
                   </div>
-                  <h1 className="text-3xl font-bold text-[#333132] mb-4">{title}</h1>
-                  <p className="text-[#666666] mb-6 leading-relaxed">{description}</p>
+                  <h1 className="text-3xl font-bold text-[#333132] mb-4">
+                    {title}
+                  </h1>
+                  <p className="text-[#666666] mb-6 leading-relaxed">
+                    {description}
+                  </p>
                   <p className="text-sm text-[#666666]">
                     Continue prompting to have this page content generated!
                   </p>
@@ -45,7 +49,7 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
           </main>
         </div>
       </div>
-      
+
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>

@@ -7,8 +7,11 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { WhyChooseBuildora } from "@/components/WhyChooseBuildora";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext";
 
-export default function Index() {
+function IndexContent() {
+  const { isCollapsed, toggle } = useSidebar();
+
   return (
     <div className="min-h-screen bg-[#e8e8e8]">
       {/* Mobile: Add top margin for navbar with search */}
@@ -16,11 +19,15 @@ export default function Index() {
         <div className="flex">
           {/* Sidebar Navigation - Only on desktop */}
           <div className="hidden xl:block">
-            <Sidebar />
+            <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
           </div>
           
           {/* Main Content */}
-          <main className="flex-1 xl:ml-[220px]">
+          <main 
+            className={`flex-1 transition-all duration-300 ease-in-out ${
+              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"
+            }`}
+          >
             {/* Mobile: Bottom padding for bottom nav */}
             <div className="min-h-screen flex flex-col pb-24 md:pb-0">
               {/* Content sections with smooth transitions */}
@@ -76,5 +83,13 @@ export default function Index() {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>
+  );
+}
+
+export default function Index() {
+  return (
+    <SidebarProvider>
+      <IndexContent />
+    </SidebarProvider>
   );
 }

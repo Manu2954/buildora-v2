@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import TrustTags from "./components/TrustTags";
 import Form from "./components/Form";
 import Banner from "./components/Banner";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       </main>
 
       <Banner />
+      <Footer />
     </div>
   );
 }

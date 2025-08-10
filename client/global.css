@@ -9,45 +9,45 @@
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
-    /* Buildora brand colors */
+    /* Luxury Buildora colors */
     --background: 0 0% 91%; /* #e8e8e8 */
     --foreground: 0 2% 20%; /* #333132 */
 
     --card: 0 0% 100%;
-    --card-foreground: 0 2% 20%;
+    --card-foreground: 0 2% 20%; /* #333132 */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 2% 20%;
+    --popover-foreground: 0 2% 20%; /* #333132 */
 
     --primary: 42 42% 53%; /* #c59c46 gold */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 2% 20%;
+    --secondary: 0 0% 95%; /* #f2f2f2 subtle background */
+    --secondary-foreground: 0 2% 20%; /* #333132 */
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 2% 45%;
+    --muted: 0 0% 97%; /* #f8f8f8 hover state */
+    --muted-foreground: 0 0% 40%; /* #666666 */
 
-    --accent: 42 42% 53%;
+    --accent: 42 42% 53%; /* #c59c46 gold */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 42 42% 53%;
+    --border: 0 0% 88%; /* #e0e0e0 subtle borders */
+    --input: 0 0% 85%; /* #d9d9d9 */
+    --ring: 42 42% 53%; /* #c59c46 focus ring */
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 2% 20%;
-    --sidebar-primary: 42 42% 53%;
+    --sidebar-foreground: 0 2% 20%; /* #333132 */
+    --sidebar-primary: 42 42% 53%; /* #c59c46 */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 2% 20%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 42 42% 53%;
+    --sidebar-accent: 0 0% 95%; /* #f2f2f2 active state */
+    --sidebar-accent-foreground: 0 2% 20%; /* #333132 */
+    --sidebar-border: 0 0% 90%; /* #e6e6e6 */
+    --sidebar-ring: 42 42% 53%; /* #c59c46 */
   }
 
   .dark {

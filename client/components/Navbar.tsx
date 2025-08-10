@@ -93,12 +93,20 @@ export function Navbar() {
             {/* Left: Logo */}
             <div className="flex items-center space-x-3 flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#c59c46] to-[#e6d09f] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">B</span>
-                </div>
-                <span className="text-xl md:text-2xl font-bold text-[#333132]">
-                  Buildora
-                </span>
+                {/* Brand Icon Logo */}
+                <img
+                  src="/buildora-icon.png"
+                  alt="Buildora Icon"
+                  className="h-8 md:h-10 w-auto object-contain"
+                  draggable="false"
+                />
+                {/* Brand Wordmark Logo */}
+                <img
+                  src="/buildora-logo.png"
+                  alt="Buildora"
+                  className="h-6 md:h-8 w-auto object-contain"
+                  draggable="false"
+                />
               </Link>
             </div>
 

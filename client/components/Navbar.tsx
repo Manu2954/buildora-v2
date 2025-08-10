@@ -335,7 +335,7 @@ export function Navbar() {
             </div>
 
             {/* Bottom Section */}
-            <div className="border-t border-gray-200 p-6 bg-[#f8f8f8] rounded-t-2xl">
+            <div className="border-t border-gray-200 p-6 bg-[#f8f8f8] rounded-t-2xl mt-auto">
               {isLoggedIn ? (
                 <div>
                   <div className="flex items-center space-x-4 mb-6">

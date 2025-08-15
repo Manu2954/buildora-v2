@@ -1,11 +1,11 @@
 function Header() {
   return (
-    <header className="bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center gap-3">
+    <header className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-3">
           <img
             src="/logo-monogram.svg"
-            alt="Buildora Enterprise"
+            alt="BE"
             className="h-10 w-10"
             draggable="false"
           />
@@ -15,7 +15,25 @@ function Header() {
             className="h-8"
             draggable="false"
           />
-        </div>
+        </a>
+        <nav className="flex items-center gap-4">
+          <a
+            href="https://buildoraenterprise.com/about"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            About Us
+          </a>
+          <a
+            href="https://buildoraenterprise.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            Go to the Website
+          </a>
+        </nav>
       </div>
     </header>
   );

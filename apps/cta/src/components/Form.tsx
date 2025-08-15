@@ -6,7 +6,6 @@ interface FormData {
   location: string;
   requirement: string;
   otherDescription: string;
-  interests: string[];
   consent: boolean;
 }
 
@@ -25,7 +24,6 @@ function Form() {
     location: "",
     requirement: "",
     otherDescription: "",
-    interests: [],
     consent: false,
   });
 
@@ -39,14 +37,6 @@ function Form() {
     "TV Unit or Showcase",
     "Full Home Interiors",
     "Other",
-  ];
-
-  const interestOptions = [
-    "Interior Supplies/Products",
-    "Modular Kitchen",
-    "Wardrobe or Storage",
-    "TV Unit or Showcase",
-    "Full Home Interiors",
   ];
 
   const validateForm = (): FormErrors => {
@@ -79,21 +69,13 @@ function Form() {
 
   const handleInputChange = (
     field: keyof FormData,
-    value: string | boolean | string[],
+    value: string | boolean,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  };
-
-  const handleInterestToggle = (interest: string) => {
-    const newInterests = formData.interests.includes(interest)
-      ? formData.interests.filter((i) => i !== interest)
-      : [...formData.interests, interest];
-
-    handleInputChange("interests", newInterests);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -114,7 +96,6 @@ function Form() {
       location: "",
       requirement: "",
       otherDescription: "",
-      interests: [],
       consent: false,
     });
     setErrors({});
@@ -125,45 +106,21 @@ function Form() {
     }, 5000);
   };
 
-  if (isSubmitted) {
-    return (
-      <div className="bg-white p-8 rounded-2xl shadow-lg animate-fade-in">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-8 h-8 text-green-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-text-base mb-2">
-            Thank You!
-          </h3>
-          <p className="text-gray-600 leading-relaxed">
-            Our team will connect with you shortly to understand your
-            requirement and begin your project.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-lg animate-slide-up">
       <h2 className="text-2xl font-bold text-text-base mb-6 text-center lg:text-left">
         Get Started Today
       </h2>
-
+      {isSubmitted && (
+        <div className="mb-6 p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg">
+          Thank you! Our team will connect with you shortly to understand your requirement and begin your project.
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="form-label">Full Name *</label>
+          <label htmlFor="fullName" className="form-label">Full Name *</label>
           <input
+            id="fullName"
             type="text"
             value={formData.fullName}
             onChange={(e) => handleInputChange("fullName", e.target.value)}
@@ -174,8 +131,9 @@ function Form() {
         </div>
 
         <div>
-          <label className="form-label">Mobile Number *</label>
+          <label htmlFor="mobile" className="form-label">Mobile Number *</label>
           <input
+            id="mobile"
             type="tel"
             value={formData.mobile}
             onChange={(e) => handleInputChange("mobile", e.target.value)}
@@ -186,8 +144,9 @@ function Form() {
         </div>
 
         <div>
-          <label className="form-label">Your Location *</label>
+          <label htmlFor="location" className="form-label">Your Location *</label>
           <input
+            id="location"
             type="text"
             value={formData.location}
             onChange={(e) => handleInputChange("location", e.target.value)}
@@ -198,10 +157,11 @@ function Form() {
         </div>
 
         <div>
-          <label className="form-label">
+          <label htmlFor="requirement" className="form-label">
             Select or Describe Your Requirement *
           </label>
           <select
+            id="requirement"
             value={formData.requirement}
             onChange={(e) => handleInputChange("requirement", e.target.value)}
             className="form-input"
@@ -220,10 +180,11 @@ function Form() {
 
         {formData.requirement === "Other" && (
           <div>
-            <label className="form-label">
+            <label htmlFor="otherDescription" className="form-label">
               Please describe your requirement
             </label>
             <textarea
+              id="otherDescription"
               value={formData.otherDescription}
               onChange={(e) =>
                 handleInputChange("otherDescription", e.target.value)
@@ -235,37 +196,18 @@ function Form() {
         )}
 
         <div>
-          <label className="form-label">Additional Interests (Optional)</label>
-          <div className="space-y-2">
-            {interestOptions.map((interest) => (
-              <label
-                key={interest}
-                className="flex items-center gap-3 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={formData.interests.includes(interest)}
-                  onChange={() => handleInterestToggle(interest)}
-                  className="w-4 h-4 text-brand-gold border-gray-300 rounded focus:ring-brand-gold focus:ring-2"
-                />
-                <span className="text-sm text-text-base">{interest}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="flex items-start gap-3 cursor-pointer">
+          <div className="flex items-start gap-3">
             <input
+              id="consent"
               type="checkbox"
               checked={formData.consent}
               onChange={(e) => handleInputChange("consent", e.target.checked)}
               className="w-4 h-4 text-brand-gold border-gray-300 rounded focus:ring-brand-gold focus:ring-2 mt-0.5"
             />
-            <span className="text-sm text-text-base">
+            <label htmlFor="consent" className="text-sm text-text-base">
               I agree to be contacted by Buildora Enterprise for my inquiry. *
-            </span>
-          </label>
+            </label>
+          </div>
           {errors.consent && <p className="form-error">{errors.consent}</p>}
         </div>
 

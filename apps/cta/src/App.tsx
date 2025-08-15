@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import TrustTags from "./components/TrustTags";
 import Form from "./components/Form";
-import Banner from "./components/Banner";
+import BottomActions from "./components/BottomActions";
 import Footer from "./components/Footer";
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
         </div>
       </main>
 
-      <Banner />
+      <BottomActions />
       <Footer />
     </div>
   );

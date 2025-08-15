@@ -15,10 +15,17 @@ function BottomActions() {
     <section className="container mx-auto px-4 py-12">
       <div className="grid gap-6 lg:grid-cols-2 mb-12">
         <a
+
+          href="https://buildoraenterprise.com/designs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-brand-gold hover:bg-gray-50 hover:shadow-md hover:-translate-y-1 transform transition-all"
+
           href="https://buildoraenterprise.com/packages"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-brand-gold hover:shadow-md hover:-translate-y-1 transform transition-transform"
+
         >
           <svg
             className="w-8 h-8 text-brand-gold pointer-events-none"
@@ -27,6 +34,30 @@ function BottomActions() {
           >
             <path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z" />
           </svg>
+
+          <span className="font-semibold text-text-base">Explore Designs</span>
+        </a>
+        <a
+          href="https://buildoraenterprise.com/products"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-brand-gold hover:bg-gray-50 hover:shadow-md hover:-translate-y-1 transform transition-all"
+        >
+          <svg
+            className="w-8 h-8 text-brand-gold pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 2l8 4-8 4-8-4 8-4z" />
+            <path d="M4 6v8l8 4 8-4V6" />
+            <path d="M12 10v8" />
+          </svg>
+          <span className="font-semibold text-text-base">Explore Products</span>
+
           <span className="font-semibold text-text-base">See Packages</span>
         </a>
         <a
@@ -43,6 +74,7 @@ function BottomActions() {
             <path d="M3 10a1 1 0 011-1h8.586l-3.293-3.293 1.414-1.414 6 6-6 6-1.414-1.414L12.586 11H4a1 1 0 01-1-1z" />
           </svg>
           <span className="font-semibold text-text-base">Go to the Website</span>
+
         </a>
       </div>
       <div className="max-w-md mx-auto">

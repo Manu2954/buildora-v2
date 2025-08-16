@@ -130,6 +130,43 @@ export default function Index() {
     document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Geolocation not supported",
+        description: "Your browser does not support geolocation.",
+      });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await res.json();
+          const address = data.display_name || `${latitude}, ${longitude}`;
+          setFormData((prev) => ({ ...prev, location: address }));
+        } catch {
+          setFormData((prev) => ({ ...prev, location: `${latitude}, ${longitude}` }));
+        }
+      },
+      () => {
+        toast({
+          title: "Location error",
+          description: "Unable to retrieve your location.",
+        });
+      }
+    );
+  };
+
+  const handleChooseFromMap = () => {
+    const query = formData.location ? encodeURIComponent(formData.location) : "";
+    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+  };
+
   const mobileValid = /^\d{10,13}$/.test(formData.mobile);
   const isFormValid =
     formData.fullName &&
@@ -289,6 +326,22 @@ export default function Index() {
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
                 />
+                <div className="flex gap-4 mt-2">
+                  <button
+                    type="button"
+                    onClick={handleUseCurrentLocation}
+                    className="text-sm text-gold hover:underline"
+                  >
+                    Use Current Location
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleChooseFromMap}
+                    className="text-sm text-gold hover:underline"
+                  >
+                    Choose from Map
+                  </button>
+                </div>
               </div>
               
               <div>

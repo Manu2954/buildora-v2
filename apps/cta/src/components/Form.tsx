@@ -31,6 +31,8 @@ function Form() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   const requirementOptions = [
     "Interior Supplies/Products",
@@ -78,6 +80,38 @@ function Form() {
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setLocating(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+          );
+          const data = await res.json();
+          const display = data.display_name || `${latitude}, ${longitude}`;
+          handleInputChange("location", display);
+        } catch {
+          setLocationError("Unable to fetch location details");
+        } finally {
+          setLocating(false);
+        }
+      },
+      (error) => {
+        setLocationError(error.message || "Unable to retrieve your location");
+        setLocating(false);
+      },
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -137,7 +171,7 @@ function Form() {
       }, 5000);
     } catch (err) {
       setSubmitError(
-        err instanceof Error ? err.message : "Something went wrong"
+        err instanceof Error ? err.message : "Something went wrong",
       );
     } finally {
       setLoading(false);
@@ -151,7 +185,8 @@ function Form() {
       </h2>
       {isSubmitted && (
         <div className="mb-6 p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg">
-          Thank you! Our team will connect with you shortly to understand your requirement and begin your project.
+          Thank you! Our team will connect with you shortly to understand your
+          requirement and begin your project.
         </div>
       )}
       {submitError && (
@@ -161,7 +196,9 @@ function Form() {
       )}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="fullName" className="form-label">Full Name *</label>
+          <label htmlFor="fullName" className="form-label">
+            Full Name *
+          </label>
           <input
             id="fullName"
             type="text"
@@ -174,7 +211,9 @@ function Form() {
         </div>
 
         <div>
-          <label htmlFor="mobile" className="form-label">Mobile Number *</label>
+          <label htmlFor="mobile" className="form-label">
+            Mobile Number *
+          </label>
           <input
             id="mobile"
             type="tel"
@@ -187,7 +226,9 @@ function Form() {
         </div>
 
         <div>
-          <label htmlFor="location" className="form-label">Your Location *</label>
+          <label htmlFor="location" className="form-label">
+            Your Location *
+          </label>
           <input
             id="location"
             type="text"
@@ -196,7 +237,16 @@ function Form() {
             className="form-input"
             placeholder="Enter your city/location"
           />
+          <button
+            type="button"
+            onClick={handleUseMyLocation}
+            disabled={locating}
+            className="mt-2 text-sm text-brand-gold hover:underline"
+          >
+            {locating ? "Detecting..." : "Use my current location"}
+          </button>
           {errors.location && <p className="form-error">{errors.location}</p>}
+          {locationError && <p className="form-error">{locationError}</p>}
         </div>
 
         <div>
@@ -256,14 +306,16 @@ function Form() {
 
         <button
           type="submit"
-          disabled={loading ||
+          disabled={
+            loading ||
             !(
               formData.fullName &&
               formData.mobile &&
               formData.location &&
               formData.requirement &&
               formData.consent
-            )}
+            )
+          }
           className="w-full btn-primary text-lg disabled:opacity-50"
         >
           {loading ? "Sending..." : "Send My Requirement"}

@@ -75,7 +75,7 @@ export default function Index() {
           fullName: formData.fullName,
           mobileNumber: formData.mobile,
           location: formData.location,
-          requirement:
+          requirementDescription:
             formData.requirement === "Other"
               ? formData.customRequirement
               : formData.requirement,

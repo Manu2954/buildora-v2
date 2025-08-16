@@ -29,6 +29,8 @@ function Form() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const requirementOptions = [
     "Interior Supplies/Products",
@@ -48,8 +50,8 @@ function Form() {
 
     if (!formData.mobile.trim()) {
       newErrors.mobile = "Mobile number is required";
-    } else if (!/^[0-9]{10}$/.test(formData.mobile.replace(/\s/g, ""))) {
-      newErrors.mobile = "Please enter a valid 10-digit mobile number";
+    } else if (!/^\d{10,13}$/.test(formData.mobile.replace(/\s/g, ""))) {
+      newErrors.mobile = "Please enter a valid mobile number";
     }
 
     if (!formData.location.trim()) {
@@ -78,7 +80,7 @@ function Form() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const validationErrors = validateForm();
@@ -88,22 +90,58 @@ function Form() {
       return;
     }
 
-    console.log("Form submitted:", formData);
+    setLoading(true);
+    setSubmitError(null);
 
-    setFormData({
-      fullName: "",
-      mobile: "",
-      location: "",
-      requirement: "",
-      otherDescription: "",
-      consent: false,
-    });
-    setErrors({});
-    setIsSubmitted(true);
+    const requirementValue =
+      formData.requirement === "Other"
+        ? formData.otherDescription
+        : formData.requirement;
 
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/leads`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName: formData.fullName,
+            mobileNumber: formData.mobile,
+            location: formData.location,
+            requirement: requirementValue,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || "Failed to submit form");
+      }
+
+      // Clear form on success
+      setFormData({
+        fullName: "",
+        mobile: "",
+        location: "",
+        requirement: "",
+        otherDescription: "",
+        consent: false,
+      });
+      setErrors({});
+      setIsSubmitted(true);
+
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,6 +152,11 @@ function Form() {
       {isSubmitted && (
         <div className="mb-6 p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg">
           Thank you! Our team will connect with you shortly to understand your requirement and begin your project.
+        </div>
+      )}
+      {submitError && (
+        <div className="mb-6 p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
+          {submitError}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -211,8 +254,19 @@ function Form() {
           {errors.consent && <p className="form-error">{errors.consent}</p>}
         </div>
 
-        <button type="submit" className="w-full btn-primary text-lg">
-          Send My Requirement
+        <button
+          type="submit"
+          disabled={loading ||
+            !(
+              formData.fullName &&
+              formData.mobile &&
+              formData.location &&
+              formData.requirement &&
+              formData.consent
+            )}
+          className="w-full btn-primary text-lg disabled:opacity-50"
+        >
+          {loading ? "Sending..." : "Send My Requirement"}
         </button>
       </form>
     </div>

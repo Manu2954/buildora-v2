@@ -138,6 +138,13 @@ export default function Index() {
       });
       return;
     }
+    
+  console.log("secure?", window.isSecureContext, location.protocol, location.hostname);
+
+  // Optional: preflight permission check
+  navigator.permissions?.query({ name: "geolocation" as PermissionName }).then((s) => {
+    console.log("Geo permission state:", s.state); // "granted" | "prompt" | "denied"
+  }).catch(() => {});
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -149,14 +156,21 @@ export default function Index() {
           const data = await res.json();
           const address = data.display_name || `${latitude}, ${longitude}`;
           setFormData((prev) => ({ ...prev, location: address }));
-        } catch {
+        } catch(e) {
+          console.error("Reverse geocode failed:", e);
           setFormData((prev) => ({ ...prev, location: `${latitude}, ${longitude}` }));
         }
       },
-      () => {
+      (error) => {
+        console.error("Geolocation error:", error); // <-- SEE the reason here
+        let description = "Unable to retrieve your location.";
+        if (error.code === error.PERMISSION_DENIED) description = "Permission denied. Please allow location access.";
+        else if (error.code === error.POSITION_UNAVAILABLE) description = "Position unavailable. Check location services or network.";
+        else if (error.code === error.TIMEOUT) description = "Timed out getting location. Try again.";
+
         toast({
           title: "Location error",
-          description: "Unable to retrieve your location.",
+          description: description,
         });
       }
     );

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 interface FormData {
   fullName: string;
@@ -30,6 +31,8 @@ export default function Index() {
   
   const [showSuccess, setShowSuccess] = useState(false);
   const [showSubscribeSuccess, setShowSubscribeSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const requirementOptions = [
     "Interior Supplies/Products",
@@ -40,33 +43,76 @@ export default function Index() {
     "Other"
   ];
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.fullName || !formData.mobile || !formData.location || !formData.requirement || !formData.consent) {
+
+    // Basic validation for required fields
+    const mobileValid = /^\d{10,13}$/.test(formData.mobile);
+    const isValid =
+      formData.fullName &&
+      mobileValid &&
+      formData.location &&
+      formData.requirement &&
+      formData.consent &&
+      (formData.requirement !== "Other" || formData.customRequirement);
+
+    if (!isValid) {
+      setError("Please fill all required fields with valid information.");
       return;
     }
-    
-    if (formData.requirement === "Other" && !formData.customRequirement) {
-      return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Backend base URL configured via .env (VITE_API_BASE_URL / REACT_APP_API_BASE_URL)
+      const apiBase =
+        import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL;
+      const response = await fetch(`${apiBase}/api/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          mobileNumber: formData.mobile,
+          location: formData.location,
+          requirement:
+            formData.requirement === "Other"
+              ? formData.customRequirement
+              : formData.requirement,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to submit. Please try again.");
+      }
+
+      // Show success toast and message
+      toast({
+        title: "Lead submitted",
+        description: "Thank you! We'll contact you soon.",
+      });
+      setShowSuccess(true);
+
+      // Reset form
+      setFormData({
+        fullName: "",
+        mobile: "",
+        location: "",
+        requirement: "",
+        customRequirement: "",
+        consent: false,
+      });
+
+      // Hide success message after 5 seconds
+      setTimeout(() => setShowSuccess(false), 5000);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      setError(message);
+      toast({ title: "Submission failed", description: message });
+    } finally {
+      setLoading(false);
     }
-    
-    // Show success message
-    setShowSuccess(true);
-    
-    // Reset form
-    setFormData({
-      fullName: "",
-      mobile: "",
-      location: "",
-      requirement: "",
-      customRequirement: "",
-      consent: false,
-    });
-    
-    // Hide success message after 5 seconds
-    setTimeout(() => setShowSuccess(false), 5000);
   };
   
   const handleSubscribe = (e: React.FormEvent) => {
@@ -83,6 +129,15 @@ export default function Index() {
   const scrollToForm = () => {
     document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const mobileValid = /^\d{10,13}$/.test(formData.mobile);
+  const isFormValid =
+    formData.fullName &&
+    mobileValid &&
+    formData.location &&
+    formData.requirement &&
+    formData.consent &&
+    (formData.requirement !== "Other" || formData.customRequirement);
 
   return (
     <div className="min-h-screen bg-background">
@@ -185,6 +240,13 @@ export default function Index() {
                 Thank you! Our team will connect with you shortly to understand your requirement and begin your project.
               </div>
             )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl mb-6">
+                {error}
+              </div>
+            )}
             
             <form onSubmit={handleFormSubmit} className="space-y-6 max-w-lg mx-auto">
               <div>
@@ -211,6 +273,9 @@ export default function Index() {
                   onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                   className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
                 />
+                {!mobileValid && formData.mobile && (
+                  <p className="text-sm text-red-600 mt-1">Enter a valid mobile number (10-13 digits).</p>
+                )}
               </div>
               
               <div>
@@ -275,9 +340,10 @@ export default function Index() {
               
               <button
                 type="submit"
-                className="bg-gold hover:bg-gold-hover text-surface font-semibold px-8 py-4 rounded-2xl h-[52px] w-full sm:w-auto sm:min-w-[320px] mx-auto block transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50"
+                disabled={loading || !isFormValid}
+                className="bg-gold hover:bg-gold-hover disabled:opacity-50 disabled:cursor-not-allowed text-surface font-semibold px-8 py-4 rounded-2xl h-[52px] w-full sm:w-auto sm:min-w-[320px] mx-auto block transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50"
               >
-                Send My Requirement
+                {loading ? "Sending..." : "Send My Requirement"}
               </button>
             </form>
           </div>

@@ -1,17 +1,12 @@
 import { useState } from "react";
-import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { useSidebar } from "@/contexts/SidebarContext";
-import { 
-  CheckCircle, 
-  Shield, 
-  Truck, 
-  Users, 
-  Star,
-  Clock,
-  MapPin,
-  Award
+import {
+  CheckCircle,
+  Shield,
+  Truck,
+  Users,
+  MapPin
 } from "lucide-react";
 
 interface FormData {
@@ -60,7 +55,6 @@ const trustTags = [
 ];
 
 export default function CTA() {
-  const { isCollapsed, toggle } = useSidebar();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     mobileNumber: "",
@@ -131,34 +125,26 @@ export default function CTA() {
     return (
       <div className="min-h-screen bg-[#e8e8e8]">
         <div className="pt-24 md:pt-16">
-          <div className="flex">
-            <div className="hidden xl:block">
-              <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
-            </div>
-            
-            <main className={`flex-1 transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}>
-              <div className="min-h-screen flex flex-col pb-24 md:pb-0">
-                <div className="flex-1 flex items-center justify-center p-8">
-                  <div className="text-center max-w-md bg-white rounded-2xl p-8 shadow-lg">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="h-8 w-8 text-green-600" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-[#333132] mb-4">Thank You!</h1>
-                    <p className="text-[#666666] mb-6 leading-relaxed">
-                      Our team will connect with you shortly to understand your requirement and begin your project.
-                    </p>
-                    <button 
-                      onClick={() => setIsSubmitted(false)}
-                      className="bg-[#C69B4B] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#a17c36] transition-colors"
-                    >
-                      Submit Another Request
-                    </button>
-                  </div>
+          <main className="min-h-screen flex flex-col pb-24 md:pb-0">
+            <div className="flex-1 flex items-center justify-center p-8">
+              <div className="text-center max-w-md bg-white rounded-2xl p-8 shadow-lg">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
                 </div>
-                <Footer />
+                <h1 className="text-2xl font-bold text-[#333132] mb-4">Thank You!</h1>
+                <p className="text-[#666666] mb-6 leading-relaxed">
+                  Our team will connect with you shortly to understand your requirement and begin your project.
+                </p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="bg-[#C69B4B] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#a17c36] transition-colors"
+                >
+                  Submit Another Request
+                </button>
               </div>
-            </main>
-          </div>
+            </div>
+            <Footer />
+          </main>
         </div>
         <MobileBottomNav />
       </div>
@@ -168,13 +154,7 @@ export default function CTA() {
   return (
     <div className="min-h-screen bg-[#e8e8e8]">
       <div className="pt-24 md:pt-16">
-        <div className="flex">
-          <div className="hidden xl:block">
-            <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
-          </div>
-          
-          <main className={`flex-1 transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}>
-            <div className="min-h-screen flex flex-col pb-24 md:pb-0">
+      <main className="min-h-screen flex flex-col pb-24 md:pb-0">
               
               {/* Banner Image */}
               <div className="w-full h-32 md:h-48 lg:h-64 overflow-hidden">
@@ -364,10 +344,8 @@ export default function CTA() {
               </div>
               
               <Footer />
-            </div>
           </main>
         </div>
-      </div>
       <MobileBottomNav />
     </div>
   );

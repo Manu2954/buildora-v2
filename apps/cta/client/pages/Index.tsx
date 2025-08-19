@@ -6,7 +6,7 @@ interface FormData {
   fullName: string;
   mobile: string;
   location: string;
-  requirement: string;
+  requirement: string[];
   customRequirement: string;
   consent: boolean;
 }
@@ -20,7 +20,7 @@ export default function Index() {
     fullName: "",
     mobile: "",
     location: "",
-    requirement: "",
+    requirement: [],
     customRequirement: "",
     consent: false,
   });
@@ -33,6 +33,7 @@ export default function Index() {
   const [showSubscribeSuccess, setShowSubscribeSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showErrors, setShowErrors] = useState(false);
   
   const requirementOptions = [
     "Interior Supplies/Products",
@@ -45,6 +46,7 @@ export default function Index() {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowErrors(true);
 
     // Basic validation for required fields
     const mobileValid = /^\d{10,13}$/.test(formData.mobile);
@@ -52,9 +54,9 @@ export default function Index() {
       formData.fullName &&
       mobileValid &&
       formData.location &&
-      formData.requirement &&
+      formData.requirement.length > 0 &&
       formData.consent &&
-      (formData.requirement !== "Other" || formData.customRequirement);
+      (!formData.requirement.includes("Other") || formData.customRequirement);
 
     if (!isValid) {
       setError("Please fill all required fields with valid information.");
@@ -76,9 +78,9 @@ export default function Index() {
           mobileNumber: formData.mobile,
           location: formData.location,
           requirementDescription:
-            formData.requirement === "Other"
-              ? formData.customRequirement
-              : formData.requirement,
+            formData.requirement.includes("Other")
+              ? [...formData.requirement.filter((r) => r !== "Other"), formData.customRequirement].join(", ")
+              : formData.requirement.join(", "),
         }),
       });
 
@@ -99,10 +101,11 @@ export default function Index() {
         fullName: "",
         mobile: "",
         location: "",
-        requirement: "",
+        requirement: [],
         customRequirement: "",
         consent: false,
       });
+      setShowErrors(false);
 
       // Hide success message after 5 seconds
       setTimeout(() => setShowSuccess(false), 5000);
@@ -186,9 +189,9 @@ export default function Index() {
     formData.fullName &&
     mobileValid &&
     formData.location &&
-    formData.requirement &&
+    formData.requirement.length > 0 &&
     formData.consent &&
-    (formData.requirement !== "Other" || formData.customRequirement);
+    (!formData.requirement.includes("Other") || formData.customRequirement);
 
   return (
     <div className="min-h-screen bg-background">
@@ -301,7 +304,7 @@ export default function Index() {
             
             <form onSubmit={handleFormSubmit} className="space-y-6 max-w-lg mx-auto">
               <div>
-                <label className="block text-sm font-semibold text-text mb-2">
+                <label className={`block text-sm font-semibold mb-2 ${showErrors && !formData.fullName ? "text-red-600" : "text-text"}`}>
                   Full Name *
                 </label>
                 <input
@@ -309,12 +312,12 @@ export default function Index() {
                   required
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
+                  className={`w-full h-12 px-4 rounded-xl focus:outline-none focus:ring-2 bg-surface ${showErrors && !formData.fullName ? "border-red-500 focus:ring-red-500" : "border-border focus:ring-gold focus:ring-opacity-50 focus:border-gold"}`}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-text mb-2">
+                <label className={`block text-sm font-semibold mb-2 ${showErrors && (!formData.mobile || !mobileValid) ? "text-red-600" : "text-text"}`}>
                   Mobile Number *
                 </label>
                 <input
@@ -322,7 +325,7 @@ export default function Index() {
                   required
                   value={formData.mobile}
                   onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                  className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
+                  className={`w-full h-12 px-4 rounded-xl focus:outline-none focus:ring-2 bg-surface ${showErrors && (!formData.mobile || !mobileValid) ? "border-red-500 focus:ring-red-500" : "border-border focus:ring-gold focus:ring-opacity-50 focus:border-gold"}`}
                 />
                 {!mobileValid && formData.mobile && (
                   <p className="text-sm text-red-600 mt-1">Enter a valid mobile number (10-13 digits).</p>
@@ -330,7 +333,7 @@ export default function Index() {
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-text mb-2">
+                <label className={`block text-sm font-semibold mb-2 ${showErrors && !formData.location ? "text-red-600" : "text-text"}`}>
                   Your Location *
                 </label>
                 <input
@@ -338,7 +341,7 @@ export default function Index() {
                   required
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
+                  className={`w-full h-12 px-4 rounded-xl focus:outline-none focus:ring-2 bg-surface ${showErrors && !formData.location ? "border-red-500 focus:ring-red-500" : "border-border focus:ring-gold focus:ring-opacity-50 focus:border-gold"}`}
                 />
                 <div className="flex gap-4 mt-2">
                   <button
@@ -359,25 +362,40 @@ export default function Index() {
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-text mb-2">
-                  Select or Describe Your Requirement *
+                <label className={`block text-sm font-semibold mb-2 ${showErrors && formData.requirement.length === 0 ? "text-red-600" : "text-text"}`}>
+                  Select Your Requirements *
                 </label>
-                <select
-                  required
-                  value={formData.requirement}
-                  onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
-                  className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
-                >
-                  <option value="">Choose your requirement</option>
+                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 rounded-xl bg-surface ${showErrors && formData.requirement.length === 0 ? "border border-red-500" : "border border-border"}`}>
                   {requirementOptions.map((option) => (
-                    <option key={option} value={option}>{option}</option>
+                    <label key={option} className="flex items-center gap-2 text-sm text-text">
+                      <input
+                        type="checkbox"
+                        value={option}
+                        checked={formData.requirement.includes(option)}
+                        onChange={(e) => {
+                          const { checked, value } = e.target;
+                          setFormData((prev) => {
+                            const requirement = checked
+                              ? [...prev.requirement, value]
+                              : prev.requirement.filter((r) => r !== value);
+                            return {
+                              ...prev,
+                              requirement,
+                              ...(value === "Other" && !checked ? { customRequirement: "" } : {}),
+                            };
+                          });
+                        }}
+                        className="w-4 h-4 text-gold border-border rounded focus:ring-gold focus:ring-2"
+                      />
+                      {option}
+                    </label>
                   ))}
-                </select>
+                </div>
               </div>
-              
-              {formData.requirement === "Other" && (
+
+              {formData.requirement.includes("Other") && (
                 <div>
-                  <label className="block text-sm font-semibold text-text mb-2">
+                  <label className={`block text-sm font-semibold mb-2 ${showErrors && !formData.customRequirement ? "text-red-600" : "text-text"}`}>
                     Describe your requirement *
                   </label>
                   <input
@@ -385,7 +403,7 @@ export default function Index() {
                     required
                     value={formData.customRequirement}
                     onChange={(e) => setFormData({ ...formData, customRequirement: e.target.value })}
-                    className="w-full h-12 px-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50 focus:border-gold"
+                    className={`w-full h-12 px-4 rounded-xl focus:outline-none focus:ring-2 bg-surface ${showErrors && !formData.customRequirement ? "border-red-500 focus:ring-red-500" : "border-border focus:ring-gold focus:ring-opacity-50 focus:border-gold"}`}
                     placeholder="Tell us about your specific requirement"
                   />
                 </div>
@@ -398,7 +416,7 @@ export default function Index() {
                   required
                   checked={formData.consent}
                   onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-                  className="mt-1 w-4 h-4 text-gold border-border rounded focus:ring-gold focus:ring-2"
+                  className={`mt-1 w-4 h-4 text-gold rounded focus:ring-gold focus:ring-2 ${showErrors && !formData.consent ? "border-red-500" : "border-border"}`}
                 />
                 <label htmlFor="consent" className="text-sm text-text">
                   I agree to be contacted by Buildora Enterprise for my inquiry. *

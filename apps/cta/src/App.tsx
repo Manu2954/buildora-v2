@@ -4,6 +4,7 @@ import TrustTags from "./components/TrustTags";
 import Form from "./components/Form";
 import BottomActions from "./components/BottomActions";
 import Footer from "./components/Footer";
+import CompanyLogos from "./components/CompanyLogos";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <div className="lg:hidden space-y-8">
           <Hero />
           <TrustTags />
+          <CompanyLogos />
           <Form />
         </div>
 
@@ -23,6 +25,7 @@ function App() {
           <div className="space-y-8">
             <Hero />
             <TrustTags />
+            <CompanyLogos />
           </div>
           <div className="sticky top-8">
             <Form />

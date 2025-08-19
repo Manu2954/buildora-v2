@@ -111,7 +111,13 @@ function Form() {
         setLocationError(error.message || "Unable to retrieve your location");
         setLocating(false);
       },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     );
+  };
+
+  const handleSelectOnMap = () => {
+    // Placeholder for map selection implementation
+    alert("Map location picker not implemented yet.");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -237,14 +243,23 @@ function Form() {
             className="form-input"
             placeholder="Enter your city/location"
           />
-          <button
-            type="button"
-            onClick={handleUseMyLocation}
-            disabled={locating}
-            className="mt-2 text-sm text-brand-gold hover:underline"
-          >
-            {locating ? "Detecting..." : "Use my current location"}
-          </button>
+          <div className="flex flex-wrap gap-4 mt-2">
+            <button
+              type="button"
+              onClick={handleUseMyLocation}
+              disabled={locating}
+              className="text-sm text-brand-gold hover:underline"
+            >
+              {locating ? "Detecting..." : "Use current location"}
+            </button>
+            <button
+              type="button"
+              onClick={handleSelectOnMap}
+              className="text-sm text-brand-gold hover:underline"
+            >
+              Select on map
+            </button>
+          </div>
           {errors.location && <p className="form-error">{errors.location}</p>}
           {locationError && <p className="form-error">{locationError}</p>}
         </div>

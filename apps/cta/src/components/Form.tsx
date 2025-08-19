@@ -1,324 +1,210 @@
 import { useState } from "react";
+import { CheckCircle } from "lucide-react";
 
 interface FormData {
   fullName: string;
-  mobile: string;
+  mobileNumber: string;
   location: string;
-  requirement: string;
-  otherDescription: string;
+  requirements: string[];
+  otherRequirement: string;
   consent: boolean;
 }
 
-interface FormErrors {
-  fullName?: string;
-  mobile?: string;
-  location?: string;
-  requirement?: string;
-  consent?: string;
-}
+const requirementOptions = [
+  "Interior Supplies/Products",
+  "Modular Kitchen",
+  "Wardrobe or Storage",
+  "TV Unit or Showcase",
+  "Full Home Interiors",
+  "Other",
+];
 
 function Form() {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
-    mobile: "",
+    mobileNumber: "",
     location: "",
-    requirement: "",
-    otherDescription: "",
+    requirements: [],
+    otherRequirement: "",
     consent: false,
   });
-
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [locating, setLocating] = useState(false);
-  const [locationError, setLocationError] = useState<string | null>(null);
 
-  const requirementOptions = [
-    "Interior Supplies/Products",
-    "Modular Kitchen",
-    "Wardrobe or Storage",
-    "TV Unit or Showcase",
-    "Full Home Interiors",
-    "Other",
-  ];
-
-  const validateForm = (): FormErrors => {
-    const newErrors: FormErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
 
     if (!formData.fullName.trim()) {
       newErrors.fullName = "Full name is required";
     }
 
-    if (!formData.mobile.trim()) {
-      newErrors.mobile = "Mobile number is required";
-    } else if (!/^\d{10,13}$/.test(formData.mobile.replace(/\s/g, ""))) {
-      newErrors.mobile = "Please enter a valid mobile number";
+    if (!formData.mobileNumber.trim()) {
+      newErrors.mobileNumber = "Mobile number is required";
+    } else if (!/^[6-9]\d{9}$/.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = "Please enter a valid 10-digit mobile number";
     }
 
     if (!formData.location.trim()) {
       newErrors.location = "Location is required";
     }
 
-    if (!formData.requirement) {
-      newErrors.requirement = "Please select your requirement";
+    if (formData.requirements.length === 0) {
+      newErrors.requirements = ["Please select at least one requirement"];
     }
 
     if (!formData.consent) {
-      newErrors.consent = "You must agree to be contacted";
+      newErrors.consent = true as any;
     }
 
-    return newErrors;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (
-    field: keyof FormData,
-    value: string | boolean,
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-
-    if (errors[field as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
-
-  const handleUseMyLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser");
-      return;
-    }
-
-    setLocating(true);
-    setLocationError(null);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-          );
-          const data = await res.json();
-          const display = data.display_name || `${latitude}, ${longitude}`;
-          handleInputChange("location", display);
-        } catch {
-          setLocationError("Unable to fetch location details");
-        } finally {
-          setLocating(false);
-        }
-      },
-      (error) => {
-        setLocationError(error.message || "Unable to retrieve your location");
-        setLocating(false);
-      },
-    );
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationErrors = validateForm();
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    if (!validateForm()) {
       return;
     }
 
-    setLoading(true);
-    setSubmitError(null);
+    setIsSubmitting(true);
 
-    const requirementValue =
-      formData.requirement === "Other"
-        ? formData.otherDescription
-        : formData.requirement;
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/leads`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fullName: formData.fullName,
-            mobileNumber: formData.mobile,
-            location: formData.location,
-            requirement: requirementValue,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || "Failed to submit form");
-      }
-
-      // Clear form on success
-      setFormData({
-        fullName: "",
-        mobile: "",
-        location: "",
-        requirement: "",
-        otherDescription: "",
-        consent: false,
-      });
-      setErrors({});
+    setTimeout(() => {
       setIsSubmitted(true);
-
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    } catch (err) {
-      setSubmitError(
-        err instanceof Error ? err.message : "Something went wrong",
-      );
-    } finally {
-      setLoading(false);
-    }
+      setIsSubmitting(false);
+    }, 1500);
   };
 
+  const handleRequirementChange = (requirement: string, checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      requirements: checked
+        ? [...prev.requirements, requirement]
+        : prev.requirements.filter((r) => r !== requirement),
+    }));
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="text-center max-w-md mx-auto">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="h-8 w-8 text-green-600" />
+        </div>
+        <h1 className="text-2xl font-bold text-[#333132] mb-4">Thank You!</h1>
+        <p className="text-[#666666] mb-6 leading-relaxed">
+          Our team will connect with you shortly to understand your requirement and begin your project.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-lg animate-slide-up">
-      <h2 className="text-2xl font-bold text-text-base mb-6 text-center lg:text-left">
-        Get Started Today
-      </h2>
-      {isSubmitted && (
-        <div className="mb-6 p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg">
-          Thank you! Our team will connect with you shortly to understand your
-          requirement and begin your project.
-        </div>
-      )}
-      {submitError && (
-        <div className="mb-6 p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
-          {submitError}
-        </div>
-      )}
+    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-[#333132] mb-2">Get Started Today</h3>
+        <p className="text-[#666666]">Fill out the form below and our team will reach out to you.</p>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="fullName" className="form-label">
-            Full Name *
+          <label className="block text-sm font-medium text-[#333132] mb-2">
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
-            id="fullName"
             type="text"
             value={formData.fullName}
-            onChange={(e) => handleInputChange("fullName", e.target.value)}
-            className="form-input"
+            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200 ${errors.fullName ? 'border-red-300' : 'border-gray-300'}`}
             placeholder="Enter your full name"
           />
-          {errors.fullName && <p className="form-error">{errors.fullName}</p>}
+          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
         </div>
 
         <div>
-          <label htmlFor="mobile" className="form-label">
-            Mobile Number *
+          <label className="block text-sm font-medium text-[#333132] mb-2">
+            Mobile Number <span className="text-red-500">*</span>
           </label>
           <input
-            id="mobile"
             type="tel"
-            value={formData.mobile}
-            onChange={(e) => handleInputChange("mobile", e.target.value)}
-            className="form-input"
-            placeholder="Enter your mobile number"
+            value={formData.mobileNumber}
+            onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200 ${errors.mobileNumber ? 'border-red-300' : 'border-gray-300'}`}
+            placeholder="Enter your 10-digit mobile number"
+            maxLength={10}
           />
-          {errors.mobile && <p className="form-error">{errors.mobile}</p>}
+          {errors.mobileNumber && <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>}
         </div>
 
         <div>
-          <label htmlFor="location" className="form-label">
-            Your Location *
+          <label className="block text-sm font-medium text-[#333132] mb-2">
+            Your Location <span className="text-red-500">*</span>
           </label>
           <input
-            id="location"
             type="text"
             value={formData.location}
-            onChange={(e) => handleInputChange("location", e.target.value)}
-            className="form-input"
+            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200 ${errors.location ? 'border-red-300' : 'border-gray-300'}`}
             placeholder="Enter your city/location"
           />
-          <button
-            type="button"
-            onClick={handleUseMyLocation}
-            disabled={locating}
-            className="mt-2 text-sm text-brand-gold hover:underline"
-          >
-            {locating ? "Detecting..." : "Use my current location"}
-          </button>
-          {errors.location && <p className="form-error">{errors.location}</p>}
-          {locationError && <p className="form-error">{locationError}</p>}
+          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
         </div>
 
         <div>
-          <label htmlFor="requirement" className="form-label">
-            Select or Describe Your Requirement *
+          <label className="block text-sm font-medium text-[#333132] mb-3">
+            Select or Describe Your Requirement <span className="text-red-500">*</span>
           </label>
-          <select
-            id="requirement"
-            value={formData.requirement}
-            onChange={(e) => handleInputChange("requirement", e.target.value)}
-            className="form-input"
-          >
-            <option value="">Choose your requirement</option>
+          <div className="space-y-3">
             {requirementOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
+              <label key={option} className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.requirements.includes(option)}
+                  onChange={(e) => handleRequirementChange(option, e.target.checked)}
+                  className="w-4 h-4 text-[#C69B4B] bg-gray-100 border-gray-300 rounded focus:ring-[#C69B4B] focus:ring-2"
+                />
+                <span className="text-[#333132]">{option}</span>
+              </label>
             ))}
-          </select>
-          {errors.requirement && (
-            <p className="form-error">{errors.requirement}</p>
+          </div>
+
+          {formData.requirements.includes("Other") && (
+            <div className="mt-3">
+              <input
+                type="text"
+                value={formData.otherRequirement}
+                onChange={(e) => setFormData({ ...formData, otherRequirement: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200"
+                placeholder="Please specify your requirement"
+              />
+            </div>
+          )}
+
+          {errors.requirements && (
+            <p className="text-red-500 text-sm mt-1">Please select at least one requirement</p>
           )}
         </div>
 
-        {formData.requirement === "Other" && (
-          <div>
-            <label htmlFor="otherDescription" className="form-label">
-              Please describe your requirement
-            </label>
-            <textarea
-              id="otherDescription"
-              value={formData.otherDescription}
-              onChange={(e) =>
-                handleInputChange("otherDescription", e.target.value)
-              }
-              className="form-input h-24 resize-none"
-              placeholder="Tell us about your specific requirements..."
-            />
-          </div>
-        )}
-
         <div>
-          <div className="flex items-start gap-3">
+          <label className="flex items-start space-x-3 cursor-pointer">
             <input
-              id="consent"
               type="checkbox"
               checked={formData.consent}
-              onChange={(e) => handleInputChange("consent", e.target.checked)}
-              className="w-4 h-4 text-brand-gold border-gray-300 rounded focus:ring-brand-gold focus:ring-2 mt-0.5"
+              onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
+              className={`w-4 h-4 text-[#C69B4B] bg-gray-100 border-gray-300 rounded focus:ring-[#C69B4B] focus:ring-2 mt-1 ${errors.consent ? 'border-red-300' : ''}`}
             />
-            <label htmlFor="consent" className="text-sm text-text-base">
-              I agree to be contacted by Buildora Enterprise for my inquiry. *
-            </label>
-          </div>
-          {errors.consent && <p className="form-error">{errors.consent}</p>}
+            <span className="text-sm text-[#333132] leading-relaxed">
+              I agree to be contacted by Buildora Enterprise for my inquiry. <span className="text-red-500">*</span>
+            </span>
+          </label>
+          {errors.consent && <p className="text-red-500 text-sm mt-1">You must agree to be contacted</p>}
         </div>
 
         <button
           type="submit"
-          disabled={
-            loading ||
-            !(
-              formData.fullName &&
-              formData.mobile &&
-              formData.location &&
-              formData.requirement &&
-              formData.consent
-            )
-          }
-          className="w-full btn-primary text-lg disabled:opacity-50"
+          disabled={isSubmitting}
+          className="w-full bg-[#C69B4B] text-white font-semibold py-4 px-6 rounded-lg hover:bg-[#a17c36] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#C69B4B]/20 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
         >
-          {loading ? "Sending..." : "Send My Requirement"}
+          {isSubmitting ? "Sending..." : "Send My Requirement"}
         </button>
       </form>
     </div>

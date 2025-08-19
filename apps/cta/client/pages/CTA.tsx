@@ -115,10 +115,35 @@ export default function CTA() {
   const handleRequirementChange = (requirement: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      requirements: checked 
+      requirements: checked
         ? [...prev.requirements, requirement]
         : prev.requirements.filter(r => r !== requirement)
     }));
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          location: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`
+        }));
+      },
+      () => {
+        alert("Unable to retrieve your location.");
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
+  const handleAddFromMaps = () => {
+    const query = formData.location ? encodeURIComponent(formData.location) : "";
+    window.open(`https://maps.google.com/?q=${query}`, "_blank");
   };
 
   if (isSubmitted) {
@@ -173,15 +198,18 @@ export default function CTA() {
                   {/* Top Section - Branding */}
                   <div className="text-center mb-8 lg:mb-12">
                     <div className="flex items-center justify-center space-x-4 mb-6">
-                      {/* BE Monogram */}
-                      <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#C69B4B] to-[#e6d09f] rounded-xl flex items-center justify-center">
-                        <span className="text-white font-bold text-2xl md:text-3xl">BE</span>
-                      </div>
-                      {/* Company Logo */}
-                      <div className="text-left">
-                        <h1 className="text-2xl md:text-4xl font-bold text-[#333132]">Buildora</h1>
-                        <p className="text-lg md:text-xl font-semibold text-[#C69B4B]">Enterprise</p>
-                      </div>
+                      {/* Company Icon */}
+                      <img
+                        src="/logo-icon-placeholder.svg"
+                        alt="Company icon"
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
+                      />
+                      {/* Company Name Image */}
+                      <img
+                        src="/logo-name-placeholder.svg"
+                        alt="Company name"
+                        className="h-8 md:h-10 object-contain"
+                      />
                     </div>
                   </div>
 
@@ -275,6 +303,22 @@ export default function CTA() {
                             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200 ${errors.location ? 'border-red-300' : 'border-gray-300'}`}
                             placeholder="Enter your city/location"
                           />
+                          <div className="flex space-x-2 mt-2">
+                            <button
+                              type="button"
+                              onClick={handleUseCurrentLocation}
+                              className="px-3 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200"
+                            >
+                              Use current location
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleAddFromMaps}
+                              className="px-3 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200"
+                            >
+                              Add from maps
+                            </button>
+                          </div>
                           {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
                         </div>
 

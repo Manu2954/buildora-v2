@@ -32,7 +32,7 @@ export default function SignUp() {
 
   const isValidPhone = (phone: string) => {
     const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(phone.replace(/\s+/g, ''));
+    return phoneRegex.test(phone.replace(/\s+/g, ""));
   };
 
   const isValidName = (name: string) => {
@@ -42,56 +42,59 @@ export default function SignUp() {
   // Form validation
   const validate = () => {
     const e: Record<string, string> = {};
-    
+
     // Full name validation
     if (!fullName.trim()) {
       e.fullName = "Full name is required";
     } else if (!isValidName(fullName)) {
-      e.fullName = "Please enter a valid full name (letters only, minimum 2 characters)";
+      e.fullName =
+        "Please enter a valid full name (letters only, minimum 2 characters)";
     }
-    
+
     // Email validation
     if (!email.trim()) {
       e.email = "Email is required";
     } else if (!isValidEmail(email)) {
       e.email = "Please enter a valid email address";
     }
-    
+
     // Mobile number validation
     if (!mobile.trim()) {
       e.mobile = "Mobile number is required";
     } else if (!isValidPhone(mobile)) {
       e.mobile = "Please enter a valid 10-digit mobile number";
     }
-    
+
     // Password validation
     if (!password.trim()) {
       e.password = "Password is required";
     } else if (password.length < 8) {
       e.password = "Password must be at least 8 characters";
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      e.password = "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+      e.password =
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number";
     }
-    
+
     // Confirm password validation
     if (!confirmPassword.trim()) {
       e.confirmPassword = "Please confirm your password";
     } else if (password !== confirmPassword) {
       e.confirmPassword = "Passwords do not match";
     }
-    
+
     // Terms agreement validation
     if (!agreeToTerms) {
-      e.agreeToTerms = "You must agree to the Terms of Service and Privacy Policy";
+      e.agreeToTerms =
+        "You must agree to the Terms of Service and Privacy Policy";
     }
-    
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   // Handle mobile number input formatting
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    const value = e.target.value.replace(/\D/g, ""); // Remove non-digits
     if (value.length <= 10) {
       setMobile(value);
     }
@@ -100,22 +103,23 @@ export default function SignUp() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Success - show toast and reset form
       toast({
         title: "Account created successfully!",
-        description: "Welcome to Buildora! You can now sign in to your account.",
+        description:
+          "Welcome to Buildora! You can now sign in to your account.",
         variant: "default",
       });
-      
+
       // Reset form
       setFullName("");
       setEmail("");
@@ -123,7 +127,6 @@ export default function SignUp() {
       setPassword("");
       setConfirmPassword("");
       setAgreeToTerms(false);
-      
     } catch (error) {
       toast({
         title: "Sign up failed",
@@ -136,7 +139,10 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: beTokens.colors.background }}>
+    <div
+      className="min-h-screen"
+      style={{ background: beTokens.colors.background }}
+    >
       {/* Mobile: Add top margin for navbar */}
       <div className="pt-24 md:pt-16">
         <div className="flex">
@@ -149,7 +155,7 @@ export default function SignUp() {
           <main
             className={cn(
               "flex-1 transition-all duration-300 ease-in-out",
-              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"
+              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]",
             )}
           >
             {/* Mobile: Bottom padding for bottom nav */}
@@ -175,7 +181,11 @@ export default function SignUp() {
                     </div>
 
                     {/* Sign Up Form */}
-                    <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                    <form
+                      onSubmit={handleSubmit}
+                      noValidate
+                      className="space-y-5"
+                    >
                       {/* Full Name Field */}
                       <div>
                         <label
@@ -197,15 +207,20 @@ export default function SignUp() {
                               "w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.fullName
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Enter your full name"
                             aria-invalid={!!errors.fullName}
-                            aria-describedby={errors.fullName ? "fullName-error" : undefined}
+                            aria-describedby={
+                              errors.fullName ? "fullName-error" : undefined
+                            }
                           />
                         </div>
                         {errors.fullName && (
-                          <p id="fullName-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="fullName-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.fullName}
                           </p>
                         )}
@@ -232,15 +247,20 @@ export default function SignUp() {
                               "w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.email
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Enter your email"
                             aria-invalid={!!errors.email}
-                            aria-describedby={errors.email ? "email-error" : undefined}
+                            aria-describedby={
+                              errors.email ? "email-error" : undefined
+                            }
                           />
                         </div>
                         {errors.email && (
-                          <p id="email-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="email-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.email}
                           </p>
                         )}
@@ -268,16 +288,21 @@ export default function SignUp() {
                               "w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.mobile
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Enter 10-digit mobile number"
                             maxLength={10}
                             aria-invalid={!!errors.mobile}
-                            aria-describedby={errors.mobile ? "mobile-error" : undefined}
+                            aria-describedby={
+                              errors.mobile ? "mobile-error" : undefined
+                            }
                           />
                         </div>
                         {errors.mobile && (
-                          <p id="mobile-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="mobile-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.mobile}
                           </p>
                         )}
@@ -304,17 +329,21 @@ export default function SignUp() {
                               "w-full pl-10 pr-12 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.password
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Create a secure password"
                             aria-invalid={!!errors.password}
-                            aria-describedby={errors.password ? "password-error" : undefined}
+                            aria-describedby={
+                              errors.password ? "password-error" : undefined
+                            }
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#666666] hover:text-[#c59c46] transition-colors duration-200"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
                           >
                             {showPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -324,7 +353,10 @@ export default function SignUp() {
                           </button>
                         </div>
                         {errors.password && (
-                          <p id="password-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="password-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.password}
                           </p>
                         )}
@@ -351,17 +383,27 @@ export default function SignUp() {
                               "w-full pl-10 pr-12 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.confirmPassword
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Confirm your password"
                             aria-invalid={!!errors.confirmPassword}
-                            aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+                            aria-describedby={
+                              errors.confirmPassword
+                                ? "confirmPassword-error"
+                                : undefined
+                            }
                           />
                           <button
                             type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#666666] hover:text-[#c59c46] transition-colors duration-200"
-                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                            aria-label={
+                              showConfirmPassword
+                                ? "Hide password"
+                                : "Show password"
+                            }
                           >
                             {showConfirmPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -371,7 +413,10 @@ export default function SignUp() {
                           </button>
                         </div>
                         {errors.confirmPassword && (
-                          <p id="confirmPassword-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="confirmPassword-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.confirmPassword}
                           </p>
                         )}
@@ -386,11 +431,15 @@ export default function SignUp() {
                             onChange={(e) => setAgreeToTerms(e.target.checked)}
                             className={cn(
                               "mt-1 w-4 h-4 border-gray-300 rounded focus:ring-[#c59c46] focus:ring-2",
-                              errors.agreeToTerms && "border-red-500"
+                              errors.agreeToTerms && "border-red-500",
                             )}
                             style={{ accentColor: beTokens.colors.gold }}
                             aria-invalid={!!errors.agreeToTerms}
-                            aria-describedby={errors.agreeToTerms ? "agreeToTerms-error" : undefined}
+                            aria-describedby={
+                              errors.agreeToTerms
+                                ? "agreeToTerms-error"
+                                : undefined
+                            }
                           />
                           <span className="text-sm text-[#666666] leading-5">
                             I agree to Buildora's{" "}
@@ -412,7 +461,10 @@ export default function SignUp() {
                           </span>
                         </label>
                         {errors.agreeToTerms && (
-                          <p id="agreeToTerms-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="agreeToTerms-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.agreeToTerms}
                           </p>
                         )}
@@ -426,14 +478,16 @@ export default function SignUp() {
                           "w-full py-3 font-semibold text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200",
                           isSubmitting
                             ? "opacity-50 cursor-not-allowed"
-                            : "hover:opacity-90 active:transform active:scale-[0.98]"
+                            : "hover:opacity-90 active:transform active:scale-[0.98]",
                         )}
                         style={{
                           backgroundColor: beTokens.colors.gold,
                           borderRadius: beTokens.radii.button,
                         }}
                       >
-                        {isSubmitting ? "Creating Account..." : "Create Account"}
+                        {isSubmitting
+                          ? "Creating Account..."
+                          : "Create Account"}
                       </button>
                     </form>
 

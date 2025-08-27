@@ -29,19 +29,19 @@ export default function Login() {
   // Form validation
   const validate = () => {
     const e: Record<string, string> = {};
-    
+
     if (!email.trim()) {
       e.email = "Email is required";
     } else if (!isValidEmail(email)) {
       e.email = "Please enter a valid email address";
     }
-    
+
     if (!password.trim()) {
       e.password = "Password is required";
     } else if (password.length < 6) {
       e.password = "Password must be at least 6 characters";
     }
-    
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -49,27 +49,26 @@ export default function Login() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Success - show toast and reset form
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
         variant: "default",
       });
-      
+
       // Reset form
       setEmail("");
       setPassword("");
       setRememberMe(false);
-      
     } catch (error) {
       toast({
         title: "Login failed",
@@ -82,7 +81,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: beTokens.colors.background }}>
+    <div
+      className="min-h-screen"
+      style={{ background: beTokens.colors.background }}
+    >
       {/* Mobile: Add top margin for navbar */}
       <div className="pt-24 md:pt-16">
         <div className="flex">
@@ -95,7 +97,7 @@ export default function Login() {
           <main
             className={cn(
               "flex-1 transition-all duration-300 ease-in-out",
-              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"
+              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]",
             )}
           >
             {/* Mobile: Bottom padding for bottom nav */}
@@ -121,7 +123,11 @@ export default function Login() {
                     </div>
 
                     {/* Login Form */}
-                    <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                    <form
+                      onSubmit={handleSubmit}
+                      noValidate
+                      className="space-y-6"
+                    >
                       {/* Email Field */}
                       <div>
                         <label
@@ -143,15 +149,20 @@ export default function Login() {
                               "w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.email
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Enter your email"
                             aria-invalid={!!errors.email}
-                            aria-describedby={errors.email ? "email-error" : undefined}
+                            aria-describedby={
+                              errors.email ? "email-error" : undefined
+                            }
                           />
                         </div>
                         {errors.email && (
-                          <p id="email-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="email-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.email}
                           </p>
                         )}
@@ -178,17 +189,21 @@ export default function Login() {
                               "w-full pl-10 pr-12 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
                               errors.password
                                 ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]"
+                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
                             )}
                             placeholder="Enter your password"
                             aria-invalid={!!errors.password}
-                            aria-describedby={errors.password ? "password-error" : undefined}
+                            aria-describedby={
+                              errors.password ? "password-error" : undefined
+                            }
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#666666] hover:text-[#c59c46] transition-colors duration-200"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
                           >
                             {showPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -198,7 +213,10 @@ export default function Login() {
                           </button>
                         </div>
                         {errors.password && (
-                          <p id="password-error" className="mt-2 text-sm text-red-600">
+                          <p
+                            id="password-error"
+                            className="mt-2 text-sm text-red-600"
+                          >
                             {errors.password}
                           </p>
                         )}
@@ -214,9 +232,11 @@ export default function Login() {
                             className="w-4 h-4 border-gray-300 rounded focus:ring-[#c59c46] focus:ring-2"
                             style={{ accentColor: beTokens.colors.gold }}
                           />
-                          <span className="text-sm text-[#666666]">Remember me</span>
+                          <span className="text-sm text-[#666666]">
+                            Remember me
+                          </span>
                         </label>
-                        
+
                         <Link
                           to="/forgot-password"
                           className="text-sm hover:underline transition-colors duration-200"
@@ -234,7 +254,7 @@ export default function Login() {
                           "w-full py-3 font-semibold text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200",
                           isSubmitting
                             ? "opacity-50 cursor-not-allowed"
-                            : "hover:opacity-90 active:transform active:scale-[0.98]"
+                            : "hover:opacity-90 active:transform active:scale-[0.98]",
                         )}
                         style={{
                           backgroundColor: beTokens.colors.gold,

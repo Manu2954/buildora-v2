@@ -7,6 +7,7 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { useToast } from "@/hooks/use-toast";
 import { beTokens } from "@/lib/beTokens";
 import { cn } from "@/lib/utils";
+import { login } from "@/services/authService";
 
 export default function Login() {
   const { isCollapsed, toggle } = useSidebar();
@@ -55,13 +56,11 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await login(email, password, rememberMe);
 
-      // Success - show toast and reset form
       toast({
         title: "Welcome back!",
-        description: "You have successfully logged in.",
+        description: data.message,
         variant: "default",
       });
 
@@ -70,9 +69,13 @@ export default function Login() {
       setPassword("");
       setRememberMe(false);
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Invalid email or password. Please try again.";
       toast({
         title: "Login failed",
-        description: "Invalid email or password. Please try again.",
+        description: message,
         variant: "destructive",
       });
     } finally {

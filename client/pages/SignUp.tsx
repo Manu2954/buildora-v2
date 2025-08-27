@@ -7,6 +7,7 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { useToast } from "@/hooks/use-toast";
 import { beTokens } from "@/lib/beTokens";
 import { cn } from "@/lib/utils";
+import { signUp } from "@/services/authService";
 
 export default function SignUp() {
   const { isCollapsed, toggle } = useSidebar();
@@ -109,14 +110,11 @@ export default function SignUp() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const data = await signUp(fullName, email, mobile, password);
 
-      // Success - show toast and reset form
       toast({
         title: "Account created successfully!",
-        description:
-          "Welcome to Buildora! You can now sign in to your account.",
+        description: data.message,
         variant: "default",
       });
 
@@ -128,9 +126,13 @@ export default function SignUp() {
       setConfirmPassword("");
       setAgreeToTerms(false);
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.";
       toast({
         title: "Sign up failed",
-        description: "Something went wrong. Please try again.",
+        description: message,
         variant: "destructive",
       });
     } finally {

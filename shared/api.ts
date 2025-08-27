@@ -10,3 +10,11 @@
 export interface DemoResponse {
   message: string;
 }
+
+/**
+ * Placeholder response type for auth endpoints
+ */
+export interface AuthResponse {
+  message: string;
+  token?: string;
+}

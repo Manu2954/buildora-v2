@@ -39,6 +39,8 @@ function AppRoutes() {
         <Route path="/search" element={<Search />} />
         <Route path="/cta" element={<CTA />} />
         <Route path="/enterprise" element={<EnterpriseCTA />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

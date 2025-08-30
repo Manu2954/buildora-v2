@@ -224,13 +224,19 @@ export function Navbar() {
                 </div>
               ) : (
                 <div className="hidden sm:flex items-center space-x-3">
-                  <button className="text-sm font-medium text-[#333132] hover:text-[#c59c46] transition-colors duration-200 px-3 py-2 min-h-[44px]">
+                  <Link
+                    to="/login"
+                    className="text-sm font-medium text-[#333132] hover:text-[#c59c46] transition-colors duration-200 px-3 py-2 min-h-[44px] flex items-center"
+                  >
                     Sign In
-                  </button>
-                  <button className="text-sm font-medium bg-[#c59c46] text-white hover:bg-[#a17c36] transition-colors duration-200 px-4 py-2 rounded-lg min-h-[44px]">
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="text-sm font-medium bg-[#c59c46] text-white hover:bg-[#a17c36] transition-colors duration-200 px-4 py-2 rounded-lg min-h-[44px] flex items-center"
+                  >
                     <span className="hidden lg:inline">Create Account</span>
                     <span className="lg:hidden">Join</span>
-                  </button>
+                  </Link>
                 </div>
               )}
 
@@ -384,12 +390,18 @@ export function Navbar() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <button className="w-full bg-[#c59c46] text-white font-semibold py-4 rounded-xl hover:bg-[#a17c36] transition-all duration-300 min-h-[52px] active:scale-95">
+                  <Link
+                    to="/login"
+                    className="block w-full bg-[#c59c46] text-white font-semibold py-4 rounded-xl hover:bg-[#a17c36] transition-all duration-300 min-h-[52px] active:scale-95 text-center"
+                  >
                     Sign In
-                  </button>
-                  <button className="w-full border-2 border-[#c59c46] text-[#c59c46] font-semibold py-4 rounded-xl hover:bg-[#c59c46] hover:text-white transition-all duration-300 min-h-[52px] active:scale-95">
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="block w-full border-2 border-[#c59c46] text-[#c59c46] font-semibold py-4 rounded-xl hover:bg-[#c59c46] hover:text-white transition-all duration-300 min-h-[52px] active:scale-95 text-center"
+                  >
                     Create Account
-                  </button>
+                  </Link>
                 </div>
               )}
 

@@ -14,8 +14,6 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
-import CTA from "./pages/CTA";
-import EnterpriseCTA from "./pages/EnterpriseCTA";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,8 +33,6 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/cta" element={<CTA />} />
-        <Route path="/enterprise" element={<EnterpriseCTA />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

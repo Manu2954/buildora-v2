@@ -223,7 +223,7 @@ export default function Orders() {
                               </div>
                             </div>
                             <DialogFooter className="mt-4">
-                              <Button variant="outline">Cancel</Button>
+                              <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-[#D9D9D9] bg-white px-4 py-2 text-sm font-medium text-[#333132] hover:bg-[#f7f7f7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C69B4B]" data-state="close">Cancel</button>
                               <Button className="bg-[#C69B4B] hover:bg-[#B1873E] text-white" onClick={submitRequestProgress}>
                                 Submit Request
                               </Button>

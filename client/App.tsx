@@ -10,6 +10,7 @@ import { SidebarProvider } from "./contexts/SidebarContext";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -31,6 +32,7 @@ function AppRoutes() {
         <Route path="/" element={<Index />} />
         <Route path="/services" element={<Services />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/orders/:orderId" element={<OrderDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

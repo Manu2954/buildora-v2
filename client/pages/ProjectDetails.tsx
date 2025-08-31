@@ -267,37 +267,48 @@ export default function ProjectDetails() {
                 </div>
               </SectionCard>
 
-              {/* 4) Documentations */}
+              {/* 4) Work Permits / NOCs */}
               <SectionCard className="mt-8">
-                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Documentations</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="font-medium text-[#333132] mb-2">Work Permits / NOCs</h3>
-                    <ul className="space-y-2">
-                      {data.permits.map((f) => (
-                        <li key={f.name} className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132] break-words">{f.name}</span>
-                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
-                            <Download className="w-4 h-4" />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-[#333132] mb-2">Customer Approvals & Sign-offs</h3>
-                    <ul className="space-y-2">
-                      {data.signoffs.map((f) => (
-                        <li key={f.name} className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132] break-words">{f.name}</span>
-                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
-                            <Download className="w-4 h-4" />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Work Permits / NOCs</h2>
+                <ul className="divide-y divide-[#EFEFEF]">
+                  {data.permits.map((f) => (
+                    <li key={f.name}>
+                      <a
+                        href={f.url}
+                        aria-label={`Download ${f.name}`}
+                        className="flex items-start gap-3 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C69B4B] hover:bg-[#F9F9F9] min-h-[48px]"
+                      >
+                        <FileText className="w-5 h-5 text-[#C69B4B] mt-0.5 flex-shrink-0" />
+                        <span className="flex-1 whitespace-normal break-words text-[#666666]">
+                          <span className="block text-[#333132] font-medium leading-snug">{f.name}</span>
+                        </span>
+                        <Download className="w-4 h-4 text-[#C69B4B] flex-shrink-0" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </SectionCard>
+
+              {/* 4b) Customer Approvals & Sign-offs */}
+              <SectionCard className="mt-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Customer Approvals & Sign-offs</h2>
+                <ul className="divide-y divide-[#EFEFEF]">
+                  {data.signoffs.map((f) => (
+                    <li key={f.name}>
+                      <a
+                        href={f.url}
+                        aria-label={`Download ${f.name}`}
+                        className="flex items-start gap-3 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C69B4B] hover:bg-[#F9F9F9] min-h-[48px]"
+                      >
+                        <FileText className="w-5 h-5 text-[#C69B4B] mt-0.5 flex-shrink-0" />
+                        <span className="flex-1 whitespace-normal break-words text-[#666666]">
+                          <span className="block text-[#333132] font-medium leading-snug">{f.name}</span>
+                        </span>
+                        <Download className="w-4 h-4 text-[#C69B4B] flex-shrink-0" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </SectionCard>
 
               {/* 5) Financials */}

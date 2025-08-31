@@ -108,21 +108,8 @@ export default function Orders() {
 
               <div
                 className="relative mt-6 md:mt-8"
-                style={{
-                  backgroundImage:
-                    "url('data:image/svg+xml;utf8,\
-<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'>\
-<defs><pattern id=\'p\' width=\'80\' height=\'80\' patternUnits=\'userSpaceOnUse\'>\
-<g fill=\'none\' stroke=\'%23D9D9D9\' stroke-opacity=\'.35\' stroke-width=\'1\'>\
-<circle cx=\'20\' cy=\'20\' r=\'6\'/>\
-<rect x=\'50\' y=\'10\' width=\'14\' height=\'14\' rx=\'2\'/>\
-<path d=\'M10 60h20M20 50v20\'/>\
-</g></pattern></defs>\
-<rect width=\'100%\' height=\'100%\' fill=\'url(%23p)\'/>\
-</svg>')",
-                  backgroundSize: "auto",
-                }}
               >
+                <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.04)_1px,_transparent_1px)] [background-size:24px_24px]" />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filtered.map((item) => (
                     <OrderCard key={item.id} item={item} />

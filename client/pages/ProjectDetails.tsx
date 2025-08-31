@@ -334,7 +334,38 @@ export default function ProjectDetails() {
                       {overallMaterialStatus}
                     </Badge>
                   </div>
-                  <div className="overflow-x-auto">
+                  {/* Mobile list */}
+                  <ul className="md:hidden divide-y divide-[#EFEFEF]">
+                    {data.materials.map((m, idx) => (
+                      <li
+                        key={idx}
+                        className="py-3 flex items-start justify-between gap-4"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-[#333132]">
+                            {m.type}
+                          </div>
+                          <div className="text-xs text-[#666666]">
+                            {m.brand} · {m.qty}
+                          </div>
+                        </div>
+                        <Badge
+                          className={
+                            m.status === "Installed"
+                              ? "bg-[#16a34a] text-white border-none"
+                              : m.status === "Delivered"
+                                ? "bg-[#fde68a] text-[#333132] border-none"
+                                : "bg-[#F2F2F2] text-[#666666] border-none"
+                          }
+                        >
+                          {m.status}
+                        </Badge>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Desktop table */}
+                  <div className="hidden md:block overflow-x-auto">
                     <table className="min-w-full text-xs sm:text-sm">
                       <thead>
                         <tr className="text-left text-[#666666]">

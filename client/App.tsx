@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
+import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";

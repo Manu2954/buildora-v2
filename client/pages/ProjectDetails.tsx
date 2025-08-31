@@ -165,7 +165,7 @@ export default function ProjectDetails() {
           </div>
 
           <main className={`flex-1 transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}>
-            <div className="max-w-[960px] mx-auto px-4 md:px-6 lg:px-0 pb-24">
+            <div className="max-w-[960px] mx-auto px-4 md:px-6 lg:px-0 pb-40 sm:pb-32 md:pb-28">
               <header className="mt-2 mb-6 md:mb-8">
                 <h1 className="text-2xl md:text-3xl font-bold text-[#333132]">Project {data.id}</h1>
                 <p className="text-[#666666] mt-1">Detailed view of your interior project</p>
@@ -201,7 +201,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 2) Designs Selected */}
-              <SectionCard className="mt-8">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Designs Selected</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {data.designs.map((d) => (
@@ -225,7 +225,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 3) Materials */}
-              <SectionCard className="mt-8 relative overflow-hidden">
+              <SectionCard className="mt-5 md:mt-8 relative overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.04)_1px,_transparent_1px)] [background-size:20px_20px]" />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-4">
@@ -268,7 +268,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 4) Work Permits / NOCs */}
-              <SectionCard className="mt-8">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Work Permits / NOCs</h2>
                 <ul className="divide-y divide-[#EFEFEF]">
                   {data.permits.map((f) => (
@@ -290,7 +290,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 4b) Customer Approvals & Sign-offs */}
-              <SectionCard className="mt-6">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Customer Approvals & Sign-offs</h2>
                 <ul className="divide-y divide-[#EFEFEF]">
                   {data.signoffs.map((f) => (
@@ -312,7 +312,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 5) Financials */}
-              <SectionCard className="mt-8">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Financials</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
@@ -536,7 +536,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 6) Communication & Feedback */}
-              <SectionCard className="mt-8">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Communication & Feedback</h2>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-1 space-y-4">
@@ -586,7 +586,7 @@ export default function ProjectDetails() {
               </SectionCard>
 
               {/* 7) Project Closure */}
-              <SectionCard className="mt-8">
+              <SectionCard className="mt-5 md:mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Project Closure</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>

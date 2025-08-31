@@ -115,10 +115,36 @@ export default function ProjectDetails() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
+  const [fixDialog, setFixDialog] = useState<{ open: boolean; id: string | null; text: string }>({
+    open: false,
+    id: null,
+    text: "",
+  });
+  const [payDialog, setPayDialog] = useState<{ open: boolean; id: string | null }>({
+    open: false,
+    id: null,
+  });
+
   function onPayMilestone(id: string) {
     setMilestones((prev) => prev.map((m) => (m.id === id ? { ...m, status: "Paid" } : m)));
     const item = milestones.find((m) => m.id === id);
     toast.success(`${item?.label ?? "Milestone"} payment received!`);
+  }
+
+  function handleSubmitFix() {
+    if (!fixDialog.id) return;
+    setMilestones((prev) =>
+      prev.map((m) => (m.id === fixDialog.id ? { ...m, status: "Fix Requested", approved: false } : m)),
+    );
+    setFixDialog({ open: false, id: null, text: "" });
+    toast.success("Fix requested. Our team will review this.");
+  }
+
+  function handleProceedPayment() {
+    if (!payDialog.id) return;
+    const id = payDialog.id;
+    setPayDialog({ open: false, id: null });
+    onPayMilestone(id);
   }
 
   const overallMaterialStatus = useMemo(() => {
@@ -291,37 +317,158 @@ export default function ProjectDetails() {
 
                     <div className="mt-4 rounded-[24px] border border-[#D9D9D9] overflow-hidden shadow-sm">
                       <div className="px-4 py-3 bg-white border-b border-[#EFEFEF] font-semibold text-[#333132]">Payment Milestones</div>
-                      <ul className="bg-white">
-                        {milestones.map((m, i) => {
-                          const rowStatus = m.status === "Paid" ? "Paid" : m.approved ? "Awaiting Payment" : "Pending";
-                          return (
-                            <li key={m.id} className={`px-4 py-4 sm:py-3 border-t border-[#EFEFEF] ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
-                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                <div className="min-w-0">
-                                  <p className="text-[#333132] font-medium leading-snug">{m.label}</p>
-                                  <p className="text-[#666666] text-sm">₹ {m.amount.toLocaleString()}</p>
-                                  <span className={`inline-flex mt-1 text-xs px-2 py-0.5 rounded-full border ${rowStatus === "Paid" ? "bg-[#16a34a] text-white border-[#16a34a]" : rowStatus === "Awaiting Payment" ? "bg-[#FFF7E8] text-[#B1873E] border-[#F0D8A8]" : "bg-[#F2F2F2] text-[#666666] border-[#E6E6E6]"}`}>
-                                    {rowStatus}
-                                  </span>
+                      <div className="md:hidden">
+                        <ul className="bg-white">
+                          {milestones.map((m, i) => {
+                            const rowStatus =
+                              m.status === "Paid"
+                                ? "Paid"
+                                : m.status === "Fix Requested"
+                                ? "Fix Requested"
+                                : m.approved
+                                ? "Ready for Approval"
+                                : "Pending";
+                            return (
+                              <li
+                                key={m.id}
+                                className={`px-4 py-4 sm:py-3 border-t border-[#EFEFEF] ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}
+                              >
+                                <div className="flex flex-col gap-3">
+                                  <div className="min-w-0">
+                                    <p className="text-[#333132] font-medium leading-snug">{m.label}</p>
+                                    <p className="text-[#666666] text-sm">₹ {m.amount.toLocaleString()}</p>
+                                    <span
+                                      className={`inline-flex mt-1 text-xs px-2 py-0.5 rounded-full border ${
+                                        rowStatus === "Paid"
+                                          ? "bg-[#16a34a] text-white border-[#16a34a]"
+                                          : rowStatus === "Ready for Approval"
+                                          ? "bg-[#FFF7E8] text-[#B1873E] border-[#F0D8A8]"
+                                          : rowStatus === "Fix Requested"
+                                          ? "bg-[#F2F2F2] text-[#666666] border-[#E6E6E6]"
+                                          : "bg-[#F2F2F2] text-[#666666] border-[#E6E6E6]"
+                                      }`}
+                                    >
+                                      {rowStatus}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    {rowStatus === "Ready for Approval" ? (
+                                      <div className="flex flex-col gap-2">
+                                        <Button
+                                          variant="outline"
+                                          className="rounded-xl border-[#D9D9D9] text-[#666666] hover:bg-[#F9F9F9] focus-visible:ring-[#C69B4B]"
+                                          aria-label={`Request fix for ${m.label}`}
+                                          onClick={() => setFixDialog({ open: true, id: m.id, text: "" })}
+                                        >
+                                          Request Fix
+                                        </Button>
+                                        <Button
+                                          className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] focus-visible:ring-[#C69B4B]"
+                                          aria-label={`Approve and pay for ${m.label}`}
+                                          onClick={() => setPayDialog({ open: true, id: m.id })}
+                                        >
+                                          Approve &amp; Pay
+                                        </Button>
+                                      </div>
+                                    ) : rowStatus === "Paid" ? (
+                                      <Badge className="bg-[#16a34a] text-white border-none">Paid</Badge>
+                                    ) : rowStatus === "Fix Requested" ? (
+                                      <Badge className="bg-[#F2F2F2] text-[#666666] border-none">Fix Requested</Badge>
+                                    ) : (
+                                      <Button
+                                        className="rounded-xl bg-[#F2F2F2] text-[#666666] hover:bg-[#EDEDED]"
+                                        aria-label={`${m.label} awaiting approval`}
+                                        disabled
+                                      >
+                                        Awaiting Approval
+                                      </Button>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="sm:text-right">
-                                  {rowStatus === "Awaiting Payment" ? (
-                                    <Button className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] w-full sm:w-auto" aria-label={`Pay now for ${m.label}`} onClick={() => onPayMilestone(m.id)}>
-                                      Pay Now
-                                    </Button>
-                                  ) : rowStatus === "Paid" ? (
-                                    <Badge className="bg-[#16a34a] text-white border-none">Paid</Badge>
-                                  ) : (
-                                    <Button className="rounded-xl bg-[#F2F2F2] text-[#666666] hover:bg-[#EDEDED] w-full sm:w-auto" aria-label={`${m.label} awaiting approval`} disabled>
-                                      Awaiting Approval
-                                    </Button>
-                                  )}
-                                </div>
-                              </div>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+
+                      <div className="hidden md:block overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                          <thead>
+                            <tr className="text-left text-[#666666]">
+                              <th className="py-3 px-4">Milestone</th>
+                              <th className="py-3 px-4">Amount</th>
+                              <th className="py-3 px-4">Status</th>
+                              <th className="py-3 px-4 text-right">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {milestones.map((m, i) => {
+                              const rowStatus =
+                                m.status === "Paid"
+                                  ? "Paid"
+                                  : m.status === "Fix Requested"
+                                  ? "Fix Requested"
+                                  : m.approved
+                                  ? "Ready for Approval"
+                                  : "Pending";
+                              return (
+                                <tr key={m.id} className={`bg-white border-t border-[#EFEFEF] ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
+                                  <td className="py-3 px-4 text-[#333132]">{m.label}</td>
+                                  <td className="py-3 px-4 text-[#333132]">₹ {m.amount.toLocaleString()}</td>
+                                  <td className="py-3 px-4">
+                                    <Badge
+                                      className={
+                                        rowStatus === "Paid"
+                                          ? "bg-[#16a34a] text-white border-none"
+                                          : rowStatus === "Ready for Approval"
+                                          ? "bg-[#FFF7E8] text-[#B1873E] border-[#F0D8A8]"
+                                          : "bg-[#F2F2F2] text-[#666666] border-none"
+                                      }
+                                    >
+                                      {rowStatus}
+                                    </Badge>
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    <div className="flex justify-end gap-2">
+                                      {rowStatus === "Ready for Approval" ? (
+                                        <>
+                                          <Button
+                                            variant="outline"
+                                            className="rounded-xl border-[#D9D9D9] text-[#666666] hover:bg-[#F9F9F9] focus-visible:ring-[#C69B4B]"
+                                            aria-label={`Request fix for ${m.label}`}
+                                            onClick={() => setFixDialog({ open: true, id: m.id, text: "" })}
+                                          >
+                                            Request Fix
+                                          </Button>
+                                          <Button
+                                            className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] focus-visible:ring-[#C69B4B]"
+                                            aria-label={`Approve and pay for ${m.label}`}
+                                            onClick={() => setPayDialog({ open: true, id: m.id })}
+                                          >
+                                            Approve &amp; Pay
+                                          </Button>
+                                        </>
+                                      ) : rowStatus === "Paid" ? (
+                                        <Badge className="bg-[#16a34a] text-white border-none">Paid</Badge>
+                                      ) : rowStatus === "Fix Requested" ? (
+                                        <Badge className="bg-[#F2F2F2] text-[#666666] border-none">Fix Requested</Badge>
+                                      ) : (
+                                        <Button
+                                          className="rounded-xl bg-[#F2F2F2] text-[#666666] hover:bg-[#EDEDED]"
+                                          aria-label={`${m.label} awaiting approval`}
+                                          disabled
+                                        >
+                                          Awaiting Approval
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
                       <div className="p-4 bg-white">
                         <Progress value={progress} />
                         <div className="mt-2 text-sm text-[#666666]">
@@ -482,6 +629,70 @@ export default function ProjectDetails() {
                   </p>
                 </div>
               </SectionCard>
+
+              {/* Modals */}
+              <Dialog open={fixDialog.open} onOpenChange={(open) => setFixDialog((s) => ({ ...s, open }))}>
+                <DialogContent className="sm:rounded-2xl">
+                  <DialogTitle className="text-[#333132]">
+                    {`Request Fix for ${milestones.find((m) => m.id === fixDialog.id)?.label ?? "Milestone"}`}
+                  </DialogTitle>
+                  <div>
+                    <Textarea
+                      value={fixDialog.text}
+                      onChange={(e) => setFixDialog((s) => ({ ...s, text: e.target.value }))}
+                      placeholder="Describe the issue…"
+                      aria-label="Describe the issue"
+                      className="rounded-xl"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      className="rounded-xl border-[#D9D9D9] text-[#666666] hover:bg-[#F9F9F9] focus-visible:ring-[#C69B4B]"
+                      onClick={() => setFixDialog({ open: false, id: null, text: "" })}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] focus-visible:ring-[#C69B4B]"
+                      onClick={handleSubmitFix}
+                    >
+                      Submit Request
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={payDialog.open} onOpenChange={(open) => setPayDialog((s) => ({ ...s, open }))}>
+                <DialogContent className="sm:rounded-2xl">
+                  <DialogTitle className="text-[#333132]">Payment Summary</DialogTitle>
+                  <div className="text-sm text-[#333132]">
+                    <div className="flex items-center justify-between py-1">
+                      <span>Milestone</span>
+                      <span>{milestones.find((m) => m.id === payDialog.id)?.label ?? "-"}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <span>Amount</span>
+                      <span>₹ {milestones.find((m) => m.id === payDialog.id)?.amount.toLocaleString() ?? "-"}</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      className="rounded-xl border-[#D9D9D9] text-[#666666] hover:bg-[#F9F9F9] focus-visible:ring-[#C69B4B]"
+                      onClick={() => setPayDialog({ open: false, id: null })}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] focus-visible:ring-[#C69B4B]"
+                      onClick={handleProceedPayment}
+                    >
+                      Proceed to Payment
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               <div className="mt-10">
                 <Footer />

@@ -140,7 +140,7 @@ export default function ProjectDetails() {
                 <div className="flex flex-col md:flex-row gap-6 items-start">
                   <div className="flex-1">
                     <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Project Overview</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                       <Field label="Project ID" value={data.id} />
                       <Field label="Project Type" value={data.type} />
                       <Field label="Start Date" value={data.startDate} />
@@ -162,12 +162,12 @@ export default function ProjectDetails() {
               {/* 2) Designs Selected */}
               <SectionCard className="mt-8">
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Designs Selected</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {data.designs.map((d) => (
                     <Dialog key={d.url}>
                       <DialogTrigger asChild>
                         <button className="group relative rounded-2xl overflow-hidden border border-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-[#C69B4B]">
-                          <img src={d.url} alt={d.title} loading="lazy" className="w-full h-36 sm:h-44 object-cover" />
+                          <img src={d.url} alt={d.title} loading="lazy" className="w-full h-40 sm:h-48 md:h-56 object-cover" />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                           <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-xs sm:text-sm">
                             {d.title}
@@ -192,22 +192,22 @@ export default function ProjectDetails() {
                     <Badge className="rounded-full bg-[#F2F2F2] text-[#333132] border-none">{overallMaterialStatus}</Badge>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
+                    <table className="min-w-full text-xs sm:text-sm">
                       <thead>
                         <tr className="text-left text-[#666666]">
-                          <th className="py-3 px-3">Material Type</th>
-                          <th className="py-3 px-3">Brand/Model</th>
-                          <th className="py-3 px-3">Quantity</th>
-                          <th className="py-3 px-3">Status</th>
+                          <th className="py-2 px-2 sm:py-3 sm:px-3">Material Type</th>
+                          <th className="py-2 px-2 sm:py-3 sm:px-3">Brand/Model</th>
+                          <th className="py-2 px-2 sm:py-3 sm:px-3">Quantity</th>
+                          <th className="py-2 px-2 sm:py-3 sm:px-3">Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {data.materials.map((m, idx) => (
                           <tr key={idx} className="bg-white border-t border-[#EFEFEF]">
-                            <td className="py-3 px-3 text-[#333132]">{m.type}</td>
-                            <td className="py-3 px-3 text-[#333132]">{m.brand}</td>
-                            <td className="py-3 px-3 text-[#333132]">{m.qty}</td>
-                            <td className="py-3 px-3">
+                            <td className="py-2 px-2 sm:py-3 sm:px-3 text-[#333132]">{m.type}</td>
+                            <td className="py-2 px-2 sm:py-3 sm:px-3 text-[#333132]">{m.brand}</td>
+                            <td className="py-2 px-2 sm:py-3 sm:px-3 text-[#333132]">{m.qty}</td>
+                            <td className="py-2 px-2 sm:py-3 sm:px-3">
                               <Badge className={
                                 m.status === "Installed"
                                   ? "bg-[#16a34a] text-white border-none"
@@ -234,8 +234,8 @@ export default function ProjectDetails() {
                     <h3 className="font-medium text-[#333132] mb-2">Work Permits / NOCs</h3>
                     <ul className="space-y-2">
                       {data.permits.map((f) => (
-                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132]">{f.name}</span>
+                        <li key={f.name} className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
+                          <span className="text-sm text-[#333132] break-words">{f.name}</span>
                           <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
                             <Download className="w-4 h-4" />
                           </a>
@@ -247,8 +247,8 @@ export default function ProjectDetails() {
                     <h3 className="font-medium text-[#333132] mb-2">Customer Approvals & Sign-offs</h3>
                     <ul className="space-y-2">
                       {data.signoffs.map((f) => (
-                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132]">{f.name}</span>
+                        <li key={f.name} className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
+                          <span className="text-sm text-[#333132] break-words">{f.name}</span>
                           <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
                             <Download className="w-4 h-4" />
                           </a>
@@ -264,10 +264,10 @@ export default function ProjectDetails() {
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Financials</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <div className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl p-3">
+                    <div className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl p-3">
                       <div className="flex items-center gap-3">
                         <FileText className="text-[#C69B4B]" />
-                        <span className="text-sm text-[#333132] font-medium">{data.quotationFile.name}</span>
+                        <span className="text-sm text-[#333132] font-medium break-words">{data.quotationFile.name}</span>
                       </div>
                       <a href={data.quotationFile.url} className="text-[#C69B4B] hover:text-[#B1873E] inline-flex items-center gap-2 font-medium">
                         <Download className="w-4 h-4" /> View
@@ -278,9 +278,9 @@ export default function ProjectDetails() {
                       <div className="px-4 py-3 bg-white border-b border-[#EFEFEF] font-medium text-[#333132]">Milestone Payments</div>
                       <ul className="divide-y divide-[#EFEFEF]">
                         {data.milestones.map((m) => (
-                          <li key={m.label} className="flex items-center justify-between px-4 py-3">
+                          <li key={m.label} className="flex items-start sm:items-center justify-between gap-3 px-4 py-3">
                             <div>
-                              <p className="text-[#333132] font-medium">{m.label}</p>
+                              <p className="text-[#333132] font-medium leading-snug">{m.label}</p>
                               <p className="text-[#666666] text-sm">₹ {m.amount.toLocaleString()}</p>
                             </div>
                             <Badge className={m.status === "Paid" ? "bg-[#16a34a] text-white border-none" : "bg-[#F2F2F2] text-[#666666] border-none"}>
@@ -310,8 +310,8 @@ export default function ProjectDetails() {
                         <p className="text-sm text-[#333132] font-medium mb-2">Invoices/Bills</p>
                         <div className="space-y-2">
                           {data.invoices.map((inv) => (
-                            <a key={inv.name} href={inv.url} className="flex items-center justify-between text-sm bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                              <span className="text-[#333132]">{inv.name}</span>
+                            <a key={inv.name} href={inv.url} className="flex items-start sm:items-center justify-between gap-3 text-sm bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
+                              <span className="text-[#333132] break-words">{inv.name}</span>
                               <Download className="w-4 h-4 text-[#C69B4B]" />
                             </a>
                           ))}

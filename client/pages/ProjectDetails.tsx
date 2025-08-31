@@ -469,9 +469,9 @@ export default function ProjectDetails() {
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl w-full bg-[#F9F9F9] border border-[#D9D9D9] p-3 md:p-4">
-      <div className="text-xs text-[#666666] mb-1">{label}</div>
-      <div className="text-[#333132] font-medium break-words leading-snug">{value}</div>
+    <div className="rounded-xl w-full bg-[#F9F9F9] border border-[#D9D9D9] p-3 md:p-4" role="group" aria-label={label}>
+      <dt className="text-xs text-[#666666] mb-1 font-semibold">{label}</dt>
+      <dd className="text-[#333132] break-words leading-snug">{value}</dd>
     </div>
   );
 }

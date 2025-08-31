@@ -265,7 +265,7 @@ export function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search designs, packages..."
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl bg-[#f8f8f8] text-[#333132] placeholder:text-[#666666] focus:outline-none focus:ring-2 focus:ring-[#c59c46] focus:border-transparent focus:bg-white transition-all duration-200 min-h-[48px] text-base"
+              className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-xl bg-[#f8f8f8] text-[#333132] placeholder:text-[#666666] focus:outline-none focus:ring-2 focus:ring-[#c59c46] focus:border-transparent focus:bg-white transition-all duration-200 min-h-[44px] text-base"
               aria-label="Search designs and packages"
             />
           </form>

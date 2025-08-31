@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
+import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
@@ -31,6 +32,7 @@ function AppRoutes() {
         <Route path="/" element={<Index />} />
         <Route path="/services" element={<Services />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/project/:id" element={<ProjectDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

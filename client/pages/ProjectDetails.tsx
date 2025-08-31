@@ -134,11 +134,11 @@ export default function ProjectDetails() {
                 <p className="text-[#666666] mt-1">Detailed view of your interior project</p>
               </header>
 
-              {/* Project Overview */}
+              {/* 1) Project Overview */}
               <SectionCard>
                 <div className="flex flex-col md:flex-row gap-6 items-start">
                   <div className="flex-1">
-                    <h2 className="text-xl font-semibold text-[#333132] mb-4">Project Overview</h2>
+                    <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Project Overview</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <Field label="Project ID" value={data.id} />
                       <Field label="Project Type" value={data.type} />
@@ -165,9 +165,109 @@ export default function ProjectDetails() {
                 </div>
               </SectionCard>
 
-              {/* Financials */}
+              {/* 2) Designs Selected */}
               <SectionCard className="mt-8">
-                <h2 className="text-xl font-semibold text-[#333132] mb-4">Financials</h2>
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Designs Selected</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
+                  {data.designs.map((d) => (
+                    <Dialog key={d.url}>
+                      <DialogTrigger asChild>
+                        <button className="group relative rounded-2xl overflow-hidden border border-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-[#C69B4B]">
+                          <img src={d.url} alt={d.title} loading="lazy" className="w-full h-36 sm:h-44 object-cover" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                          <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-xs sm:text-sm">
+                            {d.title}
+                          </div>
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-3xl">
+                        <DialogTitle className="sr-only">{d.title}</DialogTitle>
+                        <img src={d.url} alt={d.title} className="w-full h-auto rounded-lg" />
+                      </DialogContent>
+                    </Dialog>
+                  ))}
+                </div>
+              </SectionCard>
+
+              {/* 3) Materials */}
+              <SectionCard className="mt-8 relative overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.04)_1px,_transparent_1px)] [background-size:20px_20px]" />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl md:text-2xl font-semibold text-[#333132]">Materials</h2>
+                    <Badge className="rounded-full bg-[#F2F2F2] text-[#333132] border-none">{overallMaterialStatus}</Badge>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-[#666666]">
+                          <th className="py-3 px-3">Material Type</th>
+                          <th className="py-3 px-3">Brand/Model</th>
+                          <th className="py-3 px-3">Quantity</th>
+                          <th className="py-3 px-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.materials.map((m, idx) => (
+                          <tr key={idx} className="bg-white border-t border-[#EFEFEF]">
+                            <td className="py-3 px-3 text-[#333132]">{m.type}</td>
+                            <td className="py-3 px-3 text-[#333132]">{m.brand}</td>
+                            <td className="py-3 px-3 text-[#333132]">{m.qty}</td>
+                            <td className="py-3 px-3">
+                              <Badge className={
+                                m.status === "Installed"
+                                  ? "bg-[#16a34a] text-white border-none"
+                                  : m.status === "Delivered"
+                                  ? "bg-[#fde68a] text-[#333132] border-none"
+                                  : "bg-[#F2F2F2] text-[#666666] border-none"
+                              }>
+                                {m.status}
+                              </Badge>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </SectionCard>
+
+              {/* 4) Documentations */}
+              <SectionCard className="mt-8">
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Documentations</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium text-[#333132] mb-2">Work Permits / NOCs</h3>
+                    <ul className="space-y-2">
+                      {data.permits.map((f) => (
+                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
+                          <span className="text-sm text-[#333132]">{f.name}</span>
+                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
+                            <Download className="w-4 h-4" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-[#333132] mb-2">Customer Approvals & Sign-offs</h3>
+                    <ul className="space-y-2">
+                      {data.signoffs.map((f) => (
+                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
+                          <span className="text-sm text-[#333132]">{f.name}</span>
+                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
+                            <Download className="w-4 h-4" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </SectionCard>
+
+              {/* 5) Financials */}
+              <SectionCard className="mt-8">
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Financials</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
                     <div className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl p-3">
@@ -245,76 +345,9 @@ export default function ProjectDetails() {
                 </div>
               </SectionCard>
 
-              {/* Design Selections */}
+              {/* 6) Communication & Feedback */}
               <SectionCard className="mt-8">
-                <h2 className="text-xl font-semibold text-[#333132] mb-4">Design Selections</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {data.designs.map((d) => (
-                    <Dialog key={d.url}>
-                      <DialogTrigger asChild>
-                        <button className="group relative rounded-2xl overflow-hidden border border-[#D9D9D9]">
-                          <img src={d.url} alt={d.title} loading="lazy" className="w-full h-44 object-cover" />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                          <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-sm">
-                            {d.title}
-                          </div>
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-3xl">
-                        <DialogTitle className="sr-only">{d.title}</DialogTitle>
-                        <img src={d.url} alt={d.title} className="w-full h-auto rounded-lg" />
-                      </DialogContent>
-                    </Dialog>
-                  ))}
-                </div>
-              </SectionCard>
-
-              {/* Materials & Products */}
-              <SectionCard className="mt-8 relative overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.04)_1px,_transparent_1px)] [background-size:20px_20px]" />
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-[#333132]">Materials & Products</h2>
-                    <Badge className="rounded-full bg-[#F2F2F2] text-[#333132] border-none">{overallMaterialStatus}</Badge>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
-                      <thead>
-                        <tr className="text-left text-[#666666]">
-                          <th className="py-3 px-3">Material Type</th>
-                          <th className="py-3 px-3">Brand/Model</th>
-                          <th className="py-3 px-3">Quantity</th>
-                          <th className="py-3 px-3">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.materials.map((m, idx) => (
-                          <tr key={idx} className="bg-white border-t border-[#EFEFEF]">
-                            <td className="py-3 px-3 text-[#333132]">{m.type}</td>
-                            <td className="py-3 px-3 text-[#333132]">{m.brand}</td>
-                            <td className="py-3 px-3 text-[#333132]">{m.qty}</td>
-                            <td className="py-3 px-3">
-                              <Badge className={
-                                m.status === "Installed"
-                                  ? "bg-[#16a34a] text-white border-none"
-                                  : m.status === "Delivered"
-                                  ? "bg-[#fde68a] text-[#333132] border-none"
-                                  : "bg-[#F2F2F2] text-[#666666] border-none"
-                              }>
-                                {m.status}
-                              </Badge>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </SectionCard>
-
-              {/* Communication & Feedback */}
-              <SectionCard className="mt-8">
-                <h2 className="text-xl font-semibold text-[#333132] mb-4">Communication & Feedback</h2>
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Communication & Feedback</h2>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-1 space-y-4">
                     <Button className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] w-full sm:w-auto">Request Progress</Button>
@@ -325,7 +358,7 @@ export default function ProjectDetails() {
                         {data.worksiteMedia.map((m, i) => (
                           <Dialog key={i}>
                             <DialogTrigger asChild>
-                              <button className="rounded-xl overflow-hidden border border-[#D9D9D9]">
+                              <button className="rounded-xl overflow-hidden border border-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-[#C69B4B]">
                                 <img src={m} alt={`Worksite media ${i + 1}`} loading="lazy" className="w-full h-28 object-cover" />
                               </button>
                             </DialogTrigger>
@@ -362,42 +395,9 @@ export default function ProjectDetails() {
                 </div>
               </SectionCard>
 
-              {/* Compliance & Documentation */}
+              {/* 7) Project Closure */}
               <SectionCard className="mt-8">
-                <h2 className="text-xl font-semibold text-[#333132] mb-4">Compliance & Documentation</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="font-medium text-[#333132] mb-2">Work Permits / NOCs</h3>
-                    <ul className="space-y-2">
-                      {data.permits.map((f) => (
-                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132]">{f.name}</span>
-                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
-                            <Download className="w-4 h-4" />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-[#333132] mb-2">Customer Approvals & Sign-offs</h3>
-                    <ul className="space-y-2">
-                      {data.signoffs.map((f) => (
-                        <li key={f.name} className="flex items-center justify-between bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                          <span className="text-sm text-[#333132]">{f.name}</span>
-                          <a href={f.url} className="text-[#C69B4B] hover:text-[#B1873E]" aria-label={`Download ${f.name}`}>
-                            <Download className="w-4 h-4" />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </SectionCard>
-
-              {/* Project Closure */}
-              <SectionCard className="mt-8">
-                <h2 className="text-xl font-semibold text-[#333132] mb-4">Project Closure</h2>
+                <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Project Closure</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm font-medium text-[#333132] mb-2">Final Photos/Videos</p>
@@ -405,7 +405,7 @@ export default function ProjectDetails() {
                       {data.closure.finalMedia.map((m, i) => (
                         <Dialog key={i}>
                           <DialogTrigger asChild>
-                            <button className="rounded-xl overflow-hidden border border-[#D9D9D9]">
+                            <button className="rounded-xl overflow-hidden border border-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-[#C69B4B]">
                               <img src={m} alt={`Final media ${i + 1}`} loading="lazy" className="w-full h-28 object-cover" />
                             </button>
                           </DialogTrigger>

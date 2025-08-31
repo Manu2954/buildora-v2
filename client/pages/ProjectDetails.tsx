@@ -230,7 +230,7 @@ export default function ProjectDetails() {
           <main
             className={`flex-1 transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}
           >
-            <div className="max-w-[960px] mx-auto px-4 md:px-6 lg:px-0 pb-40 sm:pb-32 md:pb-28">
+            <div className="max-w-[960px] mx-auto px-0 sm:px-4 md:px-6 lg:px-0 pb-40 sm:pb-32 md:pb-28">
               <header className="mt-2 mb-6 md:mb-8">
                 <h1 className="text-2xl md:text-3xl font-bold text-[#333132]">
                   Project {data.id}

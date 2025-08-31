@@ -501,9 +501,14 @@ export default function ProjectDetails() {
                         <p className="text-sm text-[#333132] font-medium mb-2">Invoices/Bills</p>
                         <div className="space-y-2">
                           {data.invoices.map((inv) => (
-                            <a key={inv.name} href={inv.url} className="flex items-start sm:items-center justify-between gap-3 text-sm bg-[#F9F9F9] border border-[#D9D9D9] rounded-lg px-3 py-2">
-                              <span className="text-[#333132] break-words">{inv.name}</span>
-                              <Download className="w-4 h-4 text-[#C69B4B]" />
+                            <a
+                              key={inv.name}
+                              href={inv.url}
+                              aria-label={`Download ${inv.name}`}
+                              className="flex items-start justify-between gap-3 text-sm bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-[#C69B4B] min-h-[48px]"
+                            >
+                              <span className="text-[#666666] whitespace-normal break-words mr-2">{inv.name}</span>
+                              <Download className="w-4 h-4 text-[#C69B4B] flex-shrink-0" />
                             </a>
                           ))}
                         </div>

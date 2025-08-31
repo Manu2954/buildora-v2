@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { RatingStars } from "@/components/orders/RatingStars";
+import { StatusStepper, type ProjectStatus } from "@/components/orders/StatusStepper";
 import { Download, FileText, UploadCloud } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";

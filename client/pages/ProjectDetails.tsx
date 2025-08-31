@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { RatingStars } from "@/components/orders/RatingStars";
 import { Download, FileText, UploadCloud } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -261,6 +261,7 @@ export default function ProjectDetails() {
                         </button>
                       </DialogTrigger>
                       <DialogContent className="max-w-3xl">
+                        <DialogTitle className="sr-only">{d.title}</DialogTitle>
                         <img src={d.url} alt={d.title} className="w-full h-auto rounded-lg" />
                       </DialogContent>
                     </Dialog>
@@ -329,6 +330,7 @@ export default function ProjectDetails() {
                               </button>
                             </DialogTrigger>
                             <DialogContent className="max-w-3xl">
+                              <DialogTitle className="sr-only">Worksite media {i + 1}</DialogTitle>
                               <img src={m} alt={`Worksite media ${i + 1}`} className="w-full h-auto rounded-lg" />
                             </DialogContent>
                           </Dialog>
@@ -408,6 +410,7 @@ export default function ProjectDetails() {
                             </button>
                           </DialogTrigger>
                           <DialogContent className="max-w-3xl">
+                            <DialogTitle className="sr-only">Final media {i + 1}</DialogTitle>
                             <img src={m} alt={`Final media ${i + 1}`} className="w-full h-auto rounded-lg" />
                           </DialogContent>
                         </Dialog>

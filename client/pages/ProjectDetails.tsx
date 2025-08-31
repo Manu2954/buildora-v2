@@ -148,7 +148,7 @@ export default function ProjectDetails() {
                       <Field label="Salesman in Charge" value={`${data.salesman.name} (${data.salesman.phone})`} />
                       <Field label="Designer/Architect" value={data.designer.name} />
                       <Field label="Carpenter/Contractor" value={data.contractor.name} />
-                      <div className="md:col-span-2">
+                      <div className="col-span-1 sm:col-span-2 lg:col-span-3">
                         <Field label="Site Location" value={data.address} />
                       </div>
                     </div>

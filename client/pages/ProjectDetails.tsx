@@ -140,7 +140,7 @@ export default function ProjectDetails() {
                 <div className="flex flex-col md:flex-row gap-6 items-start">
                   <div className="flex-1">
                     <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Project Overview</h2>
-                    <div className="grid [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))] gap-4 md:gap-5 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 text-sm">
                       <Field label="Project ID" value={data.id} />
                       <Field label="Project Type" value={data.type} />
                       <Field label="Start Date" value={data.startDate} />

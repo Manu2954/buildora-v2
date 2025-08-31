@@ -316,15 +316,15 @@ export default function ProjectDetails() {
                 <h2 className="text-xl md:text-2xl font-semibold text-[#333132] mb-4">Financials</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <div className="flex items-start sm:items-center justify-between gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl p-3">
-                      <div className="flex items-center gap-3">
-                        <FileText className="text-[#C69B4B]" />
-                        <span className="text-sm text-[#333132] font-medium break-words">{data.quotationFile.name}</span>
-                      </div>
-                      <a href={data.quotationFile.url} className="text-[#C69B4B] hover:text-[#B1873E] inline-flex items-center gap-2 font-medium">
-                        <Download className="w-4 h-4" /> View
-                      </a>
-                    </div>
+                    <a
+                      href={data.quotationFile.url}
+                      aria-label={`Open ${data.quotationFile.name}`}
+                      className="group flex items-start gap-3 bg-[#F9F9F9] border border-[#D9D9D9] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#C69B4B] min-h-[48px]"
+                    >
+                      <FileText className="w-5 h-5 text-[#C69B4B] mt-0.5 flex-shrink-0" />
+                      <span className="flex-1 text-sm text-[#666666] whitespace-normal break-words">{data.quotationFile.name}</span>
+                      <Download className="w-4 h-4 text-[#C69B4B] flex-shrink-0" />
+                    </a>
 
                     <div className="mt-4 rounded-[24px] border border-[#D9D9D9] overflow-hidden shadow-sm">
                       <div className="px-4 py-3 bg-white border-b border-[#EFEFEF] font-semibold text-[#333132]">Payment Milestones</div>

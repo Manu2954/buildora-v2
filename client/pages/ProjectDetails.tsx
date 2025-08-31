@@ -270,8 +270,7 @@ export default function ProjectDetails() {
 
               {/* Materials & Products */}
               <SectionCard className="mt-8 relative overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none opacity-[0.06]" style={{ backgroundImage: "url('data:image/svg+xml;utf8,\\
-<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><defs><pattern id=\\'tex\\' width=\\'40\\' height=\\'40\\' patternUnits=\\'userSpaceOnUse\\'><path d=\\'M0 20h40M20 0v40\\' stroke=\\'%23333132\\' stroke-width=\\'1\\' /></pattern></defs><rect width=\\'100%\\' height=\\'100%\\' fill=\\'url(%23tex)\\' /></svg>')" }} />
+                <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.04)_1px,_transparent_1px)] [background-size:20px_20px]" />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-[#333132]">Materials & Products</h2>

@@ -148,21 +148,14 @@ export default function ProjectDetails() {
                       <Field label="Salesman in Charge" value={`${data.salesman.name} (${data.salesman.phone})`} />
                       <Field label="Designer/Architect" value={data.designer.name} />
                       <Field label="Carpenter/Contractor" value={data.contractor.name} />
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#666666]">Current Status</span>
-                        <Badge className="rounded-full">{data.status}</Badge>
-                      </div>
                       <div className="md:col-span-2">
                         <Field label="Site Location" value={data.address} />
                       </div>
                     </div>
+                    <div className="mt-4">
+                      <StatusStepper status={data.status as ProjectStatus} />
+                    </div>
                   </div>
-                  <img
-                    src={data.sitePhoto}
-                    alt="Project site preview"
-                    loading="lazy"
-                    className="w-full md:w-72 h-44 md:h-48 object-cover rounded-2xl border border-[#D9D9D9] shadow-md"
-                  />
                 </div>
               </SectionCard>
 

@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/
 import { RatingStars } from "@/components/orders/RatingStars";
 import { StatusStepper, type ProjectStatus } from "@/components/orders/StatusStepper";
 import { Download, FileText, UploadCloud } from "lucide-react";
+import { toast } from "sonner";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -45,11 +46,11 @@ const sampleProject = {
     { name: "Invoice-2.pdf", url: "#" },
   ],
   milestones: [
-    { label: "Advance (20%)", amount: 200000, status: "Paid" },
-    { label: "Design Sign-off (20%)", amount: 200000, status: "Paid" },
-    { label: "Material Procurement (30%)", amount: 300000, status: "Pending" },
-    { label: "Execution (20%)", amount: 200000, status: "Pending" },
-    { label: "Handover (10%)", amount: 100000, status: "Pending" },
+    { label: "Advance (20%)", amount: 200000, status: "Paid", approved: true },
+    { label: "Design Sign-off (20%)", amount: 200000, status: "Paid", approved: true },
+    { label: "Material Procurement (30%)", amount: 300000, status: "Pending", approved: true },
+    { label: "Execution (20%)", amount: 200000, status: "Pending", approved: false },
+    { label: "Handover (10%)", amount: 100000, status: "Pending", approved: false },
   ],
   discounts: 25000,
   extras: 18000,
@@ -102,14 +103,23 @@ export default function ProjectDetails() {
 
   const data = useMemo(() => ({ ...sampleProject, id: projectId }), [projectId]);
 
-  const totalAmount = data.milestones.reduce((s, m) => s + m.amount, 0);
-  const paidAmount = data.milestones
+  const [milestones, setMilestones] = useState(() =>
+    data.milestones.map((m, i) => ({ id: `m${i + 1}`, ...m }))
+  );
+  const totalAmount = milestones.reduce((s, m) => s + m.amount, 0);
+  const paidAmount = milestones
     .filter((m) => m.status === "Paid")
     .reduce((s, m) => s + m.amount, 0);
   const progress = Math.round((paidAmount / totalAmount) * 100);
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+
+  function onPayMilestone(id: string) {
+    setMilestones((prev) => prev.map((m) => (m.id === id ? { ...m, status: "Paid" } : m)));
+    const item = milestones.find((m) => m.id === id);
+    toast.success(`${item?.label ?? "Milestone"} payment received!`);
+  }
 
   const overallMaterialStatus = useMemo(() => {
     const statuses = data.materials.map((m) => m.status);
@@ -279,20 +289,38 @@ export default function ProjectDetails() {
                       </a>
                     </div>
 
-                    <div className="mt-4 rounded-xl border border-[#D9D9D9] overflow-hidden">
-                      <div className="px-4 py-3 bg-white border-b border-[#EFEFEF] font-medium text-[#333132]">Milestone Payments</div>
-                      <ul className="divide-y divide-[#EFEFEF]">
-                        {data.milestones.map((m) => (
-                          <li key={m.label} className="flex items-start sm:items-center justify-between gap-3 px-4 py-3">
-                            <div>
-                              <p className="text-[#333132] font-medium leading-snug">{m.label}</p>
-                              <p className="text-[#666666] text-sm">₹ {m.amount.toLocaleString()}</p>
-                            </div>
-                            <Badge className={m.status === "Paid" ? "bg-[#16a34a] text-white border-none" : "bg-[#F2F2F2] text-[#666666] border-none"}>
-                              {m.status}
-                            </Badge>
-                          </li>
-                        ))}
+                    <div className="mt-4 rounded-[24px] border border-[#D9D9D9] overflow-hidden shadow-sm">
+                      <div className="px-4 py-3 bg-white border-b border-[#EFEFEF] font-semibold text-[#333132]">Payment Milestones</div>
+                      <ul className="bg-white">
+                        {milestones.map((m, i) => {
+                          const rowStatus = m.status === "Paid" ? "Paid" : m.approved ? "Awaiting Payment" : "Pending";
+                          return (
+                            <li key={m.id} className={`px-4 py-4 sm:py-3 border-t border-[#EFEFEF] ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div className="min-w-0">
+                                  <p className="text-[#333132] font-medium leading-snug">{m.label}</p>
+                                  <p className="text-[#666666] text-sm">₹ {m.amount.toLocaleString()}</p>
+                                  <span className={`inline-flex mt-1 text-xs px-2 py-0.5 rounded-full border ${rowStatus === "Paid" ? "bg-[#16a34a] text-white border-[#16a34a]" : rowStatus === "Awaiting Payment" ? "bg-[#FFF7E8] text-[#B1873E] border-[#F0D8A8]" : "bg-[#F2F2F2] text-[#666666] border-[#E6E6E6]"}`}>
+                                    {rowStatus}
+                                  </span>
+                                </div>
+                                <div className="sm:text-right">
+                                  {rowStatus === "Awaiting Payment" ? (
+                                    <Button className="rounded-xl bg-[#C69B4B] hover:bg-[#B1873E] w-full sm:w-auto" aria-label={`Pay now for ${m.label}`} onClick={() => onPayMilestone(m.id)}>
+                                      Pay Now
+                                    </Button>
+                                  ) : rowStatus === "Paid" ? (
+                                    <Badge className="bg-[#16a34a] text-white border-none">Paid</Badge>
+                                  ) : (
+                                    <Button className="rounded-xl bg-[#F2F2F2] text-[#666666] hover:bg-[#EDEDED] w-full sm:w-auto" aria-label={`${m.label} awaiting approval`} disabled>
+                                      Awaiting Approval
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </li>
+                          );
+                        })}
                       </ul>
                       <div className="p-4 bg-white">
                         <Progress value={progress} />

@@ -220,7 +220,7 @@ export default function ProjectDetails() {
   }, [data.materials]);
 
   return (
-    <div className="min-h-screen bg-[#E8E8E8]">
+    <div className="min-h-screen bg-[#E8E8E8] overflow-x-hidden">
       <div className="pt-24 md:pt-16">
         <div className="flex">
           <div className="hidden xl:block">

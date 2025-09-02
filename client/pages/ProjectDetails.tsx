@@ -221,14 +221,15 @@ export default function ProjectDetails() {
 
   return (
     <div className="min-h-screen bg-[#E8E8E8]">
-      <div className="pt-24 md:pt-16">
+      {/* Extra top padding on mobile to clear fixed navbar + search */}
+      <div className="pt-40 sm:pt-32 md:pt-16">
         <div className="flex">
           <div className="hidden xl:block">
             <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
           </div>
 
           <main
-            className={`flex-1 transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}
+            className={`flex-1  overflow-x-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "xl:ml-16" : "xl:ml-[220px]"}`}
           >
             <div className="max-w-[960px] mx-auto px-0 sm:px-4 md:px-6 lg:px-0 pb-40 sm:pb-32 md:pb-28">
               <header className="mt-2 mb-6 md:mb-8">
@@ -269,7 +270,7 @@ export default function ProjectDetails() {
                       </div>
                     </dl>
                     <div
-                      className="mt-4 flex items-center gap-2"
+                      className="mt-4 flex flex-wrap items-center gap-2"
                       aria-label={`Current status ${data.status}`}
                     >
                       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#C69B4B]" />

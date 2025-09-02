@@ -33,7 +33,36 @@ export function StatusStepper({ status }: { status: ProjectStatus }) {
       <div className="flex items-center justify-between mb-3">
         <div className="text-xs text-[#666666] sm:order-2">Steps</div>
       </div>
-      <div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+      {/* Mobile: vertical list for better fit */}
+      <ol className="sm:hidden space-y-3">
+        {steps.map((s, i) => {
+          const active = i === idx && !isCancelled;
+          const past = i < idx && !isCancelled;
+          const circleBase = "grid place-items-center rounded-full h-9 w-9 border transition-colors duration-200 flex-shrink-0";
+          const circleClass = active
+            ? `${circleBase} bg-[#C69B4B] border-[#C69B4B] text-white`
+            : past
+            ? `${circleBase} bg-[#F7F0E4] border-[#C69B4B] text-[#C69B4B]`
+            : `${circleBase} bg-white border-[#D9D9D9] text-[#666666]`;
+          const labelClass = active
+            ? "text-xs font-semibold text-[#C69B4B]"
+            : "text-xs text-[#666666]";
+          return (
+            <li key={s} className="flex items-center gap-3">
+              <button
+                type="button"
+                className={`${circleClass} min-h-[36px] min-w-[36px]`}
+                aria-label={`Step ${i + 1}: ${s}`}
+              >
+                <span className="text-[12px] font-bold">{i + 1}</span>
+              </button>
+              <div className={labelClass}>{s}</div>
+            </li>
+          );
+        })}
+      </ol>
+      {/* Tablet/Desktop: horizontal stepper */}
+      <div className="hidden sm:block overflow-x-auto [-webkit-overflow-scrolling:touch]">
         <ol className="min-w-[520px] sm:min-w-0 grid grid-cols-5 gap-4 sm:gap-6">
           {steps.map((s, i) => {
             const active = i === idx && !isCancelled;

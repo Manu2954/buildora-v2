@@ -227,6 +227,16 @@ export default function CTA() {
     <div className="min-h-screen bg-[#e8e8e8]">
       <div className="pt-24 md:pt-16">
       <main className="min-h-screen flex flex-col pb-24 md:pb-0">
+              
+              {/* Banner Image */}
+              <div className="w-full h-32 md:h-48 lg:h-64 overflow-hidden">
+                <img
+                  src="/banner1.jpg"
+                  alt="Buildora Enterprise - Interior Design Project"
+                  className="w-full h-full object-cover"
+                  draggable="false"
+                />
+              </div>
 
               {/* Main Content */}
               <div className="flex-1 px-4 lg:px-8 py-8 lg:py-12">
@@ -237,17 +247,22 @@ export default function CTA() {
                     </div>
                   )}
                   
-                  {/* Page Header */}
+                  {/* Top Section - Branding */}
                   <div className="text-center mb-8 lg:mb-12">
-                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-medium text-[#333132] shadow-sm">
-                      Buildora Enterprise
-                    </span>
-                    <h1 className="mt-4 text-3xl md:text-4xl font-bold text-[#333132]">
-                      Project Inquiry
-                    </h1>
-                    <p className="mt-2 text-[#666666]">
-                      Share your requirements and location. We'll connect you with the right expert.
-                    </p>
+                    <div className="flex items-center justify-center space-x-4 mb-6">
+                      {/* Company Icon */}
+                      <img
+                        src="/buildora-icon.png"
+                        alt="Company icon"
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
+                      />
+                      {/* Company Name Image */}
+                      <img
+                        src="/buildora-icon-v1.jpeg"
+                        alt="Company name"
+                        className="h-8 md:h-10 object-contain"
+                      />
+                    </div>
                   </div>
 
                   {/* Desktop Layout: Two Columns */}

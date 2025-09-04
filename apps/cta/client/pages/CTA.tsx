@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
 import {
   CheckCircle,
   Shield,
@@ -66,6 +65,7 @@ export default function CTA() {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -104,12 +104,59 @@ export default function CTA() {
     }
 
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setSubmitError(null);
+
+    try {
+      const base = import.meta.env.VITE_API_BASE_URL as string | undefined;
+      const apiBase = (base && base.trim().length > 0) ? base : "";
+
+      const requirementSummary = (() => {
+        const baseReq = formData.requirements.join(", ");
+        const other = formData.otherRequirement?.trim() ? ` (Other: ${formData.otherRequirement.trim()})` : "";
+        return `${baseReq}${other}`;
+      })();
+
+      // Map to backend schema (now stores location, requirement, consent separately)
+      const payload = {
+        name: formData.fullName,
+        phone: formData.mobileNumber,
+        location: formData.location,
+        requirement: requirementSummary,
+        consent: formData.consent,
+        // Optional context
+        message: undefined as string | undefined,
+        page: window.location.href,
+        source: "cta-landing",
+        variant: "default",
+      };
+
+      const res = await fetch(`${apiBase}/api/cta/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        throw new Error(err?.message || `Request failed with ${res.status}`);
+      }
+
+      // Success
       setIsSubmitted(true);
+      setFormData({
+        fullName: "",
+        mobileNumber: "",
+        location: "",
+        requirements: [],
+        otherRequirement: "",
+        consent: false,
+      });
+      setErrors({});
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const handleRequirementChange = (requirement: string, checked: boolean) => {
@@ -171,7 +218,7 @@ export default function CTA() {
             <Footer />
           </main>
         </div>
-        <MobileBottomNav />
+        {/* <MobileBottomNav /> */}
       </div>
     );
   }
@@ -180,37 +227,27 @@ export default function CTA() {
     <div className="min-h-screen bg-[#e8e8e8]">
       <div className="pt-24 md:pt-16">
       <main className="min-h-screen flex flex-col pb-24 md:pb-0">
-              
-              {/* Banner Image */}
-              <div className="w-full h-32 md:h-48 lg:h-64 overflow-hidden">
-                <img
-                  src="/placeholder.svg"
-                  alt="Buildora Enterprise - Interior Design Project"
-                  className="w-full h-full object-cover"
-                  draggable="false"
-                />
-              </div>
 
               {/* Main Content */}
               <div className="flex-1 px-4 lg:px-8 py-8 lg:py-12">
                 <div className="max-w-7xl mx-auto">
-                  
-                  {/* Top Section - Branding */}
-                  <div className="text-center mb-8 lg:mb-12">
-                    <div className="flex items-center justify-center space-x-4 mb-6">
-                      {/* Company Icon */}
-                      <img
-                        src="/logo-icon-placeholder.svg"
-                        alt="Company icon"
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
-                      />
-                      {/* Company Name Image */}
-                      <img
-                        src="/logo-name-placeholder.svg"
-                        alt="Company name"
-                        className="h-8 md:h-10 object-contain"
-                      />
+                  {submitError && (
+                    <div className="mb-4 p-3 rounded-md bg-red-50 text-red-700 border border-red-200">
+                      {submitError}
                     </div>
+                  )}
+                  
+                  {/* Page Header */}
+                  <div className="text-center mb-8 lg:mb-12">
+                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-medium text-[#333132] shadow-sm">
+                      Buildora Enterprise
+                    </span>
+                    <h1 className="mt-4 text-3xl md:text-4xl font-bold text-[#333132]">
+                      Project Inquiry
+                    </h1>
+                    <p className="mt-2 text-[#666666]">
+                      Share your requirements and location. We'll connect you with the right expert.
+                    </p>
                   </div>
 
                   {/* Desktop Layout: Two Columns */}
@@ -221,7 +258,7 @@ export default function CTA() {
                       {/* Hero Headlines */}
                       <div className="text-center lg:text-left">
                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#333132] mb-4 leading-tight">
-                          Sourcing made simple. Building made easy!
+                          Sourcing made simple. Building made easy.
                         </h2>
                         <p className="text-lg md:text-xl text-[#666666] leading-relaxed">
                           From modular kitchens to full interiors — the right expert is just a form away.
@@ -390,7 +427,7 @@ export default function CTA() {
               <Footer />
           </main>
         </div>
-      <MobileBottomNav />
+      {/* Mobile bottom navigation removed for CTA page */}
     </div>
   );
 }

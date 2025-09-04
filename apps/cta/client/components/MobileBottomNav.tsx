@@ -37,6 +37,10 @@ const navItems = [
 
 export function MobileBottomNav() {
   const location = useLocation();
+  // Hide on CTA page (home route)
+  if (location.pathname === "/") {
+    return null;
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden">

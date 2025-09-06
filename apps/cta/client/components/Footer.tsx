@@ -14,10 +14,10 @@ import {
 } from "lucide-react";
 
 const socialLinks = [
-  { name: "Facebook", icon: Facebook, href: "#", followers: "" },
-  { name: "Twitter", icon: Twitter, href: "#", followers: "" },
-  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/buildora_enterprise", followers: "" },
-  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/buildora-enterprise/", followers: "" },
+  { name: "Facebook", icon: Facebook, href: "#", color: "#1877F2" },
+  { name: "Twitter", icon: Twitter, href: "#", color: "#1DA1F2" },
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/buildora_enterprise", color: "#E4405F" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/buildora-enterprise/", color: "#0A66C2" },
 ];
 
 const trustBadges = [
@@ -81,18 +81,16 @@ export function Footer() {
             <div className="flex items-center space-x-3">
               <span className="text-sm text-muted-foreground mr-2">Follow us:</span>
               {socialLinks.map((social) => (
-                <div key={social.name} className="group relative">
-                  <a
-                    href={social.href}
-                    className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-colors"
-                    aria-label={`Follow us on ${social.name}`}
-                  >
-                    <social.icon className="h-5 w-5" />
-                  </a>
-                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-card-foreground text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                    {social.followers}
-                  </div>
-                </div>
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Follow us on ${social.name}`}
+                  className="inline-flex items-center justify-center hover:opacity-80 transition-opacity"
+                >
+                  <social.icon className="h-6 w-6" style={{ color: social.color }} />
+                </a>
               ))}
             </div>
           </div>
@@ -101,4 +99,3 @@ export function Footer() {
     </footer>
   );
 }
-

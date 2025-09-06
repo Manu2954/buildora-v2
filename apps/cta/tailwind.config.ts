@@ -20,12 +20,22 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        brand: ["The Seasons", "Playfair Display", "serif"],
+        sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"],
+      },
       colors: {
         // Buildora Enterprise Brand Colors
         gold: {
           DEFAULT: "#C69B4B",
           hover: "#B1873E",
         },
+        // Tokenized brand colors
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        "primary-hover": "hsl(var(--primary-hover))",
         text: "#333132",
         muted: "#666666",
         background: "#E8E8E8",
@@ -35,10 +45,6 @@ export default {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

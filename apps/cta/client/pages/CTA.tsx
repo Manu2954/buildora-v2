@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import Logo from "@/components/Logo";
 import {
   CheckCircle,
   Shield,
@@ -196,6 +198,7 @@ export default function CTA() {
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-[#e8e8e8]">
+        <Navbar />
         <div className="pt-24 md:pt-16">
           <main className="min-h-screen flex flex-col pb-24 md:pb-0">
             <div className="flex-1 flex items-center justify-center p-8">
@@ -225,9 +228,10 @@ export default function CTA() {
 
   return (
     <div className="min-h-screen bg-[#e8e8e8]">
+      <Navbar />
       <div className="pt-24 md:pt-16">
       <main className="min-h-screen flex flex-col pb-24 md:pb-0">
-
+              
               {/* Main Content */}
               <div className="flex-1 px-4 lg:px-8 py-8 lg:py-12">
                 <div className="max-w-7xl mx-auto">
@@ -237,19 +241,6 @@ export default function CTA() {
                     </div>
                   )}
                   
-                  {/* Page Header */}
-                  <div className="text-center mb-8 lg:mb-12">
-                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-medium text-[#333132] shadow-sm">
-                      Buildora Enterprise
-                    </span>
-                    <h1 className="mt-4 text-3xl md:text-4xl font-bold text-[#333132]">
-                      Project Inquiry
-                    </h1>
-                    <p className="mt-2 text-[#666666]">
-                      Share your requirements and location. We'll connect you with the right expert.
-                    </p>
-                  </div>
-
                   {/* Desktop Layout: Two Columns */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
                     
@@ -268,7 +259,7 @@ export default function CTA() {
                       {/* Trust Tags */}
                       <div className="space-y-6">
                         <h3 className="text-xl font-semibold text-[#333132] text-center lg:text-left">
-                          Why Choose Buildora Enterprise?
+                          Why Choose <span className="inline-block align-middle ml-1"><Logo size="small" variant="text" /></span>?
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                           {trustTags.map((tag, index) => (
@@ -404,7 +395,7 @@ export default function CTA() {
                               className={`w-4 h-4 text-[#C69B4B] bg-gray-100 border-gray-300 rounded focus:ring-[#C69B4B] focus:ring-2 mt-1 ${errors.consent ? 'border-red-300' : ''}`}
                             />
                             <span className="text-sm text-[#333132] leading-relaxed">
-                              I agree to be contacted by Buildora Enterprise for my inquiry. <span className="text-red-500">*</span>
+                              I agree to be contacted by BUILDORA ENTERPRISE for my inquiry. <span className="text-red-500">*</span>
                             </span>
                           </label>
                           {errors.consent && <p className="text-red-500 text-sm mt-1">You must agree to be contacted</p>}
@@ -431,3 +422,4 @@ export default function CTA() {
     </div>
   );
 }
+

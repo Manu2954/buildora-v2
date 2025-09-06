@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Logo from "@/components/Logo";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -93,20 +94,7 @@ export function Navbar() {
             {/* Left: Logo */}
             <div className="flex items-center space-x-3 flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
-                {/* Brand Icon Logo */}
-                <img
-                  src="../buildora-icon.png"
-                  alt="Buildora Icon"
-                  className="h-8 md:h-10 w-auto object-contain"
-                  draggable="false"
-                />
-                {/* Brand Wordmark Logo */}
-                <img
-                  src="../buildora-icon-v1.jpeg"
-                  alt="Buildora - banner"
-                  className="h-6 md:h-8 w-auto object-contain"
-                  draggable="false"
-                />
+                <Logo size="medium" variant="full" />
               </Link>
             </div>
 
@@ -120,7 +108,7 @@ export function Navbar() {
                       key={item.name}
                       to={item.href}
                       className={cn(
-                        "text-sm font-medium transition-all duration-200 py-2 relative min-h-[44px] flex items-center",
+                        "text-base font-medium transition-all duration-200 py-2 relative min-h-[44px] flex items-center",
                         isActive
                           ? "text-[#c59c46]"
                           : "text-[#333132] hover:text-[#c59c46]",
@@ -159,7 +147,7 @@ export function Navbar() {
               {/* Get Free Quote Button (hidden on small mobile) */}
               <Link
                 to="/cta"
-                className="hidden sm:inline-flex items-center px-4 lg:px-6 py-2 bg-[#c59c46] text-white font-medium rounded-lg hover:bg-[#a17c36] transition-colors duration-200 text-sm min-h-[44px]"
+                className="hidden sm:inline-flex items-center px-4 lg:px-6 py-2 bg-[#c59c46] text-white font-medium rounded-lg hover:bg-[#a17c36] transition-colors duration-200 text-base min-h-[44px]"
               >
                 <span className="hidden lg:inline">Get Free Quote</span>
                 <span className="lg:hidden">Quote</span>
@@ -196,17 +184,17 @@ export function Navbar() {
 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                       <Link
                         to="/orders"
-                        className="flex items-center px-4 py-3 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
+                        className="flex items-center px-4 py-3 text-base text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
                       >
                         <ClipboardList className="h-4 w-4 mr-3" />
                         My Orders
                       </Link>
                       <Link
                         to="/profile"
-                        className="flex items-center px-4 py-3 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
+                        className="flex items-center px-4 py-3 text-base text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
                       >
                         <Settings className="h-4 w-4 mr-3" />
                         Settings
@@ -214,7 +202,7 @@ export function Navbar() {
                       <hr className="my-2 border-gray-200" />
                       <button
                         onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-3 text-sm text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
+                        className="flex items-center w-full px-4 py-3 text-base text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
                       >
                         <LogOut className="h-4 w-4 mr-3" />
                         Logout
@@ -226,13 +214,13 @@ export function Navbar() {
                 <div className="hidden sm:flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="text-sm font-medium text-[#333132] hover:text-[#c59c46] transition-colors duration-200 px-3 py-2 min-h-[44px] flex items-center"
+                    className="text-base font-medium text-[#333132] hover:text-[#c59c46] transition-colors duration-200 px-3 py-2 min-h-[44px] flex items-center"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/sign-up"
-                    className="text-sm font-medium bg-[#c59c46] text-white hover:bg-[#a17c36] transition-colors duration-200 px-4 py-2 rounded-lg min-h-[44px] flex items-center"
+                    className="text-base font-medium bg-[#c59c46] text-white hover:bg-[#a17c36] transition-colors duration-200 px-4 py-2 rounded-lg min-h-[44px] flex items-center"
                   >
                     <span className="hidden lg:inline">Create Account</span>
                     <span className="lg:hidden">Join</span>
@@ -297,12 +285,7 @@ export function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <img
-                  src="/buildora-icon.png"
-                  alt="Buildora Icon"
-                  className="h-8 w-auto object-contain"
-                  draggable="false"
-                />
+                <Logo size="small" variant="icon" showText={false} />
                 <span className="text-xl font-bold text-[#333132]">Menu</span>
               </div>
               <button

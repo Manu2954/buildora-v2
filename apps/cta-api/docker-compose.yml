@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cta
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 5055
+      API_KEY: change-me-at-deploy
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/cta?schema=public
+      ALLOWED_ORIGINS: http://localhost:5173
+    ports:
+      - "5055:5055"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Optional UI for Postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5056:80"
+    depends_on:
+      - db
+

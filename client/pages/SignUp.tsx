@@ -116,7 +116,7 @@ export default function SignUp() {
       toast({
         title: "Account created successfully!",
         description:
-          "Welcome to Buildora! You can now sign in to your account.",
+          "Welcome to BUILDORA ENTERPRISE! You can now sign in to your account.",
         variant: "default",
       });
 
@@ -176,7 +176,7 @@ export default function SignUp() {
                         Create Account
                       </h1>
                       <p className="text-[#666666] text-sm md:text-base">
-                        Join Buildora and transform your space
+                        Join BUILDORA ENTERPRISE and transform your space
                       </p>
                     </div>
 
@@ -442,7 +442,7 @@ export default function SignUp() {
                             }
                           />
                           <span className="text-sm text-[#666666] leading-5">
-                            I agree to Buildora's{" "}
+                            I agree to BUILDORA ENTERPRISE's{" "}
                             <Link
                               to="/terms"
                               className="font-medium hover:underline transition-colors duration-200"

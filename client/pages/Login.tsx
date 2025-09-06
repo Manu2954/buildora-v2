@@ -118,7 +118,7 @@ export default function Login() {
                         Welcome Back
                       </h1>
                       <p className="text-[#666666] text-sm md:text-base">
-                        Sign in to your Buildora account
+                        Sign in to your BUILDORA ENTERPRISE account
                       </p>
                     </div>
 

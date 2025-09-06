@@ -19,7 +19,7 @@ export function HeroBanner({ imageUrl, className }: HeroBannerProps) {
         <div className="w-full p-6 md:p-10">
           <h1 className="text-white text-2xl md:text-4xl font-bold tracking-tight">My Interior Projects</h1>
           <p className="text-white/90 md:text-white/80 text-sm md:text-base mt-2 max-w-xl">
-            Track and manage your interiors with Buildora
+            Track and manage your interiors with BUILDORA ENTERPRISE
           </p>
         </div>
       </div>

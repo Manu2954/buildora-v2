@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CompanyName } from "@/components/CompanyName";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -100,13 +101,8 @@ export function Navbar() {
                   className="h-8 md:h-10 w-auto object-contain"
                   draggable="false"
                 />
-                {/* Brand Wordmark Logo */}
-                <img
-                  src="../buildora-icon-v1.jpeg"
-                  alt="Buildora - banner"
-                  className="h-6 md:h-8 w-auto object-contain"
-                  draggable="false"
-                />
+                {/* Company Name */}
+                <CompanyName size="sm" />
               </Link>
             </div>
 

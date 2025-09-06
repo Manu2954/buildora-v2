@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BrandMark from "@/components/BrandMark";
 import {
   Facebook,
   Twitter,
@@ -32,10 +33,10 @@ export function Footer() {
         <div className="max-w-7xl mx-auto space-y-8">
           <div>
             <Link to="/" className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gold rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">B</span>
               </div>
-              <span className="text-2xl font-bold text-card-foreground">Buildora</span>
+              <BrandMark size="md" align="left" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
               Transform your space with professional interior design & execution packages. From supplies to architects, we handle everything for your dream space.
@@ -75,7 +76,7 @@ export function Footer() {
 
           <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm text-center md:text-left mb-4 md:mb-0">
-              Â© 2024 Buildora. All rights reserved.
+              © 2024 BUILDORA ENTERPRISE. All rights reserved.
             </p>
             <div className="flex items-center space-x-3">
               <span className="text-sm text-muted-foreground mr-2">Follow us:</span>
@@ -100,3 +101,6 @@ export function Footer() {
     </footer>
   );
 }
+
+
+

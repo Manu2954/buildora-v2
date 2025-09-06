@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
+import BrandMark from "@/components/BrandMark";
 import {
   CheckCircle,
   Shield,
@@ -232,7 +233,7 @@ export default function CTA() {
               <div className="w-full h-32 md:h-48 lg:h-64 overflow-hidden">
                 <img
                   src="/banner1.jpg"
-                  alt="Buildora Enterprise - Interior Design Project"
+                  alt="BUILDORA ENTERPRISE - Interior Design Project"
                   className="w-full h-full object-cover"
                   draggable="false"
                 />
@@ -253,15 +254,11 @@ export default function CTA() {
                       {/* Company Icon */}
                       <img
                         src="/buildora-icon.png"
-                        alt="Company icon"
+                        alt="BUILDORA ENTERPRISE icon"
                         className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
                       />
-                      {/* Company Name Image */}
-                      <img
-                        src="/buildora-icon-v1.jpeg"
-                        alt="Company name"
-                        className="h-8 md:h-10 object-contain"
-                      />
+                      {/* Company Wordmark */}
+                      <BrandMark size="lg" align="left" />
                     </div>
                   </div>
 
@@ -283,7 +280,7 @@ export default function CTA() {
                       {/* Trust Tags */}
                       <div className="space-y-6">
                         <h3 className="text-xl font-semibold text-[#333132] text-center lg:text-left">
-                          Why Choose Buildora Enterprise?
+                          Why Choose <span className="inline-block align-middle ml-1"><BrandMark size="sm" align="left" /></span>?
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                           {trustTags.map((tag, index) => (
@@ -419,7 +416,7 @@ export default function CTA() {
                               className={`w-4 h-4 text-[#C69B4B] bg-gray-100 border-gray-300 rounded focus:ring-[#C69B4B] focus:ring-2 mt-1 ${errors.consent ? 'border-red-300' : ''}`}
                             />
                             <span className="text-sm text-[#333132] leading-relaxed">
-                              I agree to be contacted by Buildora Enterprise for my inquiry. <span className="text-red-500">*</span>
+                              I agree to be contacted by BUILDORA ENTERPRISE for my inquiry. <span className="text-red-500">*</span>
                             </span>
                           </label>
                           {errors.consent && <p className="text-red-500 text-sm mt-1">You must agree to be contacted</p>}
@@ -446,3 +443,4 @@ export default function CTA() {
     </div>
   );
 }
+

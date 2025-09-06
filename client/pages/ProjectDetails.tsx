@@ -930,7 +930,7 @@ export default function ProjectDetails() {
                     className="w-20 h-16 object-cover rounded-lg"
                   />
                   <p className="text-sm text-[#333132]">
-                    Thank you for choosing Buildora. We hope your new space
+                    Thank you for choosing BUILDORA ENTERPRISE. We hope your new space
                     brings comfort and joy. Share your experience and help
                     others discover their dream interiors!
                   </p>

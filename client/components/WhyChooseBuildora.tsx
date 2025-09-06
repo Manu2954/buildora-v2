@@ -83,7 +83,7 @@ export function WhyChooseBuildora() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Why Choose Buildora?
+            Why Choose BUILDORA ENTERPRISE?
           </h2>
           <p className="text-muted-foreground text-base md:text-lg lg:text-xl max-w-3xl mx-auto">
             Experience the difference with our commitment to excellence,

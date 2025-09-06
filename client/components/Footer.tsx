@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { CompanyName } from "@/components/CompanyName";
 import {
   Facebook,
   Twitter,
@@ -131,9 +132,7 @@ export function Footer() {
               <div className="w-10 h-10 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">B</span>
               </div>
-              <span className="text-2xl font-bold text-card-foreground">
-                Buildora
-              </span>
+              <CompanyName size="md" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
               Transform your space with professional interior design & execution
@@ -262,7 +261,7 @@ export function Footer() {
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-col md:flex-row items-center gap-4 mb-4 md:mb-0">
             <p className="text-muted-foreground text-sm text-center md:text-left">
-              © 2024 Buildora. All rights reserved.
+              © 2024 BUILDORA ENTERPRISE. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <Link
@@ -313,7 +312,7 @@ export function Footer() {
         {/* Mobile App Promotion */}
         <div className="mt-8 p-4 bg-muted/30 rounded-lg text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            Get the Buildora mobile app for exclusive deals and easy project
+            Get the BUILDORA ENTERPRISE mobile app for exclusive deals and easy project
             tracking
           </p>
           <button className="inline-flex items-center text-buildora-gold hover:text-buildora-gold-dark font-medium text-sm">

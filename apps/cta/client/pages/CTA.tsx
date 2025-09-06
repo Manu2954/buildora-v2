@@ -265,7 +265,7 @@ export default function CTA() {
       <main className="flex-1 flex flex-col pb-0">
               
               {/* Main Content */}
-              <div className="flex-1 px-4 lg:px-6 py-5 lg:py-6">
+              <div className="flex-1 px-4 lg:px-6 py-4 lg:py-6">
                 <div className="max-w-7xl mx-auto">
                   {submitError && (
                     <div className="mb-4 p-3 rounded-md bg-red-50 text-red-700 border border-red-200">
@@ -274,22 +274,22 @@ export default function CTA() {
                   )}
                   
                   {/* Desktop Layout: Two Columns */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6 items-start">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6 items-start">
                     
                     {/* Left Column: Hero Content & Trust Tags */}
-                    <div className="space-y-5 md:space-y-7">
+                    <div className="space-y-4 md:space-y-6">
                       {/* Hero Headlines */}
                       <div className="text-center lg:text-left">
-                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#333132] mb-2 leading-snug">
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#333132] mb-1.5 leading-snug">
                           Sourcing made simple. Building made easy.
                         </h2>
-                        <p className="text-sm md:text-base text-[#666666] leading-normal">
+                        <p className="text-sm md:text-base text-[#666666] leading-snug">
                           From modular kitchens to full interiors — the right expert is just a form away.
                         </p>
                       </div>
 
                       {/* Trust Tags */}
-                      <div className="space-y-3 md:space-y-4">
+                      <div className="space-y-1.5 md:space-y-2">
                         <h3 className="text-xl font-semibold text-[#333132] text-center lg:text-left">
                           Why Choose
                           <span className="inline-block align-middle ml-1 font-brand">
@@ -298,13 +298,13 @@ export default function CTA() {
                           </span>
                           ?
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-1.5 md:gap-2">
                           {trustTags.map((tag, index) => (
                             <div
                               key={index}
-                              className="flex items-center space-x-3 bg-white p-3.5 md:p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                              className="flex items-center space-x-3 bg-white p-2.5 md:p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                             >
-                              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tag.color} flex items-center justify-center flex-shrink-0`}>
+                              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${tag.color} flex items-center justify-center flex-shrink-0`}>
                                 <tag.icon className="h-6 w-6 text-white" />
                               </div>
                               <div>
@@ -318,16 +318,16 @@ export default function CTA() {
                     </div>
 
                     {/* Right Column: Form */}
-                    <div className="bg-white rounded-2xl p-4 md:p-5 shadow-lg">
-                      <div className="mb-4">
+                    <div className="bg-white rounded-2xl p-3 md:p-4 shadow-lg">
+                      <div className="mb-3">
                         <h3 className="text-2xl font-bold text-[#333132] mb-2">Get Started Today</h3>
                         <p className="text-[#666666]">Fill out the form below and our team will reach out to you.</p>
                       </div>
 
-                      <form onSubmit={handleSubmit} className="space-y-3">
+                      <form onSubmit={handleSubmit} className="space-y-2.5">
                         {/* Full Name */}
                         <div>
-                          <label className="block text-sm font-medium text-[#333132] mb-1.5">
+                          <label className="block text-sm font-medium text-[#333132] mb-1">
                             Full Name <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -342,7 +342,7 @@ export default function CTA() {
 
                         {/* Mobile Number */}
                         <div>
-                          <label className="block text-sm font-medium text-[#333132] mb-1.5">
+                          <label className="block text-sm font-medium text-[#333132] mb-1">
                             Mobile Number <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -358,7 +358,7 @@ export default function CTA() {
 
                         {/* Location */}
                         <div>
-                          <label className="block text-sm font-medium text-[#333132] mb-1.5">
+                          <label className="block text-sm font-medium text-[#333132] mb-1">
                             Your Location <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -368,7 +368,7 @@ export default function CTA() {
                             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C69B4B] focus:border-transparent transition-all duration-200 ${errors.location ? 'border-red-300' : 'border-gray-300'}`}
                             placeholder="Enter your city/location"
                           />
-                          <div className="flex space-x-2 mt-1.5">
+                          <div className="flex space-x-2 mt-1">
                             <button
                               type="button"
                               onClick={handleUseCurrentLocation}
@@ -390,10 +390,10 @@ export default function CTA() {
 
                         {/* Requirements */}
                         <div>
-                          <label className="block text-sm font-medium text-[#333132] mb-2">
+                          <label className="block text-sm font-medium text-[#333132] mb-1.5">
                             Select or Describe Your Requirement <span className="text-red-500">*</span>
                           </label>
-                          <div className="space-y-2.5">
+                          <div className="space-y-2">
                             {requirementOptions.map((option) => (
                               <label key={option} className="flex items-center space-x-3 cursor-pointer">
                                 <input
@@ -409,7 +409,7 @@ export default function CTA() {
                           
                           {/* Other Requirement Text Box */}
                           {formData.requirements.includes("Other") && (
-                            <div className="mt-2">
+                            <div className="mt-1.5">
                               <input
                                 type="text"
                                 value={formData.otherRequirement}
@@ -432,7 +432,7 @@ export default function CTA() {
                               onChange={(e) => setFormData({...formData, consent: e.target.checked})}
                               className={`w-4 h-4 text-[#C69B4B] bg-gray-100 border-gray-300 rounded focus:ring-[#C69B4B] focus:ring-2 mt-1 ${errors.consent ? 'border-red-300' : ''}`}
                             />
-                            <span className="text-sm text-[#333132] leading-normal">
+                            <span className="text-sm text-[#333132] leading-snug">
                               I agree to be contacted by BUILDORA ENTERPRISE for my inquiry. <span className="text-red-500">*</span>
                             </span>
                           </label>
@@ -443,7 +443,7 @@ export default function CTA() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-[#C69B4B] text-white font-semibold py-3.5 md:py-4 px-5 rounded-lg hover:bg-[#a17c36] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#C69B4B]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full bg-[#C69B4B] text-white font-semibold py-3 md:py-3.5 px-5 rounded-lg hover:bg-[#a17c36] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#C69B4B]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isSubmitting ? "Booking..." : "Book Free Consultation"}
                         </button>

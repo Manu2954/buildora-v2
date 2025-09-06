@@ -75,8 +75,9 @@ export default function Logo({
           aria-label="BUILDORA ENTERPRISE"
         >
           <span
-            className={cn("block uppercase tracking-wide")}
-            style={{ color: "#C69B4B", letterSpacing: "1px", marginBottom:"-4px", paddingBottom: "1px", fontSize: size === "small" ? undefined : "x-large" }}
+            className={cn("block uppercase tracking-wide")} 
+            style={{ color: "#C69B4B", marginBottom:"-5px", letterSpacing: "1px", paddingBottom: "1px", fontSize: size === "small" ? undefined : "x-large" }}
+
           >
             BUILDORA
           </span>

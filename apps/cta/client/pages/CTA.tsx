@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Logo from "@/components/Logo";
 import {
   CheckCircle,
   Shield,
@@ -68,6 +67,7 @@ export default function CTA() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -175,16 +175,48 @@ export default function CTA() {
       alert("Geolocation is not supported by your browser.");
       return;
     }
+    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        setFormData(prev => ({
-          ...prev,
-          location: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`
-        }));
+        const latFixed = latitude.toFixed(6);
+        const lonFixed = longitude.toFixed(6);
+
+        // Try reverse geocoding to get a human-readable address
+        try {
+          const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+          const resp = await fetch(url);
+
+          let locationText = `${latFixed}, ${lonFixed}`;
+          if (resp.ok) {
+            const data = await resp.json();
+            const city = data.city || data.locality;
+            const region = data.principalSubdivision;
+            const postcode = data.postcode;
+            const country = data.countryName;
+            const parts = [city, region, postcode, country].filter(Boolean);
+            if (parts.length > 0) {
+              locationText = `${parts.join(", ")} (${latFixed}, ${lonFixed})`;
+            }
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            location: locationText,
+          }));
+        } catch (e) {
+          // Fallback to coordinates only
+          setFormData((prev) => ({
+            ...prev,
+            location: `${latFixed}, ${lonFixed}`,
+          }));
+        } finally {
+          setIsLocating(false);
+        }
       },
       () => {
         alert("Unable to retrieve your location.");
+        setIsLocating(false);
       },
       { enableHighAccuracy: true }
     );
@@ -259,7 +291,12 @@ export default function CTA() {
                       {/* Trust Tags */}
                       <div className="space-y-6">
                         <h3 className="text-xl font-semibold text-[#333132] text-center lg:text-left">
-                          Why Choose <span className="inline-block align-middle ml-1"><Logo size="small" variant="text" /></span>?
+                          Why Choose
+                          <span className="inline-block align-middle ml-1 font-brand">
+                            <span className="text-primary">BUILDORA</span>
+                            <span className="text-text"> ENTERPRISE</span>
+                          </span>
+                          ?
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                           {trustTags.map((tag, index) => (
@@ -335,9 +372,10 @@ export default function CTA() {
                             <button
                               type="button"
                               onClick={handleUseCurrentLocation}
-                              className="px-3 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200"
+                              disabled={isLocating}
+                              className={`px-3 py-2 text-sm rounded ${isLocating ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200'}`}
                             >
-                              Use current location
+                              {isLocating ? 'Fetching location…' : 'Use current location'}
                             </button>
                             <button
                               type="button"
@@ -407,7 +445,7 @@ export default function CTA() {
                           disabled={isSubmitting}
                           className="w-full bg-[#C69B4B] text-white font-semibold py-4 px-6 rounded-lg hover:bg-[#a17c36] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#C69B4B]/20 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
                         >
-                          {isSubmitting ? "Sending..." : "Send My Requirement"}
+                          {isSubmitting ? "Booking..." : "Book Free Consultation"}
                         </button>
                       </form>
                     </div>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
+import { Phone } from "lucide-react";
 
 export function Navbar() {
   return (
@@ -11,11 +12,20 @@ export function Navbar() {
             <Logo size="medium" variant="full" />
           </Link>
 
-          {/* Right: Placeholder actions (kept minimal for CTA) */}
-          <div className="hidden sm:flex items-center gap-2">
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2">
+            {/* Mobile: icon-only call button */}
             <a
               href="tel:+919963360888"
-              className="px-4 py-2 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors duration-200"
+              aria-label="Call Us"
+              className="sm:hidden inline-flex items-center justify-center p-2 rounded-full bg-primary text-white hover:bg-primary-hover transition-colors duration-200"
+            >
+              <Phone className="h-5 w-5" />
+            </a>
+            {/* Desktop/Tablet: full button */}
+            <a
+              href="tel:+919963360888"
+              className="hidden sm:inline-flex px-4 py-2 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors duration-200"
             >
               Call Us
             </a>

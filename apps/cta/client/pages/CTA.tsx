@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
-import BrandMark from "@/components/BrandMark";
+import Navbar from "@/components/Navbar";
+import Logo from "@/components/Logo";
 import {
   CheckCircle,
   Shield,
@@ -197,6 +198,7 @@ export default function CTA() {
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-[#e8e8e8]">
+        <Navbar />
         <div className="pt-24 md:pt-16">
           <main className="min-h-screen flex flex-col pb-24 md:pb-0">
             <div className="flex-1 flex items-center justify-center p-8">
@@ -226,19 +228,10 @@ export default function CTA() {
 
   return (
     <div className="min-h-screen bg-[#e8e8e8]">
+      <Navbar />
       <div className="pt-24 md:pt-16">
       <main className="min-h-screen flex flex-col pb-24 md:pb-0">
               
-              {/* Banner Image */}
-              <div className="w-full h-32 md:h-48 lg:h-64 overflow-hidden">
-                <img
-                  src="/banner1.jpg"
-                  alt="BUILDORA ENTERPRISE - Interior Design Project"
-                  className="w-full h-full object-cover"
-                  draggable="false"
-                />
-              </div>
-
               {/* Main Content */}
               <div className="flex-1 px-4 lg:px-8 py-8 lg:py-12">
                 <div className="max-w-7xl mx-auto">
@@ -248,20 +241,6 @@ export default function CTA() {
                     </div>
                   )}
                   
-                  {/* Top Section - Branding */}
-                  <div className="text-center mb-8 lg:mb-12">
-                    <div className="flex items-center justify-center space-x-4 mb-6">
-                      {/* Company Icon */}
-                      <img
-                        src="/buildora-icon.png"
-                        alt="BUILDORA ENTERPRISE icon"
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover"
-                      />
-                      {/* Company Wordmark */}
-                      <BrandMark size="lg" align="left" />
-                    </div>
-                  </div>
-
                   {/* Desktop Layout: Two Columns */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
                     
@@ -280,7 +259,7 @@ export default function CTA() {
                       {/* Trust Tags */}
                       <div className="space-y-6">
                         <h3 className="text-xl font-semibold text-[#333132] text-center lg:text-left">
-                          Why Choose <span className="inline-block align-middle ml-1"><BrandMark size="sm" align="left" /></span>?
+                          Why Choose <span className="inline-block align-middle ml-1"><Logo size="small" variant="text" /></span>?
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                           {trustTags.map((tag, index) => (

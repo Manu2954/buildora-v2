@@ -58,7 +58,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                   <Link
                     to={item.href}
                     className={cn(
-                      "flex items-center text-sm font-medium rounded-lg transition-all duration-200 relative group",
+                      "flex items-center text-base font-medium rounded-lg transition-all duration-200 relative group",
                       "hover:bg-[#f8f8f8] focus:outline-none focus:ring-2 focus:ring-[#c59c46]/20",
                       isCollapsed ? "p-3 justify-center" : "px-3 py-2.5",
                       isActive
@@ -109,10 +109,10 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                 <User className="h-4 w-4 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[#333132] truncate">
+                <p className="text-base font-medium text-[#333132] truncate">
                   Welcome!
                 </p>
-                <p className="text-xs text-[#666666] truncate">
+                <p className="text-sm text-[#666666] truncate">
                   Transform your space
                 </p>
               </div>

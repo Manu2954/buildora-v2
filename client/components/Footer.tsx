@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CompanyName } from "@/components/CompanyName";
+import Logo from "@/components/Logo";
 import {
   Facebook,
   Twitter,
@@ -129,10 +129,10 @@ export function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
+              {/* <div className="w-10 h-10 bg-gradient-to-br from-buildora-gold to-buildora-gold-light rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">B</span>
-              </div>
-              <CompanyName size="md" />
+              </div> */}
+              <Logo size="medium" variant="full" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
               Transform your space with professional interior design & execution

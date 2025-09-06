@@ -29,7 +29,7 @@ const trustBadges = [
 export function Footer() {
   return (
     <footer className="bg-card border-t border-border">
-      <div className="px-4 lg:px-6 py-8 lg:py-12">
+      <div className="px-4 lg:px-6 py-6 lg:py-8">
         <div className="max-w-7xl mx-auto space-y-8">
           <div>
             <Link to="/" className="flex items-center space-x-3 mb-4">
@@ -74,7 +74,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm text-center md:text-left mb-4 md:mb-0">
               &copy; 2025 BUILDORA ENTERPRISE. All rights reserved.
             </p>
@@ -101,5 +101,4 @@ export function Footer() {
     </footer>
   );
 }
-
 

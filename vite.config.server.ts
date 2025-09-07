@@ -32,6 +32,15 @@ export default defineConfig({
         // External dependencies that should not be bundled
         "express",
         "cors",
+        "helmet",
+        "pino",
+        "pino-http",
+        "express-rate-limit",
+        "prom-client",
+        "argon2",
+        "jsonwebtoken",
+        "@prisma/client",
+        "prisma",
       ],
       output: {
         format: "es",
@@ -44,7 +53,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
     },
   },
   define: {

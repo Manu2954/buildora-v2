@@ -6,10 +6,16 @@ import path from "path";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 5174,
     fs: {
       allow: ["./client"],
       deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**"],
+    },
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
   build: {

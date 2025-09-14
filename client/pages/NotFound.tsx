@@ -11,10 +11,7 @@ const NotFound = () => {
   const { isCollapsed, toggle } = useSidebar();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname,
-    );
+    // optionally report to analytics here; suppress console noise
   }, [location.pathname]);
 
   return (

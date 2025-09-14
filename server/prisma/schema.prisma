@@ -22,6 +22,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   refreshTokens RefreshToken[]
+  // Back-relations
+  assignedLeads Lead[]      @relation("LeadAssignedToUser")
+  leadNotes     LeadNote[]  @relation("LeadNoteAuthor")
+  leadEvents    LeadEvent[] @relation("LeadEventActor")
 }
 
 model RefreshToken {
@@ -54,7 +58,14 @@ model Lead {
   fingerprint String?
   ip          String?
   userAgent   String?
+  status      LeadStatus @default(NEW)
+  priority    LeadPriority @default(MEDIUM)
+  followUpAt  DateTime?
+  assignedTo  User?      @relation("LeadAssignedToUser", fields: [assignedToId], references: [id])
+  assignedToId String?
   createdAt   DateTime @default(now())
+  notes       LeadNote[]
+  events      LeadEvent[]
 }
 
 model CtaConfig {
@@ -64,3 +75,35 @@ model CtaConfig {
   createdAt DateTime @default(now())
 }
 
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+enum LeadPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+  author    User?    @relation("LeadNoteAuthor", fields: [authorId], references: [id])
+  authorId  String?
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model LeadEvent {
+  id        String   @id @default(cuid())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+  actor     User?    @relation("LeadEventActor", fields: [actorId], references: [id])
+  actorId   String?
+  type      String
+  data      Json?
+  createdAt DateTime @default(now())
+}

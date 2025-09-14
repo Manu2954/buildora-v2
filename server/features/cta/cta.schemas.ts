@@ -35,3 +35,24 @@ export const AnalyticsQuerySchema = z.object({
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
+export const LeadStatusSchema = z.enum(["NEW", "CONTACTED", "CLOSED"]);
+
+export const LeadsQuerySchema = z.object({
+  from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  status: z.enum(["all", "NEW", "CONTACTED", "CLOSED"]).default("all"),
+  q: z.string().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(100).default(20),
+});
+
+export const UpdateLeadStatusSchema = z.object({
+  status: LeadStatusSchema,
+});
+
+export const UpdateLeadSchema = z.object({
+  status: LeadStatusSchema.optional(),
+  assignedToId: z.string().cuid().optional(),
+  followUpAt: z.string().datetime().optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+});

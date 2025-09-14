@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
@@ -7,10 +7,12 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { useToast } from "@/hooks/use-toast";
 import { beTokens } from "@/lib/beTokens";
 import { cn } from "@/lib/utils";
+import { apiFetch } from "@/lib/api";
 
 export default function SignUp() {
   const { isCollapsed, toggle } = useSidebar();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Form state
   const [fullName, setFullName] = useState("");
@@ -109,28 +111,16 @@ export default function SignUp() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Success - show toast and reset form
-      toast({
-        title: "Account created successfully!",
-        description:
-          "Welcome to BUILDORA ENTERPRISE! You can now sign in to your account.",
-        variant: "default",
+      await apiFetch("/api/core/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ email, password, role: "CUSTOMER" }),
       });
-
-      // Reset form
-      setFullName("");
-      setEmail("");
-      setMobile("");
-      setPassword("");
-      setConfirmPassword("");
-      setAgreeToTerms(false);
+      toast({ title: "Account created", description: "You can now sign in." });
+      navigate("/login", { replace: true });
     } catch (error) {
       toast({
         title: "Sign up failed",
-        description: "Something went wrong. Please try again.",
+        description: error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
       });
     } finally {

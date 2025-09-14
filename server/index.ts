@@ -11,6 +11,7 @@ import { requestIdGen } from "./modules/lib/logger";
 import { registerHealthRoutes } from "./routes/health";
 import { registerMetrics } from "./routes/metrics";
 import { coreRouter } from "./api/core/auth.routes";
+import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
 
 export function createServer() {
@@ -18,7 +19,7 @@ export function createServer() {
 
   // Logger
   const logger = pino({
-    level: env.NODE_ENV === "development" ? "debug" : "info",
+    level: env.LOG_LEVEL,
   });
   app.use(
     pinoHttp({
@@ -29,14 +30,21 @@ export function createServer() {
         if (res.statusCode >= 400) return "warn";
         return "info";
       },
+      autoLogging: {
+        ignorePaths: ["/healthz", "/readyz", "/metrics"],
+      },
     })
   );
 
-  // Security
-  app.use(helmet());
+  // API router (apply security only under /api to avoid interfering with Vite dev HTML)
+  const api = express.Router();
+  const helmetOptions: Parameters<typeof helmet>[0] = env.NODE_ENV === "development"
+    ? { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }
+    : {};
+  api.use(helmet(helmetOptions));
   app.set("trust proxy", true);
   const corsOrigins = env.CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean);
-  app.use(
+  api.use(
     cors({
       origin: (origin, cb) => {
         if (!origin || corsOrigins.includes("*") || corsOrigins.includes(origin)) return cb(null, true);
@@ -47,24 +55,28 @@ export function createServer() {
   );
 
   // Parsers
-  app.use(express.json({ limit: "1mb" }));
-  app.use(express.urlencoded({ extended: true }));
+  api.use(express.json({ limit: "1mb" }));
+  api.use(express.urlencoded({ extended: true }));
 
   // Health + Metrics
   registerHealthRoutes(app);
   registerMetrics(app);
 
-  // Example simple routes
-  app.get("/api/ping", (_req, res) => {
+  // Example simple routes (under /api)
+  api.get("/ping", (_req, res) => {
     res.json({ message: env.PING_MESSAGE ?? "ping" });
   });
   // Removed demo route
 
   // Core API (auth, protected features) - protected endpoints are inside router
-  app.use("/api/core", coreRouter);
+  api.use("/core", coreRouter);
+  api.use("/core", usersRouter);
 
-  // CTA API - public submit, admin endpoints with API key; add public rate limit to all CTA routes
-  app.use("/api/cta", publicRateLimiter, ctaRouter);
+  // CTA API - public submit, admin endpoints; add public rate limit to CTA
+  api.use("/cta", publicRateLimiter, ctaRouter);
+
+  // Mount API router
+  app.use("/api", api);
 
   // Central error handler (last)
   app.use(errorHandler);

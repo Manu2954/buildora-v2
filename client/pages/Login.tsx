@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { useToast } from "@/hooks/use-toast";
+import { login as loginApi } from "@/lib/api";
 import { beTokens } from "@/lib/beTokens";
 import { cn } from "@/lib/utils";
 
 export default function Login() {
   const { isCollapsed, toggle } = useSidebar();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Form state
   const [email, setEmail] = useState("");
@@ -55,26 +57,12 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Success - show toast and reset form
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully logged in.",
-        variant: "default",
-      });
-
-      // Reset form
-      setEmail("");
-      setPassword("");
-      setRememberMe(false);
+      await loginApi(email, password);
+      toast({ title: "Welcome back!", description: "Logged in successfully." });
+      navigate("/", { replace: true });
     } catch (error) {
-      toast({
-        title: "Login failed",
-        description: "Invalid email or password. Please try again.",
-        variant: "destructive",
-      });
+      const msg = error instanceof Error ? error.message : "Login failed";
+      toast({ title: "Login failed", description: msg, variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }

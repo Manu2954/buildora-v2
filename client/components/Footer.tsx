@@ -148,7 +148,7 @@ export function Footer() {
                   href="mailto:hello@buildora.com"
                   className="hover:text-buildora-gold transition-colors"
                 >
-                  hello@buildora.com
+                  support@buildoraenterprise.com
                 </a>
               </div>
               <div className="flex items-center text-muted-foreground">
@@ -157,12 +157,12 @@ export function Footer() {
                   href="tel:+919876543210"
                   className="hover:text-buildora-gold transition-colors"
                 >
-                  +91 98765 43210
+                  +91 99633 60888
                 </a>
               </div>
               <div className="flex items-center text-muted-foreground">
                 <MapPin className="h-5 w-5 mr-3 text-buildora-gold flex-shrink-0" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Warangal, Telangana, India</span>
               </div>
             </div>
 
@@ -261,7 +261,7 @@ export function Footer() {
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-col md:flex-row items-center gap-4 mb-4 md:mb-0">
             <p className="text-muted-foreground text-sm text-center md:text-left">
-              © 2024 BUILDORA ENTERPRISE. All rights reserved.
+              © 2025 BUILDORA ENTERPRISE. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <Link

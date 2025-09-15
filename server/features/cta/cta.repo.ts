@@ -34,3 +34,78 @@ export async function countLeadsBetween(from: Date, to: Date) {
   return prisma.lead.count({ where: { createdAt: { gte: from, lte: to } } });
 }
 
+export async function listLeads(params: {
+  from?: Date;
+  to?: Date;
+  status?: "NEW" | "CONTACTED" | "CLOSED";
+  q?: string;
+  skip: number;
+  take: number;
+}) {
+  const where: any = {};
+  if (params.from || params.to) {
+    where.createdAt = {};
+    if (params.from) where.createdAt.gte = params.from;
+    if (params.to) where.createdAt.lte = params.to;
+  }
+  if (params.status) where.status = params.status;
+  if (params.q) {
+    where.OR = [
+      { name: { contains: params.q, mode: "insensitive" } },
+      { phone: { contains: params.q } },
+      { email: { contains: params.q, mode: "insensitive" } },
+    ];
+  }
+  const [items, total] = await Promise.all([
+    prisma.lead.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: params.skip,
+      take: params.take,
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        email: true,
+        status: true,
+        createdAt: true,
+      },
+    }),
+    prisma.lead.count({ where }),
+  ]);
+  return { items, total };
+}
+
+export async function setLeadStatus(id: string, status: "NEW" | "CONTACTED" | "CLOSED") {
+  return prisma.lead.update({ where: { id }, data: { status } });
+}
+
+export async function getLeadById(id: string) {
+  return prisma.lead.findUnique({
+    where: { id },
+    include: {
+      assignedTo: { select: { id: true, email: true, role: true } },
+    },
+  });
+}
+
+export async function updateLead(id: string, data: Partial<{ assignedToId: string | null; followUpAt: Date | null; priority: "LOW"|"MEDIUM"|"HIGH"; status: "NEW"|"CONTACTED"|"CLOSED" }>) {
+  return prisma.lead.update({ where: { id }, data });
+}
+
+export async function createLeadNote(params: { leadId: string; authorId?: string; content: string }) {
+  const note = await prisma.leadNote.create({ data: { leadId: params.leadId, authorId: params.authorId, content: params.content } });
+  return note;
+}
+
+export async function listLeadNotes(leadId: string) {
+  return prisma.leadNote.findMany({
+    where: { leadId },
+    orderBy: { createdAt: "desc" },
+    include: { author: { select: { id: true, email: true } } },
+  });
+}
+
+export async function logLeadEvent(params: { leadId: string; actorId?: string; type: string; data?: any }) {
+  return prisma.leadEvent.create({ data: { leadId: params.leadId, actorId: params.actorId, type: params.type, data: params.data } });
+}

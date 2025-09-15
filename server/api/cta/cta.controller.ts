@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CtaConfigBodySchema, CtaConfigQuerySchema, SubmitSchema, AnalyticsQuerySchema } from "../../features/cta/cta.schemas";
+import { CtaConfigBodySchema, CtaConfigQuerySchema, SubmitSchema, AnalyticsQuerySchema, LeadsQuerySchema, UpdateLeadStatusSchema, UpdateLeadSchema } from "../../features/cta/cta.schemas";
 import * as svc from "../../features/cta/cta.service";
 
 export const getConfigHandler: RequestHandler = async (req, res) => {
@@ -30,3 +30,42 @@ export const analyticsHandler: RequestHandler = async (req, res) => {
   res.json(out);
 };
 
+export const leadsListHandler: RequestHandler = async (req, res) => {
+  const q = LeadsQuerySchema.parse(req.query);
+  const from = q.from ? new Date(`${q.from}T00:00:00.000Z`) : undefined;
+  const to = q.to ? new Date(`${q.to}T23:59:59.999Z`) : undefined;
+  const status = q.status === "all" ? undefined : (q.status as "NEW" | "CONTACTED" | "CLOSED");
+  const out = await svc.leadsList({ from, to, status, q: q.q, page: q.page, pageSize: q.pageSize });
+  res.json(out);
+};
+
+export const updateLeadStatusHandler: RequestHandler = async (req, res) => {
+  const { status } = UpdateLeadStatusSchema.parse(req.body);
+  const id = req.params.id as string;
+  const out = await svc.updateLeadStatus(id, status);
+  res.json(out);
+};
+
+export const leadDetailHandler: RequestHandler = async (req, res) => {
+  const id = req.params.id as string;
+  const out = await svc.leadDetail(id);
+  if (!out) return res.status(404).json({ message: "Not found" });
+  res.json(out);
+};
+
+export const updateLeadHandler: RequestHandler = async (req, res) => {
+  const id = req.params.id as string;
+  const data = UpdateLeadSchema.parse(req.body);
+  const actorId = (req as any).user?.id as string | undefined;
+  const lead = await svc.updateLead(id, data, actorId);
+  res.json(lead);
+};
+
+export const addNoteHandler: RequestHandler = async (req, res) => {
+  const id = req.params.id as string;
+  const content = (req.body?.content as string | undefined) || "";
+  if (!content.trim()) return res.status(400).json({ message: "Content required" });
+  const authorId = (req as any).user?.id as string | undefined;
+  const note = await svc.addLeadNote(id, content, authorId);
+  res.status(201).json(note);
+};

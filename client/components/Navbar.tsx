@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/Logo";
+import { currentUser, logout as logoutApi } from "@/lib/api";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -30,7 +31,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => !!currentUser());
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
 
@@ -49,6 +50,17 @@ export function Navbar() {
     setIsMenuOpen(false);
     setIsProfileDropdownOpen(false);
   }, [location.pathname]);
+
+  // Update login state when storage changes (e.g., in other tabs)
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "accessToken" || e.key === "user") {
+        setIsLoggedIn(!!currentUser());
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -71,10 +83,11 @@ export function Navbar() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
+    // no-op search submit handler
   };
 
   const handleLogout = () => {
+    logoutApi();
     setIsLoggedIn(false);
     setIsProfileDropdownOpen(false);
   };

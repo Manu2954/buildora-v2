@@ -76,7 +76,7 @@ export default function Logo({
         >
           <span
             className={cn("block uppercase tracking-wide")}
-            style={{ color: "#C69B4B", letterSpacing: "1px", paddingBottom: "1px", fontSize: size === "small" ? undefined : "x-large" }}
+            style={{ color: "#C69B4B", letterSpacing: "1px", marginBottom: "-5px", paddingBottom: "1px", fontSize: size === "small" ? undefined : "x-large" }}
           >
             BUILDORA
           </span>

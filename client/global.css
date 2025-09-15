@@ -99,7 +99,8 @@
   }
 
   html {
-    font-size: 16px; /* Ensure normal base size */
+    /* Slightly reduce the global scale to make the UI feel less zoomed */
+    font-size: 15px;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }

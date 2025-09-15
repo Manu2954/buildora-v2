@@ -101,6 +101,13 @@
     @apply border-border;
   }
 
+  html {
+    /* Keep the CTA app visually in sync with the main app: reduce base scale */
+    font-size: 15px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
   }

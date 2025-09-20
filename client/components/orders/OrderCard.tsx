@@ -47,7 +47,7 @@ export function OrderCard({ item }: { item: OrderItem }) {
         </div>
         <div className="mt-4">
           <Button asChild className="w-full rounded-xl bg-[#C69B4B] hover:bg-[#B1873E]">
-            <Link to={`/project/${item.id}`} aria-label={`View details for project ${item.id}`}>
+            <Link to={`/orders/${item.id}`} aria-label={`View details for order ${item.id}`}>
               View Details
             </Link>
           </Button>

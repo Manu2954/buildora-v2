@@ -13,6 +13,13 @@ import { registerMetrics } from "./routes/metrics";
 import { coreRouter } from "./api/core/auth.routes";
 import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
+import { ordersRouter, adminOrdersRouter } from "./api/orders/orders.routes";
+import { catalogRouter, adminCatalogRouter } from "./api/catalog/catalog.routes";
+import { designsRouter, adminDesignsRouter } from "./api/designs/designs.routes";
+import { interiorOrdersRouter, adminInteriorOrdersRouter } from "./api/interior/orders.routes";
+import { projectsRouter, adminProjectsRouter } from "./api/interior/projects.routes";
+import { uploadsRouter } from "./api/interior/uploads.routes";
+import path from "path";
 
 export function createServer() {
   const app = express();
@@ -30,10 +37,9 @@ export function createServer() {
         if (res.statusCode >= 400) return "warn";
         return "info";
       },
-      autoLogging: {
-        ignorePaths: ["/healthz", "/readyz", "/metrics"],
-      },
-    })
+      // cast to any to avoid pino-http typing friction across versions
+      autoLogging: ({ ignorePaths: ["/healthz", "/readyz", "/metrics"] } as any),
+    } as any)
   );
 
   // API router (apply security only under /api to avoid interfering with Vite dev HTML)
@@ -75,8 +81,28 @@ export function createServer() {
   // CTA API - public submit, admin endpoints; add public rate limit to CTA
   api.use("/cta", publicRateLimiter, ctaRouter);
 
+  // Orders API
+  api.use("/orders", ordersRouter);
+  api.use("/admin/orders", adminOrdersRouter);
+
+  // Catalog API
+  api.use("/catalog", catalogRouter);
+  api.use("/admin/catalog", adminCatalogRouter);
+
+  // Designs + Interior Orders/Projects API (new workflow)
+  api.use("/", designsRouter);
+  api.use("/admin", adminDesignsRouter);
+  api.use("/interior", interiorOrdersRouter);
+  api.use("/admin/interior", adminInteriorOrdersRouter);
+  api.use("/interior", projectsRouter);
+  api.use("/admin/interior", adminProjectsRouter);
+  api.use("/interior", uploadsRouter);
+
   // Mount API router
   app.use("/api", api);
+
+  // Serve uploaded media
+  app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
 
   // Central error handler (last)
   app.use(errorHandler);

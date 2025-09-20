@@ -18,8 +18,8 @@ export default function AdminDashboard() {
         setTodayTotal(td.total);
         const wk = await apiFetch<{ total: number }>(`/api/cta/analytics?from=${iso(weekStart)}&to=${iso(today)}`, { auth: true });
         setWeekTotal(wk.total);
-        const rec = await apiFetch<{ items: any[] }>(`/api/cta/leads?page=1&pageSize=5`, { auth: true });
-        setRecent(rec.items);
+        const rec = await apiFetch<{ items?: any[] }>(`/api/cta/leads?page=1&pageSize=5`, { auth: true });
+        setRecent(Array.isArray(rec.items) ? rec.items : []);
       } catch {}
     })();
   }, []);
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
       {/* Recent leads */}
       <AdminCard title="Recent Leads">
         <div className="divide-y divide-[#D9D9D9]">
-          {recent.map((r) => (
+          {(recent || []).map((r) => (
             <div key={r.id} className="py-3 flex items-center justify-between">
               <div className="min-w-0">
                 <div className="font-medium text-[#333132] break-words">{r.name || '—'}</div>

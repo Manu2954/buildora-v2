@@ -26,6 +26,12 @@ model User {
   assignedLeads Lead[]      @relation("LeadAssignedToUser")
   leadNotes     LeadNote[]  @relation("LeadNoteAuthor")
   leadEvents    LeadEvent[] @relation("LeadEventActor")
+  orders        Order[]
+  // Interior workflow back-relations
+  interiorOrders InteriorOrder[]
+  projects       Project[]            // as customer
+  salesProjects  Project[] @relation("ProjectSales")
+  designProjects Project[] @relation("ProjectDesigner")
 }
 
 model RefreshToken {
@@ -106,4 +112,177 @@ model LeadEvent {
   type      String
   data      Json?
   createdAt DateTime @default(now())
+}
+
+
+// Orders
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  status          OrderStatus @default(PENDING)
+  currency        String      @default("USD")
+  subtotalCents   Int         @default(0)
+  taxCents        Int         @default(0)
+  shippingCents   Int         @default(0)
+  totalCents      Int         @default(0)
+  // Shipping (embedded)
+  shipName        String?
+  shipLine1       String?
+  shipLine2       String?
+  shipCity        String?
+  shipState       String?
+  shipPostalCode  String?
+  shipCountry     String?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id             String @id @default(cuid())
+  order          Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  sku            String?
+  productName    String
+  description    String?
+  // New design/product metadata snapshot fields
+  materialsUsed       String?
+  recommendedRoomSize String?
+  colorPalette        String?
+  designCode          String?
+  unitPriceCents Int
+  quantity       Int
+  totalCents     Int
+}
+
+// Simple product catalog for order items customers can select
+model Product {
+  id          String   @id @default(cuid())
+  sku         String?  @unique
+  name        String
+  description String?
+  priceCents  Int
+  imageUrl    String?
+  active      Boolean  @default(true)
+  // New product metadata fields
+  materialsUsed       String?
+  recommendedRoomSize String?
+  colorPalette        String?
+  designCode          String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+// =============================
+// Interior Workflow Models
+// =============================
+
+enum DesignBudget {
+  BASIC
+  PREMIUM
+  LUXURY
+}
+
+model Design {
+  id                 String   @id @default(cuid())
+  title              String
+  description        String?
+  category           String?
+  style              String?
+  budget             DesignBudget @default(BASIC)
+  basePriceCents     Int
+  durationDays       Int?
+  images             Json      @default("[]") // array of URL strings
+  customizationOptions Json?   // arbitrary options structure
+  active             Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  // Back relation to interior order items
+  interiorItems      InteriorOrderItem[]
+}
+
+enum InteriorOrderStatus {
+  QUOTATION_PENDING
+  IN_PROGRESS
+  MATERIAL_PROCUREMENT
+  EXECUTION
+  COMPLETED
+  CANCELLED
+}
+
+enum InteriorOrderItemStatus {
+  DRAFT
+  FINALIZED
+}
+
+model InteriorOrder {
+  id                     String   @id @default(cuid())
+  user                   User     @relation(fields: [userId], references: [id])
+  userId                 String
+  status                 InteriorOrderStatus @default(QUOTATION_PENDING)
+  totalPriceCents        Int      @default(0)
+  discountsCents         Int      @default(0)
+  extrasCents            Int      @default(0)
+  milestones             Json     @default("[]") // array of {label, amountCents, status, approved}
+  invoices               Json     @default("[]") // array of {id,label?,url,uploadedAt}
+  consultationRequested  Boolean  @default(false)
+  consultationAt         DateTime?
+  meetingNotes           String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  items                  InteriorOrderItem[]
+  project                Project? @relation("OrderProject")
+}
+
+model InteriorOrderItem {
+  id                 String   @id @default(cuid())
+  order              InteriorOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId            String
+  design             Design   @relation(fields: [designId], references: [id])
+  designId           String
+  title              String   // snapshot of design title
+  selectedOptions    Json?
+  quantity           Int      @default(1)
+  status             InteriorOrderItemStatus @default(DRAFT)
+  computedPriceCents Int      @default(0)
+  room               String?
+}
+
+model Project {
+  id            String  @id @default(cuid())
+  order         InteriorOrder? @relation("OrderProject", fields: [orderId], references: [id])
+  orderId       String? @unique
+  customer      User    @relation(fields: [customerId], references: [id])
+  customerId    String
+  siteLocation  String?
+  salesperson   User?   @relation("ProjectSales", fields: [salespersonId], references: [id])
+  salespersonId String?
+  designer      User?   @relation("ProjectDesigner", fields: [designerId], references: [id])
+  designerId    String?
+  contractor    String?
+  startDate     DateTime?
+  eta           DateTime?
+  comments      String?
+  mediaUploads  Json    @default("[]")
+  permits       Json    @default("[]")
+  signOffs      Json    @default("[]")
+  handoverData  Json?
+  rating        Int?
+  feedback      String?
+  supportContact String?
+  status        InteriorOrderStatus @default(IN_PROGRESS)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

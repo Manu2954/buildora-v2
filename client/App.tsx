@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
+import OrderItems from "./pages/OrderItems";
+import OrderDetail from "./pages/OrderDetail";
 import Profile from "./pages/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
@@ -21,10 +23,18 @@ import CtaConfig from "./pages/admin/CtaConfig";
 import CtaAnalytics from "./pages/admin/CtaAnalytics";
 import Leads from "./pages/admin/Leads";
 import LeadDetail from "./pages/admin/LeadDetail";
+import Catalog from "./pages/admin/Catalog";
 import PublicLayout from "./pages/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import ExploreDesigns from "./pages/ExploreDesigns";
+import DesignDetail from "./pages/DesignDetail";
+import ProjectCart from "./pages/ProjectCart";
+import Checkout from "./pages/Checkout";
+import InteriorOrderDetail from "./pages/InteriorOrderDetail";
+import DesignManagement from "./admin/pages/DesignManagement";
+import InteriorOrderManagement from "./admin/pages/InteriorOrderManagement";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +53,13 @@ export default function App() {
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:id" element={<OrderDetail />} />
+              <Route path="/order-items" element={<OrderItems />} />
+              <Route path="/designs" element={<ExploreDesigns />} />
+              <Route path="/designs/:id" element={<DesignDetail />} />
+              <Route path="/cart" element={<ProjectCart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/dashboard/interior-orders/:id" element={<InteriorOrderDetail />} />
               <Route path="/project/:id" element={<ProjectDetails />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/about" element={<About />} />
@@ -64,6 +81,9 @@ export default function App() {
               <Route path="cta/analytics" element={<CtaAnalytics />} />
               <Route path="cta/leads" element={<Leads />} />
               <Route path="cta/leads/:id" element={<LeadDetail />} />
+              <Route path="catalog" element={<Catalog />} />
+              <Route path="designs" element={<DesignManagement />} />
+              <Route path="interior-orders" element={<InteriorOrderManagement />} />
             </Route>
 
             {/* Optionally, add an admin-specific 404 here later */}

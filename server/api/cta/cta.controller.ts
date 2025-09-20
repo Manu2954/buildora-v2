@@ -17,10 +17,10 @@ export const putConfigHandler: RequestHandler = async (req, res) => {
 export const submitHandler: RequestHandler = async (req, res) => {
   const data = SubmitSchema.parse(req.body);
   const out = await svc.submitLead({
-    ...data,
+    ...(data as any),
     ip: req.ip,
     userAgent: (req.headers["user-agent"] as string | undefined) ?? undefined,
-  });
+  } as Parameters<typeof svc.submitLead>[0]);
   res.status(201).json(out);
 };
 

@@ -4,14 +4,14 @@ import * as svc from "../../core/auth/auth.service";
 
 export const registerHandler: RequestHandler = async (req, res) => {
   const data = RegisterSchema.parse(req.body);
-  const out = await svc.register(data);
+  const out = await svc.register(data as Parameters<typeof svc.register>[0]);
   if ("error" in out) return res.status(out.error.status).json({ message: out.error.message });
   res.status(201).json(out);
 };
 
 export const loginHandler: RequestHandler = async (req, res) => {
   const data = LoginSchema.parse(req.body);
-  const out = await svc.login(data);
+  const out = await svc.login(data as Parameters<typeof svc.login>[0]);
   if ("error" in out) return res.status(out.error.status).json({ message: out.error.message });
   res.json(out);
 };
@@ -36,4 +36,3 @@ export const meHandler: RequestHandler = async (req, res) => {
   if ("error" in out) return res.status(out.error.status).json({ message: out.error.message });
   res.json(out);
 };
-

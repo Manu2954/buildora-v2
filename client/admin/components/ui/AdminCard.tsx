@@ -15,7 +15,7 @@ export default function AdminCard({
   return (
     <section
       className={cn(
-        "bg-white border border-[#D9D9D9] rounded-3xl shadow-sm",
+        "bg-card border border-border rounded-2xl shadow-sm",
         "p-4 md:p-6",
         className,
       )}
@@ -23,7 +23,9 @@ export default function AdminCard({
       {(title || actions) && (
         <div className="mb-4 flex items-center justify-between gap-3">
           {title ? (
-            <h2 className="text-base md:text-lg font-semibold text-[#333132]">{title}</h2>
+            <h2 className="text-base md:text-lg font-semibold text-buildora-text">
+              {title}
+            </h2>
           ) : (
             <div />
           )}
@@ -34,4 +36,3 @@ export default function AdminCard({
     </section>
   );
 }
-

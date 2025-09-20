@@ -35,17 +35,42 @@ export default function AdminNavbar({
           >
             <Menu className="h-5 w-5 text-buildora-text" />
           </button>
-          <Link to="/admin" className="text-xl md:text-2xl font-semibold tracking-tight">
-            <span className="text-buildora-gold">Buildora</span> <span className="text-buildora-text">Admin</span>
+          <Link
+            to="/admin"
+            className="text-xl md:text-2xl font-semibold tracking-tight"
+          >
+            <span className="text-buildora-gold">Buildora</span>{" "}
+            <span className="text-buildora-text">Admin</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-[15px] text-muted-foreground">
-            <Link to="/admin" className="hover:text-buildora-gold min-h-[44px] inline-flex items-center">Overview</Link>
-            <Link to="/admin/cta/leads" className="hover:text-buildora-gold min-h-[44px] inline-flex items-center">Leads</Link>
-            <Link to="/admin/cta/config" className="hover:text-buildora-gold min-h-[44px] inline-flex items-center">CTA Config</Link>
+            <Link
+              to="/admin"
+              className="hover:text-buildora-gold min-h-[44px] inline-flex items-center"
+            >
+              Overview
+            </Link>
+            <Link
+              to="/admin/cta/leads"
+              className="hover:text-buildora-gold min-h-[44px] inline-flex items-center"
+            >
+              Leads
+            </Link>
+            <Link
+              to="/admin/cta/config"
+              className="hover:text-buildora-gold min-h-[44px] inline-flex items-center"
+            >
+              CTA Config
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <AdminButton variant="secondary" onClick={onLogout} aria-label="Logout">Logout</AdminButton>
+          <AdminButton
+            variant="secondary"
+            onClick={onLogout}
+            aria-label="Logout"
+          >
+            Logout
+          </AdminButton>
         </div>
       </div>
     </header>

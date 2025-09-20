@@ -23,7 +23,9 @@ export default function AdminCard({
       {(title || actions) && (
         <div className="mb-4 flex items-center justify-between gap-3">
           {title ? (
-            <h2 className="text-base md:text-lg font-semibold text-buildora-text">{title}</h2>
+            <h2 className="text-base md:text-lg font-semibold text-buildora-text">
+              {title}
+            </h2>
           ) : (
             <div />
           )}

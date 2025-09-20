@@ -41,6 +41,7 @@ export default defineConfig({
         "jsonwebtoken",
         "@prisma/client",
         "prisma",
+        "multer",
       ],
       output: {
         format: "es",

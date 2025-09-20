@@ -1,11 +1,12 @@
 import { countLeadsBetween, createLead, findConfig, upsertConfig, listLeads, setLeadStatus, getLeadById, updateLead as updateLeadRepo, createLeadNote, listLeadNotes, logLeadEvent } from "./cta.repo";
+import type { Prisma } from "@prisma/client";
 
 export async function getConfig(key: string) {
   const cfg = await findConfig(key);
   return { key, config: (cfg?.json as Record<string, unknown>) ?? {} } as const;
 }
 
-export async function putConfig(key: string, config: Record<string, unknown>) {
+export async function putConfig(key: string, config: Prisma.InputJsonValue) {
   await upsertConfig(key, config);
   return { ok: true, key } as const;
 }

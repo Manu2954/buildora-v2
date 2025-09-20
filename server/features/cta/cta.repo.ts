@@ -1,10 +1,11 @@
 import { prisma } from "../../prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export async function findConfig(key: string) {
   return prisma.ctaConfig.findUnique({ where: { key } });
 }
 
-export async function upsertConfig(key: string, json: Record<string, unknown>) {
+export async function upsertConfig(key: string, json: Prisma.InputJsonValue) {
   return prisma.ctaConfig.upsert({ where: { key }, create: { key, json }, update: { json } });
 }
 

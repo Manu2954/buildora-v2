@@ -9,6 +9,7 @@ type Lead = {
   location: string|null; requirement: string|null; status: "NEW"|"CONTACTED"|"CLOSED";
   priority: "LOW"|"MEDIUM"|"HIGH"; followUpAt?: string|null;
   assignedTo?: { id: string; email: string; role: string } | null;
+  assignedToId?: string | null;
   createdAt: string;
 };
 

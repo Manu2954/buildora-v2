@@ -6,6 +6,7 @@ const items = [
   { label: "Overview", href: "/admin", icon: Home },
   { label: "Lead Analytics", href: "/admin/cta/leads", icon: BarChart3 },
   { label: "CTA Config", href: "/admin/cta/config", icon: SlidersHorizontal },
+  { label: "Catalog", href: "/admin/catalog", icon: SlidersHorizontal },
 ];
 
 export default function AdminSidebar({ collapsed = false, mobile = false, onClose }: { collapsed?: boolean; mobile?: boolean; onClose?: () => void }) {

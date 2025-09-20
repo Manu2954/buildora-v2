@@ -36,3 +36,20 @@ Routes
 - Core: `/api/core/auth/register|login|refresh|logout|me`
 - CTA: `/api/cta/submit` (public), `/api/cta/config` (GET public, PUT admin via `x-api-key`), `/api/cta/analytics` (admin via `x-api-key`)
 
+Interior Workflow (New)
+- Designs (public): `GET /api/designs`, `GET /api/designs/:id`
+- Designs (admin): `GET/POST/PUT/DELETE /api/admin/designs`
+- Interior Orders (customer):
+  - `POST /api/interior/orders` create draft
+  - `GET /api/interior/orders` list my orders
+  - `GET /api/interior/orders/:id` get my order
+  - `POST /api/interior/orders/:orderId/items` add item
+  - `PUT /api/interior/orders/:orderId/items/:itemId` update item
+  - `DELETE /api/interior/orders/:orderId/items/:itemId` remove item
+  - `POST /api/interior/orders/:orderId/submit` request consultation
+- Interior Orders (admin): `GET /api/admin/interior/orders`, `GET/PUT /api/admin/interior/orders/:id`
+- Projects: `GET/POST/PUT /api/interior/projects[/:id]` (customer), admin list/get: `/api/admin/interior/projects`
+- Media upload: `POST /api/interior/projects/:id/uploads` (multipart/form-data) -> `{ id, url, ... }`
+
+Seed
+- `npm run db:push` then `npm run db:seed` to create an admin user and sample designs.

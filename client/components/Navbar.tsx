@@ -21,6 +21,7 @@ import { currentUser, logout as logoutApi } from "@/lib/api";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
+  { name: "Designs", href: "/designs", icon: ShoppingBag },
   { name: "Services", href: "/services", icon: ShoppingBag },
   { name: "Orders", href: "/orders", icon: ClipboardList },
   { name: "About", href: "/about", icon: Info },
@@ -167,12 +168,9 @@ export function Navbar() {
               </Link>
 
               {/* Cart/Order Icon */}
-              <button className="relative p-3 text-[#333132] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center">
+              <Link to="/cart" className="relative p-3 text-[#333132] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center">
                 <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-[#c59c46] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                  3
-                </span>
-              </button>
+              </Link>
 
               {/* User Profile / Auth */}
               {isLoggedIn ? (
@@ -402,10 +400,10 @@ export function Navbar() {
               )}
 
               <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-300">
-                <button className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200">
+                <Link to="/cart" className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200">
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  <span className="font-medium">Cart (3)</span>
-                </button>
+                  <span className="font-medium">Project Cart</span>
+                </Link>
                 <span className="bg-[#c59c46] text-white text-xs px-3 py-1 rounded-full font-medium">
                   New
                 </span>

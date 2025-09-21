@@ -14,18 +14,40 @@ enum Role {
   CUSTOMER
 }
 
+enum ProjectStatus {
+  QUOTATION_PENDING
+  IN_PROGRESS
+  MATERIAL_PROCUREMENT
+  EXECUTION
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIALLY_PAID
+  OVERDUE
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  role          Role           @default(CUSTOMER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
   // Back-relations
-  assignedLeads Lead[]      @relation("LeadAssignedToUser")
-  leadNotes     LeadNote[]  @relation("LeadNoteAuthor")
-  leadEvents    LeadEvent[] @relation("LeadEventActor")
+  assignedLeads Lead[]         @relation("LeadAssignedToUser")
+  leadNotes     LeadNote[]     @relation("LeadNoteAuthor")
+  leadEvents    LeadEvent[]    @relation("LeadEventActor")
 }
 
 model RefreshToken {
@@ -40,32 +62,32 @@ model RefreshToken {
 
 // Existing CTA models
 model Lead {
-  id          String   @id @default(cuid())
-  name        String?
-  email       String?
-  phone       String?
-  message     String?
-  location    String?
-  requirement String?
-  page        String?
-  variant     String?
-  source      String?
-  utmSource   String?
-  utmMedium   String?
-  utmCampaign String?
-  utmTerm     String?
-  utmContent  String?
-  fingerprint String?
-  ip          String?
-  userAgent   String?
-  status      LeadStatus @default(NEW)
-  priority    LeadPriority @default(MEDIUM)
-  followUpAt  DateTime?
-  assignedTo  User?      @relation("LeadAssignedToUser", fields: [assignedToId], references: [id])
+  id           String       @id @default(cuid())
+  name         String?
+  email        String?
+  phone        String?
+  message      String?
+  location     String?
+  requirement  String?
+  page         String?
+  variant      String?
+  source       String?
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  utmTerm      String?
+  utmContent   String?
+  fingerprint  String?
+  ip           String?
+  userAgent    String?
+  status       LeadStatus   @default(NEW)
+  priority     LeadPriority @default(MEDIUM)
+  followUpAt   DateTime?
+  assignedTo   User?        @relation("LeadAssignedToUser", fields: [assignedToId], references: [id])
   assignedToId String?
-  createdAt   DateTime @default(now())
-  notes       LeadNote[]
-  events      LeadEvent[]
+  createdAt    DateTime     @default(now())
+  notes        LeadNote[]
+  events       LeadEvent[]
 }
 
 model CtaConfig {
@@ -106,4 +128,133 @@ model LeadEvent {
   type      String
   data      Json?
   createdAt DateTime @default(now())
+}
+
+model Contact {
+  id                   String           @id @default(cuid())
+  name                 String
+  phone                String?
+  email                String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  projectsAsSalesman   Project[]        @relation("ProjectSalesman")
+  projectsAsDesigner   Project[]        @relation("ProjectDesigner")
+  projectsAsContractor Project[]        @relation("ProjectContractor")
+  closuresAsAfterSales ProjectClosure[] @relation("ClosureAfterSales")
+}
+
+model FileObject {
+  id                    String           @id @default(cuid())
+  name                  String
+  url                   String
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  projectsAsInvoice     Project[]        @relation("ProjectInvoices")
+  projectsAsPermit      Project[]        @relation("ProjectPermits")
+  projectsAsSignoff     Project[]        @relation("ProjectSignoffs")
+  projectsAsQuotation   Project[]        @relation("ProjectQuotation")
+  closuresAsCertificate ProjectClosure[] @relation("ClosureCertificate")
+  closuresAsWarranty    ProjectClosure[] @relation("ClosureWarranty")
+}
+
+model Project {
+  id              String             @id @db.VarChar(24)
+  address         String
+  type            String
+  salesmanId      String?
+  salesman        Contact?           @relation("ProjectSalesman", fields: [salesmanId], references: [id])
+  designerId      String?
+  designer        Contact?           @relation("ProjectDesigner", fields: [designerId], references: [id])
+  contractorId    String?
+  contractor      Contact?           @relation("ProjectContractor", fields: [contractorId], references: [id])
+  startDate       DateTime?
+  eta             DateTime?
+  status          ProjectStatus      @default(IN_PROGRESS)
+  sitePhoto       String?
+  quotationFileId String?
+  quotationFile   FileObject?        @relation("ProjectQuotation", fields: [quotationFileId], references: [id])
+  discounts       Decimal            @default(0) @db.Decimal(12, 2)
+  extras          Decimal            @default(0) @db.Decimal(12, 2)
+  materials       MaterialLineItem[]
+  milestones      Milestone[]
+  invoices        FileObject[]       @relation("ProjectInvoices")
+  designs         DesignAsset[]
+  permits         FileObject[]       @relation("ProjectPermits")
+  signoffs        FileObject[]       @relation("ProjectSignoffs")
+  worksiteMedia   MediaAsset[]       @relation("ProjectMedia")
+  closure         ProjectClosure?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?
+
+  @@index([status])
+  @@index([startDate])
+  @@index([eta])
+}
+
+model Milestone {
+  id        String        @id @default(cuid())
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  label     String
+  amount    Decimal       @db.Decimal(12, 2)
+  status    PaymentStatus @default(PENDING)
+  approved  Boolean       @default(false)
+  dueDate   DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([projectId, status])
+}
+
+model MaterialLineItem {
+  id        String   @id @default(cuid())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  type      String
+  brand     String?
+  qty       String?
+  status    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, status])
+}
+
+model DesignAsset {
+  id        String   @id @default(cuid())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  url       String
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String    @id @default(cuid())
+  project   Project   @relation("ProjectMedia", fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  kind      MediaKind @default(IMAGE)
+  url       String
+  caption   String?
+  isClosure Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model ProjectClosure {
+  id            String      @id @default(cuid())
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String      @unique
+  certificateId String?
+  certificate   FileObject? @relation("ClosureCertificate", fields: [certificateId], references: [id])
+  warrantyId    String?
+  warranty      FileObject? @relation("ClosureWarranty", fields: [warrantyId], references: [id])
+  afterSalesId  String?
+  afterSales    Contact?    @relation("ClosureAfterSales", fields: [afterSalesId], references: [id])
+  handoverDate  DateTime?
+  followupDate  DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }

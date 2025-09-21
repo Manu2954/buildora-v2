@@ -13,6 +13,7 @@ import { registerMetrics } from "./routes/metrics";
 import { coreRouter } from "./api/core/auth.routes";
 import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
+import { projectRouter } from "./src/domains/project/routes";
 
 export function createServer() {
   const app = express();
@@ -67,6 +68,8 @@ export function createServer() {
     res.json({ message: env.PING_MESSAGE ?? "ping" });
   });
   // Removed demo route
+
+  api.use("/projects", projectRouter);
 
   // Core API (auth, protected features) - protected endpoints are inside router
   api.use("/core", coreRouter);

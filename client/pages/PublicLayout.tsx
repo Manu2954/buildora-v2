@@ -6,8 +6,10 @@ export default function PublicLayout() {
   return (
     <SidebarProvider>
       <Navbar />
-      <Outlet />
+      {/* Add top padding to avoid content being hidden under fixed navbar.  */}
+      <main className="pt-28 md:pt-20">
+        <Outlet />
+      </main>
     </SidebarProvider>
   );
 }
-

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { featuredDesigns } from "@/components/FeaturedDesigns";
 import { Star, Heart } from "lucide-react";
@@ -26,21 +27,28 @@ export default function DesignDetail() {
 
   return (
     <div className="container py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">{design.title}</h1>
-          <p className="text-muted-foreground mt-1">{design.style} • {design.category}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsWishlisted((s) => !s)}
-            className={`inline-flex items-center gap-2 py-2 px-3 rounded-lg ${isWishlisted ? "bg-buildora-gold text-white" : "bg-card border border-border"}`}
-          >
-            <Heart className="h-5 w-5" />
-            {isWishlisted ? "Wishlisted" : "Add to Wishlist"}
-          </button>
+      {/* Card-style header */}
+      <div className="mb-6">
+        <div className="bg-[#f9f9f9] text-[#333] rounded-lg p-4 md:p-6 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div className="flex-1">
+              <h1 className="text-2xl md:text-3xl font-bold text-[#333] leading-tight">{design.title}</h1>
+              <p className="text-sm text-gray-500 mt-2">{design.style} • {design.category}</p>
+            </div>
 
-          <Link to="/designs" className="text-sm text-muted-foreground">Back to designs</Link>
+            <div className="mt-4 md:mt-0 md:ml-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button
+                onClick={() => setIsWishlisted((s) => !s)}
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4 rounded-lg shadow-sm transition-colors duration-200 text-sm font-medium focus:outline-none ${isWishlisted ? "bg-[#c59c46] text-white" : "bg-white border border-border text-[#333] hover:bg-[#f3f3f3]"}`}
+                aria-pressed={isWishlisted}
+              >
+                <Heart className="h-5 w-5" />
+                {isWishlisted ? "Wishlisted" : "Add to Wishlist"}
+              </button>
+
+              <Link to="/designs" className="mt-2 sm:mt-0 text-sm text-gray-600 hover:text-[#c59c46] self-center sm:self-auto">Back to designs</Link>
+            </div>
+          </div>
         </div>
       </div>
 

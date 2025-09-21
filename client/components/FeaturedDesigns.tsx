@@ -1,4 +1,5 @@
 import { useState } from "react";
+import React, { useState } from "react";
 import {
   Star,
   Heart,
@@ -104,7 +105,7 @@ const filterOptions = {
   styles: ["All", "Modern", "Traditional", "Contemporary", "Luxury"],
 };
 
-export function xFeaturedDesigns() {
+export function FeaturedDesigns() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBudget, setSelectedBudget] = useState("All");
   const [selectedStyle, setSelectedStyle] = useState("All");

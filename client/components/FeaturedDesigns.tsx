@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const featuredDesigns = [
+export const featuredDesigns = [
   {
     id: 1,
     title: "Modern Minimalist Living",

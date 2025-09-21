@@ -34,25 +34,33 @@ export function createServer() {
       autoLogging: {
         ignorePaths: ["/healthz", "/readyz", "/metrics"],
       },
-    })
+    }),
   );
 
   // API router (apply security only under /api to avoid interfering with Vite dev HTML)
   const api = express.Router();
-  const helmetOptions: Parameters<typeof helmet>[0] = env.NODE_ENV === "development"
-    ? { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }
-    : {};
+  const helmetOptions: Parameters<typeof helmet>[0] =
+    env.NODE_ENV === "development"
+      ? { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }
+      : {};
   api.use(helmet(helmetOptions));
   app.set("trust proxy", true);
-  const corsOrigins = env.CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean);
+  const corsOrigins = env.CORS_ORIGINS.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   api.use(
     cors({
       origin: (origin, cb) => {
-        if (!origin || corsOrigins.includes("*") || corsOrigins.includes(origin)) return cb(null, true);
+        if (
+          !origin ||
+          corsOrigins.includes("*") ||
+          corsOrigins.includes(origin)
+        )
+          return cb(null, true);
         return cb(new Error("Not allowed by CORS"));
       },
       credentials: true,
-    })
+    }),
   );
 
   // Parsers

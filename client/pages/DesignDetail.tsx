@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { featuredDesigns } from "@/components/FeaturedDesigns";
 import { Star, Heart } from "lucide-react";

@@ -22,7 +22,7 @@ import { currentUser, logout as logoutApi } from "@/lib/api";
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Services", href: "/services", icon: ShoppingBag },
-  { name: "Orders", href: "/orders", icon: ClipboardList },
+  { name: "Projects", href: "/projects", icon: ClipboardList },
   { name: "About", href: "/about", icon: Info },
   { name: "Contact", href: "/contact", icon: Phone },
 ];
@@ -199,11 +199,11 @@ export function Navbar() {
                   {isProfileDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                       <Link
-                        to="/orders"
+                        to="/projects"
                         className="flex items-center px-4 py-3 text-base text-[#333132] hover:bg-[#f8f8f8] hover:text-[#c59c46] transition-colors duration-200 min-h-[44px]"
                       >
                         <ClipboardList className="h-4 w-4 mr-3" />
-                        My Orders
+                        My Projects
                       </Link>
                       <Link
                         to="/profile"
@@ -362,11 +362,11 @@ export function Navbar() {
 
                   <div className="space-y-3">
                     <Link
-                      to="/orders"
+                      to="/projects"
                       className="flex items-center text-[#333132] hover:text-[#c59c46] transition-colors duration-200 py-2 min-h-[44px]"
                     >
                       <ClipboardList className="h-5 w-5 mr-3" />
-                      <span className="font-medium">My Orders</span>
+                      <span className="font-medium">My Projects</span>
                     </Link>
                     <Link
                       to="/profile"

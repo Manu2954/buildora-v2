@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
-import Orders from "./pages/Orders";
+import Projects from "./pages/Orders";
 import Profile from "./pages/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
@@ -42,7 +42,7 @@ export default function App() {
             <Route element={<PublicLayout />}>
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/orders" element={<Orders />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/project/:id" element={<ProjectDetails />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/about" element={<About />} />

@@ -22,10 +22,10 @@ const navItems = [
     id: "search",
   },
   {
-    name: "Orders",
-    href: "/orders",
+    name: "Projects",
+    href: "/projects",
     icon: ClipboardList,
-    id: "orders",
+    id: "projects",
   },
   {
     name: "Profile",

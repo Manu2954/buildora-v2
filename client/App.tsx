@@ -61,7 +61,11 @@ export default function App() {
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin/*"
-              element={<ProtectedRoute roles={["ADMIN"]}><AdminLayout /></ProtectedRoute>}
+              element={
+                <ProtectedRoute roles={["ADMIN"]}>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
             >
               <Route index element={<AdminDashboard />} />
               <Route path="cta/config" element={<CtaConfig />} />

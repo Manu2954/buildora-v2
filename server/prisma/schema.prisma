@@ -48,6 +48,7 @@ model User {
   assignedLeads Lead[]         @relation("LeadAssignedToUser")
   leadNotes     LeadNote[]     @relation("LeadNoteAuthor")
   leadEvents    LeadEvent[]    @relation("LeadEventActor")
+  projects      Project[]      @relation("ProjectCustomer")
 }
 
 model RefreshToken {
@@ -161,6 +162,8 @@ model Project {
   id              String             @id @db.VarChar(24)
   address         String
   type            String
+  customerId      String?
+  customer        User?              @relation("ProjectCustomer", fields: [customerId], references: [id])
   salesmanId      String?
   salesman        Contact?           @relation("ProjectSalesman", fields: [salesmanId], references: [id])
   designerId      String?
@@ -190,6 +193,7 @@ model Project {
   @@index([status])
   @@index([startDate])
   @@index([eta])
+  @@index([customerId])
 }
 
 model Milestone {

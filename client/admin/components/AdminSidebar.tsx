@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, BarChart3, SlidersHorizontal, X } from "lucide-react";
+import { Home, BarChart3, SlidersHorizontal, ClipboardList, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const items = [
   { label: "Overview", href: "/admin", icon: Home },
   { label: "Lead Analytics", href: "/admin/cta/leads", icon: BarChart3 },
+  { label: "Projects", href: "/admin/projects", icon: ClipboardList },
   { label: "CTA Config", href: "/admin/cta/config", icon: SlidersHorizontal },
 ];
 

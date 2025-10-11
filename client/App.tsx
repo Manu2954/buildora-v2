@@ -23,6 +23,7 @@ import CtaConfig from "./pages/admin/CtaConfig";
 import CtaAnalytics from "./pages/admin/CtaAnalytics";
 import Leads from "./pages/admin/Leads";
 import LeadDetail from "./pages/admin/LeadDetail";
+import AdminProjects from "./pages/admin/Projects";
 import PublicLayout from "./pages/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUp from "./pages/SignUp";
@@ -72,6 +73,7 @@ export default function App() {
               <Route path="cta/analytics" element={<CtaAnalytics />} />
               <Route path="cta/leads" element={<Leads />} />
               <Route path="cta/leads/:id" element={<LeadDetail />} />
+              <Route path="projects" element={<AdminProjects />} />
             </Route>
 
             {/* Optionally, add an admin-specific 404 here later */}

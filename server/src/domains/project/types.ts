@@ -187,6 +187,7 @@ export const ProjectCreateInputSchema = z.object({
     .string()
     .regex(/^[A-Z]{2,4}-\d{4,6}$/)
     .optional(),
+  customerId: z.string().cuid().optional().nullable(),
   address: z.string().min(1).max(300),
   type: z.string().min(1).max(120),
   status: z.enum(PROJECT_STATUS_LABELS).optional(),
@@ -221,6 +222,7 @@ export const ProjectUpdateInputSchema = z.object({
   address: z.string().min(1).max(300).optional(),
   type: z.string().min(1).max(120).optional(),
   status: z.enum(PROJECT_STATUS_LABELS).optional(),
+  customerId: z.string().cuid().optional().nullable(),
   salesman: ContactMiniSchema.optional(),
   designer: ContactMiniSchema.optional(),
   contractor: ContactMiniSchema.optional(),
@@ -251,9 +253,17 @@ export type ProjectUpdateInput = z.infer<typeof ProjectUpdateInputSchema>;
 
 export const ProjectSchema = z.object({
   id: z.string().regex(/^[A-Z]{2,4}-\d{4,6}$/),
+  customerId: z.string().cuid().nullable().optional(),
   address: z.string().min(1).max(300),
   type: z.string().min(1).max(120),
   status: z.enum(PROJECT_STATUS_LABELS),
+  customer: z
+    .object({
+      id: z.string().cuid(),
+      email: z.string().email(),
+      role: z.enum(["ADMIN", "SALESMAN", "CUSTOMER"]),
+    })
+    .optional(),
   salesman: ContactMiniSchema.optional(),
   designer: ContactMiniSchema.optional(),
   contractor: ContactMiniSchema.optional(),
@@ -290,6 +300,7 @@ export const ProjectListQuerySchema = z.object({
   pageSize: z.coerce.number().int().positive().max(50).default(10),
   status: z.enum(PROJECT_STATUS_LABELS).optional(),
   type: z.string().min(1).optional(),
+  customerId: z.string().cuid().optional(),
   q: z.string().min(1).optional(),
   startFrom: z
     .string()

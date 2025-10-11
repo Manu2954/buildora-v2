@@ -3,6 +3,7 @@ import {
   PaymentStatus as DbPaymentStatus,
   Prisma,
   ProjectStatus as DbProjectStatus,
+  Role as DbRole,
 } from "@prisma/client";
 import { prisma } from "../../../prisma/client";
 import {

@@ -9,7 +9,31 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const featuredDesigns = [
+type FeaturedMaterial = {
+  type: string;
+  detail?: string;
+};
+
+type FeaturedDesign = {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  rating: number;
+  reviews: number;
+  price: number;
+  duration: number;
+  isWishlisted: boolean;
+  style: string;
+  budget: string;
+  description?: string;
+  materials?: FeaturedMaterial[];
+  code?: string;
+};
+
+export type { FeaturedDesign };
+
+export const featuredDesigns: FeaturedDesign[] = [
   {
     id: 1,
     title: "Modern Minimalist Living",
@@ -22,6 +46,14 @@ export const featuredDesigns = [
     isWishlisted: false,
     style: "Modern",
     budget: "Premium",
+    description:
+      "A calm living space that combines clean lines, hidden storage, and warm textures for everyday comfort.",
+    materials: [
+      { type: "Flooring", detail: "Engineered oak planks" },
+      { type: "Lighting", detail: "Recessed LED profile lighting" },
+      { type: "Furniture", detail: "Custom modular sofa with neutral upholstery" },
+    ],
+    code: "BLD-001",
   },
   {
     id: 2,
@@ -35,6 +67,14 @@ export const featuredDesigns = [
     isWishlisted: true,
     style: "Luxury",
     budget: "Luxury",
+    description:
+      "A chef-inspired kitchen with a waterfall island, premium appliances, and layered lighting for entertaining.",
+    materials: [
+      { type: "Countertop", detail: "Quartz with waterfall edge" },
+      { type: "Cabinetry", detail: "High-gloss acrylic shutters" },
+      { type: "Backsplash", detail: "Handmade ceramic tiles" },
+    ],
+    code: "BLD-002",
   },
   {
     id: 3,
@@ -48,6 +88,14 @@ export const featuredDesigns = [
     isWishlisted: false,
     style: "Traditional",
     budget: "Basic",
+    description:
+      "A relaxing bedroom with layered fabrics, ambient lighting, and clever storage to keep clutter out of sight.",
+    materials: [
+      { type: "Headboard", detail: "Upholstered panel with tufted detailing" },
+      { type: "Wardrobe", detail: "Laminate sliding doors with mirrors" },
+      { type: "Lighting", detail: "Dimmable bedside pendant lamps" },
+    ],
+    code: "BLD-003",
   },
   {
     id: 4,
@@ -61,6 +109,14 @@ export const featuredDesigns = [
     isWishlisted: false,
     style: "Modern",
     budget: "Premium",
+    description:
+      "A compact bathroom transformed into a spa with mood lighting, matte finishes, and clever storage niches.",
+    materials: [
+      { type: "Tiles", detail: "Matte porcelain with anti-slip finish" },
+      { type: "Fixtures", detail: "Wall-mounted brassware" },
+      { type: "Storage", detail: "Floating vanity with quartz top" },
+    ],
+    code: "BLD-004",
   },
   {
     id: 5,
@@ -74,6 +130,14 @@ export const featuredDesigns = [
     isWishlisted: true,
     style: "Contemporary",
     budget: "Basic",
+    description:
+      "A productivity-first study corner with acoustic panels, concealed wiring, and ergonomic furniture.",
+    materials: [
+      { type: "Desk", detail: "Laminated plywood with cable management" },
+      { type: "Storage", detail: "Fluted shutters with push-to-open hardware" },
+      { type: "Lighting", detail: "Adjustable task lighting" },
+    ],
+    code: "BLD-005",
   },
   {
     id: 6,
@@ -87,6 +151,14 @@ export const featuredDesigns = [
     isWishlisted: false,
     style: "Traditional",
     budget: "Premium",
+    description:
+      "A warm dining room with a statement table, layered lighting, and cozy accents for family gatherings.",
+    materials: [
+      { type: "Dining Table", detail: "Solid wood with matte finish" },
+      { type: "Seating", detail: "Upholstered chairs with brass legs" },
+      { type: "Lighting", detail: "Clustered pendant fixture" },
+    ],
+    code: "BLD-006",
   },
 ];
 
@@ -158,68 +230,75 @@ export function FeaturedDesigns() {
           onClick={() => setShowFilters(!showFilters)}
           className="md:hidden flex items-center justify-center w-full py-3 px-4 bg-muted text-foreground rounded-lg font-medium mb-4"
         >
-          <Filter className="h-4 w-4 mr-2" />
-          Filters
-          <SlidersHorizontal className="h-4 w-4 ml-2" />
+          <Filter className="mr-2 h-4 w-4" />
+          {showFilters ? "Hide Filters" : "Show Filters"}
         </button>
 
-        {/* Filter Options */}
         <div
           className={cn(
-            "space-y-4 md:space-y-0 md:flex md:space-x-6",
-            showFilters ? "block" : "hidden md:flex",
+            "grid gap-4 md:grid-cols-4",
+            showFilters ? "block" : "hidden md:grid",
           )}
         >
-          {/* Category Filter */}
-          <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-foreground">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
               Category
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm"
             >
-              {filterOptions.categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              {filterOptions.categories.map((option) => (
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Budget Filter */}
-          <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-foreground">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
               Budget
             </label>
             <select
               value={selectedBudget}
               onChange={(e) => setSelectedBudget(e.target.value)}
-              className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm"
             >
-              {filterOptions.budgets.map((budget) => (
-                <option key={budget} value={budget}>
-                  {budget}
+              {filterOptions.budgets.map((option) => (
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Style Filter */}
-          <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-foreground">Style</label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Style
+            </label>
             <select
               value={selectedStyle}
               onChange={(e) => setSelectedStyle(e.target.value)}
-              className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-buildora-gold focus:border-transparent min-h-[44px]"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm"
             >
-              {filterOptions.styles.map((style) => (
-                <option key={style} value={style}>
-                  {style}
+              {filterOptions.styles.map((option) => (
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Quick Filters
+            </label>
+            <button className="w-full inline-flex items-center justify-center px-3 py-2 border border-border rounded-lg bg-background text-sm font-medium hover:border-buildora-gold transition-colors">
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              Advanced Filters
+            </button>
           </div>
         </div>
       </div>

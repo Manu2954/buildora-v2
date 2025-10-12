@@ -31,7 +31,7 @@ import type {
 
 const DEFAULT_PROJECT_ID = "BE-10234";
 
-type MilestoneState = ProjectMilestone & {
+type MilestoneState = Omit<ProjectMilestone, "status"> & {
   status: ProjectMilestone["status"] | "Fix Requested";
 };
 
@@ -75,7 +75,11 @@ export default function ProjectDetails() {
   const [milestones, setMilestones] = useState<MilestoneState[]>([]);
   useEffect(() => {
     if (project) {
-      setMilestones(project.milestones.map((m) => ({ ...m })));
+      setMilestones(
+        project.milestones.map<MilestoneState>((milestone) => ({
+          ...milestone,
+        })),
+      );
     } else {
       setMilestones([]);
     }

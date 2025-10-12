@@ -159,7 +159,8 @@ export function Navbar() {
 
               {/* Get Free Quote Button (hidden on small mobile) */}
               <Link
-                to="/cta"
+                target="_blank"
+                to="https://cta.buildoraenterprise.com/"
                 className="hidden sm:inline-flex items-center px-4 lg:px-6 py-2 bg-[#c59c46] text-white font-medium rounded-lg hover:bg-[#a17c36] transition-colors duration-200 text-base min-h-[44px]"
               >
                 <span className="hidden lg:inline">Get Free Quote</span>
@@ -334,7 +335,8 @@ export function Navbar() {
               {/* Mobile Get Quote Button */}
               <div className="px-6 py-4">
                 <Link
-                  to="/cta"
+                  target="_blank"
+                  to="https://cta.buildoraenterprise.com/"
                   className="block w-full bg-[#c59c46] text-white font-semibold py-4 rounded-xl hover:bg-[#a17c36] transition-all duration-300 min-h-[52px] active:scale-95 shadow-lg text-center"
                 >
                   Get Free Quote

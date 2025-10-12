@@ -19,6 +19,10 @@ type Note = {
   author?: { id: string; email: string } | null;
 };
 
+type LeadPatch = Partial<Omit<Lead, "assignedTo">> & {
+  assignedToId?: string | null;
+};
+
 export default function LeadDetail() {
   const { id } = useParams();
   const nav = useNavigate();
@@ -41,7 +45,7 @@ export default function LeadDetail() {
 
   useEffect(() => { if (id) { load(); loadUsers(); } }, [id]);
 
-  async function savePatch(patch: Partial<Lead>) {
+  async function savePatch(patch: LeadPatch) {
     setSaving(true);
     const updated = await apiFetch<Lead>(`/api/cta/leads/${id}/update`, { method: "PATCH", body: JSON.stringify(patch), auth: true });
     setLead(updated);
@@ -74,7 +78,14 @@ export default function LeadDetail() {
         <AdminCard title="Management">
           <div className="flex gap-3 items-center">
             <label className="text-sm text-[#666666] w-28">Status</label>
-            <select className="border border-[#D9D9D9] rounded-xl px-3 py-2" value={lead.status} onChange={(e)=>savePatch({ status: e.target.value as any })} disabled={saving}>
+            <select
+              className="border border-[#D9D9D9] rounded-xl px-3 py-2"
+              value={lead.status}
+              onChange={(e) =>
+                savePatch({ status: e.target.value as Lead["status"] })
+              }
+              disabled={saving}
+            >
               <option value="NEW">New</option>
               <option value="CONTACTED">Contacted</option>
               <option value="CLOSED">Closed</option>
@@ -82,7 +93,14 @@ export default function LeadDetail() {
           </div>
           <div className="flex gap-3 items-center">
             <label className="text-sm text-[#666666] w-28">Priority</label>
-            <select className="border border-[#D9D9D9] rounded-xl px-3 py-2" value={lead.priority} onChange={(e)=>savePatch({ priority: e.target.value as any })} disabled={saving}>
+            <select
+              className="border border-[#D9D9D9] rounded-xl px-3 py-2"
+              value={lead.priority}
+              onChange={(e) =>
+                savePatch({ priority: e.target.value as Lead["priority"] })
+              }
+              disabled={saving}
+            >
               <option value="LOW">Low</option>
               <option value="MEDIUM">Medium</option>
               <option value="HIGH">High</option>
@@ -90,11 +108,28 @@ export default function LeadDetail() {
           </div>
           <div className="flex gap-3 items-center">
             <label className="text-sm text-[#666666] w-28">Follow Up</label>
-            <input type="datetime-local" className="border border-[#D9D9D9] rounded-xl px-3 py-2" value={lead.followUpAt ? lead.followUpAt.slice(0,16) : ""} onChange={(e)=>savePatch({ followUpAt: e.target.value || null as any })} disabled={saving} />
+            <input
+              type="datetime-local"
+              className="border border-[#D9D9D9] rounded-xl px-3 py-2"
+              value={lead.followUpAt ? lead.followUpAt.slice(0, 16) : ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                savePatch({ followUpAt: value ? value : null });
+              }}
+              disabled={saving}
+            />
           </div>
           <div className="flex gap-3 items-center">
             <label className="text-sm text-[#666666] w-28">Assigned</label>
-            <select className="border border-[#D9D9D9] rounded-xl px-3 py-2" value={lead.assignedTo?.id || ""} onChange={(e)=>savePatch({ assignedToId: e.target.value || null as any })} disabled={saving}>
+            <select
+              className="border border-[#D9D9D9] rounded-xl px-3 py-2"
+              value={lead.assignedTo?.id || ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                savePatch({ assignedToId: value ? value : null });
+              }}
+              disabled={saving}
+            >
               <option value="">Unassigned</option>
               {salesmen.map(s=> <option key={s.id} value={s.id}>{s.email}</option>)}
             </select>

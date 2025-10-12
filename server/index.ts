@@ -22,6 +22,7 @@ export function createServer() {
   const logger = pino({
     level: env.LOG_LEVEL,
   });
+  const ignoredLogPaths = new Set(["/healthz", "/readyz", "/metrics"]);
   app.use(
     pinoHttp({
       logger,
@@ -32,7 +33,10 @@ export function createServer() {
         return "info";
       },
       autoLogging: {
-        ignorePaths: ["/healthz", "/readyz", "/metrics"],
+        ignore: (req) => {
+          const url = (req.url || "").split("?")[0];
+          return ignoredLogPaths.has(url);
+        },
       },
     }),
   );

@@ -44,7 +44,7 @@ export default function DesignDetail() {
                 {design.title}
               </h1>
               <p className="text-sm text-gray-500 mt-2">
-                {design.style} • {design.category}
+                {design.style} / {design.category}
               </p>
             </div>
 
@@ -126,7 +126,7 @@ export default function DesignDetail() {
 
           <div className="bg-card border border-border rounded-lg p-4">
             <h3 className="font-semibold mb-2">Description</h3>
-            <p className="text-muted-foreground">{design.description}</p>
+            <p className="text-muted-foreground">{design.description ?? "Description coming soon."}</p>
           </div>
         </div>
 
@@ -144,7 +144,7 @@ export default function DesignDetail() {
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold text-buildora-gold">
-                  ₹{design.price.toLocaleString()}
+                  Rs. {design.price.toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {design.duration} days

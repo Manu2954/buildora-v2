@@ -52,7 +52,12 @@ export const UpdateLeadStatusSchema = z.object({
 
 export const UpdateLeadSchema = z.object({
   status: LeadStatusSchema.optional(),
-  assignedToId: z.string().cuid().optional(),
-  followUpAt: z.string().datetime().optional(),
+  assignedToId: z.string().cuid().nullable().optional(),
+  followUpAt: z.string().datetime().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
 });
+
+export type SubmitInput = z.infer<typeof SubmitSchema>;
+export type UpdateLeadInput = z.infer<typeof UpdateLeadSchema>;
+export type LeadsQueryInput = z.infer<typeof LeadsQuerySchema>;
+export type UpdateLeadStatusInput = z.infer<typeof UpdateLeadStatusSchema>;

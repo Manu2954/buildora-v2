@@ -10,6 +10,7 @@ import {
   replaceProject,
   deleteProject,
 } from "@/lib/projects";
+import { listUsers, type UserSummary } from "@/lib/users";
 import {
   PROJECT_STATUS_LABELS,
   type Project,
@@ -125,6 +126,8 @@ const EMPTY_FORM: SimpleProjectForm = {
 };
 
 const stringifySafe = (value: unknown) => JSON.stringify(value ?? [], null, 2);
+
+const UNASSIGNED_VALUE = "__UNASSIGNED__";
 
 const mapProjectToForm = (project: Project): SimpleProjectForm => ({
   id: project.id,
@@ -343,6 +346,16 @@ export default function AdminProjects() {
   const [mode, setMode] = useState<Mode>("create");
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const {
+    data: customersData,
+    isLoading: customersLoading,
+    error: customersError,
+  } = useQuery({
+    queryKey: ["admin", "users", "customers"],
+    queryFn: () => listUsers({ role: "CUSTOMER" }),
+    staleTime: 60_000,
+  });
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["admin", "projects"],
     queryFn: () => listProjects({ page: 1, pageSize: 50 }),
@@ -350,6 +363,27 @@ export default function AdminProjects() {
   });
 
   const projects = data?.items ?? [];
+  const customers = customersData?.users ?? [];
+  const customerOptions = useMemo(() => {
+    return [...customers].sort((a, b) => a.email.localeCompare(b.email));
+  }, [customers]);
+  const fallbackCustomerOption = useMemo<UserSummary | undefined>(() => {
+    if (!formState.customerId) return undefined;
+    if (customers.some((customer) => customer.id === formState.customerId)) {
+      return undefined;
+    }
+    const projectMatch = projects.find(
+      (project) => project.id === formState.id,
+    )?.customer;
+    if (projectMatch && projectMatch.id === formState.customerId) {
+      return {
+        id: projectMatch.id,
+        email: projectMatch.email,
+        role: projectMatch.role,
+      };
+    }
+    return undefined;
+  }, [customers, formState.customerId, formState.id, projects]);
   const filteredProjects = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return projects;
@@ -580,22 +614,56 @@ export default function AdminProjects() {
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="project-customer">Customer User ID</Label>
-                <Input
-                  id="project-customer"
-                  value={formState.customerId}
-                  onChange={(event) =>
+                <Label htmlFor="project-customer">Assigned Customer</Label>
+                <Select
+                  value={formState.customerId || UNASSIGNED_VALUE}
+                  onValueChange={(value) =>
                     setFormState((prev) => ({
                       ...prev,
-                      customerId: event.target.value,
+                      customerId:
+                        value === UNASSIGNED_VALUE ? "" : value,
                     }))
                   }
-                  placeholder="Link project to a customer (optional)"
-                  className="rounded-xl"
-                />
-                <p className="text-xs text-[#666666]">
-                  Assign a customer by their user ID. Leave blank to keep the project unassigned.
-                </p>
+                  disabled={pending || customersLoading}
+                >
+                  <SelectTrigger
+                    id="project-customer"
+                    className="rounded-xl"
+                  >
+                    <SelectValue
+                      placeholder={
+                        customersLoading
+                          ? "Loading customers..."
+                          : "Select a customer (optional)"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={UNASSIGNED_VALUE}>
+                      Unassigned
+                    </SelectItem>
+                    {customerOptions.map((customer) => (
+                      <SelectItem key={customer.id} value={customer.id}>
+                        {customer.email}
+                      </SelectItem>
+                    ))}
+                    {fallbackCustomerOption && (
+                      <SelectItem value={fallbackCustomerOption.id}>
+                        {fallbackCustomerOption.email}
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+                {customersError ? (
+                  <p className="text-xs text-[#991B1B]">
+                    Unable to load customers. Please try again later.
+                  </p>
+                ) : (
+                  <p className="text-xs text-[#666666]">
+                    Leave unassigned to create the project without linking a
+                    customer.
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="project-type">Project Type</Label>

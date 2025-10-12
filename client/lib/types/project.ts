@@ -1,4 +1,5 @@
 import type { ProjectStatus } from "@/components/orders/StatusStepper";
+export type { ProjectStatus } from "@/components/orders/StatusStepper";
 
 export const PROJECT_STATUS_LABELS: ProjectStatus[] = [
   "Quotation Pending",

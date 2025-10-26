@@ -14,6 +14,8 @@ import { coreRouter } from "./api/core/auth.routes";
 import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
 import { projectRouter } from "./src/domains/project/routes";
+import { uploadsRouter } from "./api/uploads.routes";
+import { uploadsDir } from "./modules/uploads";
 
 export function createServer() {
   const app = express();
@@ -71,6 +73,9 @@ export function createServer() {
   api.use(express.json({ limit: "1mb" }));
   api.use(express.urlencoded({ extended: true }));
 
+  // Static uploads
+  app.use("/uploads", express.static(uploadsDir));
+
   // Health + Metrics
   registerHealthRoutes(app);
   registerMetrics(app);
@@ -86,6 +91,7 @@ export function createServer() {
   // Core API (auth, protected features) - protected endpoints are inside router
   api.use("/core", coreRouter);
   api.use("/core", usersRouter);
+  api.use("/", uploadsRouter);
 
   // CTA API - public submit, admin endpoints; add public rate limit to CTA
   api.use("/cta", publicRateLimiter, ctaRouter);

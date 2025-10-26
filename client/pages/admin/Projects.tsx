@@ -1,5 +1,5 @@
 ﻿
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
@@ -16,11 +16,16 @@ import {
   type Project,
   type ProjectCreateInput,
   type ProjectStatus,
+  type FileRef,
+  type DesignAssetInput,
+  type MediaAssetInput,
 } from "@/lib/types/project";
+import { uploadFile, type UploadedFile } from "@/lib/files";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -63,15 +68,14 @@ interface SimpleProjectForm {
   contractorName: string;
   contractorPhone: string;
   contractorEmail: string;
-  quotationName: string;
-  quotationUrl: string;
-  invoicesJson: string;
-  permitsJson: string;
-  signoffsJson: string;
+  quotationFile: FileRef | null;
+  invoices: FileRef[];
+  permits: FileRef[];
+  signoffs: FileRef[];
   materialsJson: string;
   milestonesJson: string;
-  designsJson: string;
-  worksiteMediaJson: string;
+  designs: DesignAssetInput[];
+  worksiteMedia: MediaAssetInput[];
   closureHandoverDate: string;
   closureFollowupDate: string;
   closureCertificateName: string;
@@ -81,7 +85,7 @@ interface SimpleProjectForm {
   closureAfterSalesName: string;
   closureAfterSalesPhone: string;
   closureAfterSalesEmail: string;
-  closureFinalMediaJson: string;
+  closureFinalMedia: MediaAssetInput[];
 }
 
 const EMPTY_FORM: SimpleProjectForm = {
@@ -104,15 +108,14 @@ const EMPTY_FORM: SimpleProjectForm = {
   contractorName: "",
   contractorPhone: "",
   contractorEmail: "",
-  quotationName: "",
-  quotationUrl: "",
-  invoicesJson: "[]",
-  permitsJson: "[]",
-  signoffsJson: "[]",
+  quotationFile: null,
+  invoices: [],
+  permits: [],
+  signoffs: [],
   materialsJson: "[]",
   milestonesJson: "[]",
-  designsJson: "[]",
-  worksiteMediaJson: "[]",
+  designs: [],
+  worksiteMedia: [],
   closureHandoverDate: "",
   closureFollowupDate: "",
   closureCertificateName: "",
@@ -122,7 +125,7 @@ const EMPTY_FORM: SimpleProjectForm = {
   closureAfterSalesName: "",
   closureAfterSalesPhone: "",
   closureAfterSalesEmail: "",
-  closureFinalMediaJson: "[]",
+  closureFinalMedia: [],
 };
 
 const stringifySafe = (value: unknown) => JSON.stringify(value ?? [], null, 2);
@@ -149,15 +152,27 @@ const mapProjectToForm = (project: Project): SimpleProjectForm => ({
   contractorName: project.contractor?.name ?? "",
   contractorPhone: project.contractor?.phone ?? "",
   contractorEmail: project.contractor?.email ?? "",
-  quotationName: project.quotationFile?.name ?? "",
-  quotationUrl: project.quotationFile?.url ?? "",
-  invoicesJson: stringifySafe(project.invoices),
-  permitsJson: stringifySafe(project.permits),
-  signoffsJson: stringifySafe(project.signoffs),
+  quotationFile: project.quotationFile
+    ? { name: project.quotationFile.name, url: project.quotationFile.url }
+    : null,
+  invoices: project.invoices?.map((file) => ({ ...file })) ?? [],
+  permits: project.permits?.map((file) => ({ ...file })) ?? [],
+  signoffs: project.signoffs?.map((file) => ({ ...file })) ?? [],
   materialsJson: stringifySafe(project.materials),
   milestonesJson: stringifySafe(project.milestones),
-  designsJson: stringifySafe(project.designs),
-  worksiteMediaJson: stringifySafe(project.worksiteMedia),
+  designs:
+    project.designs?.map((design) => ({
+      id: design.id,
+      url: design.url,
+      title: design.title,
+    })) ?? [],
+  worksiteMedia:
+    project.worksiteMedia?.map((media) => ({
+      id: media.id,
+      kind: media.kind,
+      url: media.url,
+      caption: media.caption,
+    })) ?? [],
   closureHandoverDate: project.closure?.handoverDate ?? "",
   closureFollowupDate: project.closure?.followupDate ?? "",
   closureCertificateName: project.closure?.certificate?.name ?? "",
@@ -167,7 +182,13 @@ const mapProjectToForm = (project: Project): SimpleProjectForm => ({
   closureAfterSalesName: project.closure?.afterSales?.name ?? "",
   closureAfterSalesPhone: project.closure?.afterSales?.phone ?? "",
   closureAfterSalesEmail: project.closure?.afterSales?.email ?? "",
-  closureFinalMediaJson: stringifySafe(project.closure?.finalMedia),
+  closureFinalMedia:
+    project.closure?.finalMedia?.map((media) => ({
+      id: media.id,
+      kind: media.kind,
+      url: media.url,
+      caption: media.caption,
+    })) ?? [],
 });
 
 const parseJsonArray = <T,>(label: string, value: string): T[] => {
@@ -190,19 +211,83 @@ const parseFloatOr = (value: string, fallback = 0) => {
   return Number.isFinite(num) ? num : fallback;
 };
 
+const extractNameFromUrl = (url: string) => {
+  const parts = url.split("/");
+  const last = parts[parts.length - 1] || "file";
+  try {
+    return decodeURIComponent(last);
+  } catch {
+    return last;
+  }
+};
+
+const stripExtension = (name: string) => {
+  const index = name.lastIndexOf(".");
+  if (index <= 0) return name;
+  return name.slice(0, index);
+};
+
+const cleanFileRefs = (files: FileRef[]): FileRef[] =>
+  files
+    .map((file) => {
+      const url = file.url?.trim();
+      if (!url) return null;
+      const name = file.name?.trim() || extractNameFromUrl(url);
+      return { name, url };
+    })
+    .filter((file): file is FileRef => file !== null);
+
+const cleanDesigns = (designs: DesignAssetInput[]): DesignAssetInput[] =>
+  designs
+    .map((design) => {
+      const url = design.url?.trim();
+      if (!url) return null;
+      const title = design.title?.trim();
+      return {
+        ...(design.id ? { id: design.id } : {}),
+        url,
+        ...(title ? { title } : {}),
+      };
+    })
+    .filter((design): design is DesignAssetInput => design !== null);
+
+const cleanMediaAssets = (media: MediaAssetInput[]): MediaAssetInput[] =>
+  media
+    .map((item) => {
+      const url = item.url?.trim();
+      if (!url) return null;
+      const kind: MediaAssetInput["kind"] =
+        item.kind === "video" ? "video" : "image";
+      const caption = item.caption?.trim();
+      return {
+        ...(item.id ? { id: item.id } : {}),
+        url,
+        kind,
+        ...(caption ? { caption } : {}),
+      };
+    })
+    .filter((item): item is MediaAssetInput => item !== null);
+
+const uploadedToFileRef = (uploaded: UploadedFile): FileRef => ({
+  name: uploaded.name,
+  url: uploaded.url,
+});
+
+const uploadedToDesign = (uploaded: UploadedFile): DesignAssetInput => ({
+  url: uploaded.url,
+  title: stripExtension(uploaded.name),
+});
+
+const uploadedToMedia = (uploaded: UploadedFile): MediaAssetInput => ({
+  url: uploaded.url,
+  kind: uploaded.mimeType.startsWith("video/") ? "video" : "image",
+  caption: stripExtension(uploaded.name),
+});
+
 const buildPayload = (form: SimpleProjectForm): ProjectCreateInput => {
-  const invoices = parseJsonArray<{ name: string; url: string }>(
-    "Invoices",
-    form.invoicesJson,
-  );
-  const permits = parseJsonArray<{ name: string; url: string }>(
-    "Permits",
-    form.permitsJson,
-  );
-  const signoffs = parseJsonArray<{ name: string; url: string }>(
-    "Sign-offs",
-    form.signoffsJson,
-  );
+  const invoices = cleanFileRefs(form.invoices);
+  const permits = cleanFileRefs(form.permits);
+  const signoffs = cleanFileRefs(form.signoffs);
   const materials = parseJsonArray<{
     id?: string;
     type: string;
@@ -218,23 +303,9 @@ const buildPayload = (form: SimpleProjectForm): ProjectCreateInput => {
     approved?: boolean;
     dueDate?: string;
   }>("Milestones", form.milestonesJson);
-  const designs = parseJsonArray<{
-    id?: string;
-    url: string;
-    title?: string;
-  }>("Designs", form.designsJson);
-  const worksiteMedia = parseJsonArray<{
-    id?: string;
-    kind: string;
-    url: string;
-    caption?: string;
-  }>("Worksite media", form.worksiteMediaJson);
-  const closureFinalMedia = parseJsonArray<{
-    id?: string;
-    kind: string;
-    url: string;
-    caption?: string;
-  }>("Closure media", form.closureFinalMediaJson);
+  const designs = cleanDesigns(form.designs);
+  const worksiteMedia = cleanMediaAssets(form.worksiteMedia);
+  const closureFinalMedia = cleanMediaAssets(form.closureFinalMedia);
 
   const salesman =
     form.salesmanName || form.salesmanPhone || form.salesmanEmail
@@ -264,8 +335,13 @@ const buildPayload = (form: SimpleProjectForm): ProjectCreateInput => {
       : undefined;
 
   const quotationFile =
-    form.quotationName && form.quotationUrl
-      ? { name: form.quotationName, url: form.quotationUrl }
+    form.quotationFile && form.quotationFile.url
+      ? {
+          name:
+            form.quotationFile.name?.trim() ||
+            extractNameFromUrl(form.quotationFile.url),
+          url: form.quotationFile.url.trim(),
+        }
       : undefined;
 
   const closure =
@@ -306,7 +382,7 @@ const buildPayload = (form: SimpleProjectForm): ProjectCreateInput => {
                   email: form.closureAfterSalesEmail || undefined,
                 }
               : undefined,
-          finalMedia: closureFinalMedia as any,
+          finalMedia: closureFinalMedia,
         }
       : undefined;
 
@@ -345,6 +421,8 @@ export default function AdminProjects() {
   const [formState, setFormState] = useState<SimpleProjectForm>(EMPTY_FORM);
   const [mode, setMode] = useState<Mode>("create");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const quotationFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     data: customersData,
@@ -384,6 +462,126 @@ export default function AdminProjects() {
     }
     return undefined;
   }, [customers, formState.customerId, formState.id, projects]);
+
+  const performUpload = async (
+    files: FileList | null,
+    onSuccess: (uploaded: UploadedFile[]) => void,
+  ) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const uploaded = await Promise.all(
+        Array.from(files).map((file) => uploadFile(file)),
+      );
+      onSuccess(uploaded);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to upload file";
+      toast.error(message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  type FileRefKey = "invoices" | "permits" | "signoffs";
+  const appendFileRefs = (key: FileRefKey, items: FileRef[]) => {
+    if (items.length === 0) return;
+    setFormState((prev) => ({
+      ...prev,
+      [key]: [...prev[key], ...items],
+    }));
+  };
+
+  const updateFileRefAt = (key: FileRefKey, index: number, name: string) => {
+    setFormState((prev) => {
+      const next = [...prev[key]];
+      if (!next[index]) return prev;
+      next[index] = { ...next[index], name };
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const removeFileRefAt = (key: FileRefKey, index: number) => {
+    setFormState((prev) => ({
+      ...prev,
+      [key]: prev[key].filter((_, idx) => idx !== index),
+    }));
+  };
+
+  const handleFileRefUpload =
+    (key: FileRefKey) => (files: FileList | null) => {
+      void performUpload(files, (uploaded) =>
+        appendFileRefs(key, uploaded.map(uploadedToFileRef)),
+      );
+    };
+
+  const handleDesignsUpload = (files: FileList | null) => {
+    void performUpload(files, (uploaded) =>
+      setFormState((prev) => ({
+        ...prev,
+        designs: [...prev.designs, ...uploaded.map(uploadedToDesign)],
+      })),
+    );
+  };
+
+  const updateDesignTitle = (index: number, title: string) => {
+    setFormState((prev) => {
+      const next = [...prev.designs];
+      if (!next[index]) return prev;
+      next[index] = { ...next[index], title };
+      return { ...prev, designs: next };
+    });
+  };
+
+  const removeDesignAt = (index: number) => {
+    setFormState((prev) => ({
+      ...prev,
+      designs: prev.designs.filter((_, idx) => idx !== index),
+    }));
+  };
+
+  type MediaKey = "worksiteMedia" | "closureFinalMedia";
+  const appendMedia = (key: MediaKey, items: MediaAssetInput[]) => {
+    if (items.length === 0) return;
+    setFormState((prev) => ({
+      ...prev,
+      [key]: [...prev[key], ...items],
+    }));
+  };
+
+  const handleMediaUpload =
+    (key: MediaKey) => (files: FileList | null) => {
+      void performUpload(files, (uploaded) =>
+        appendMedia(key, uploaded.map(uploadedToMedia)),
+      );
+    };
+
+  const updateMediaCaption = (key: MediaKey, index: number, caption: string) => {
+    setFormState((prev) => {
+      const next = [...prev[key]];
+      if (!next[index]) return prev;
+      next[index] = { ...next[index], caption };
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const removeMediaAt = (key: MediaKey, index: number) => {
+    setFormState((prev) => ({
+      ...prev,
+      [key]: prev[key].filter((_, idx) => idx !== index),
+    }));
+  };
+
+  const handleQuotationUpload = (files: FileList | null) => {
+    void performUpload(files, (uploaded) => {
+      const first = uploaded[0];
+      if (!first) return;
+      setFormState((prev) => ({
+        ...prev,
+        quotationFile: uploadedToFileRef(first),
+      }));
+    });
+  };
   const filteredProjects = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return projects;
@@ -468,7 +666,13 @@ export default function AdminProjects() {
     }
   };
 
-  const pending = createMutation.isPending || updateMutation.isPending;
+  const pending =
+    createMutation.isPending || updateMutation.isPending || uploading;
+  const documentSections: Array<{ key: FileRefKey; label: string }> = [
+    { key: "invoices", label: "Invoices" },
+    { key: "permits", label: "Permits" },
+    { key: "signoffs", label: "Sign-offs" },
+  ];
 
   const handleDelete = (project: Project) => {
     if (deleteMutation.isPending) return;
@@ -869,67 +1073,169 @@ export default function AdminProjects() {
             </section>
 
             <section className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2 rounded-2xl border border-[#E4E4E4] p-4">
+              <div className="space-y-3 rounded-2xl border border-[#E4E4E4] p-4">
                 <h3 className="text-sm font-semibold text-[#333132]">
                   Quotation File
                 </h3>
-                <Label>Name</Label>
-                <Input
-                  value={formState.quotationName}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      quotationName: event.target.value,
-                    }))
-                  }
-                  className="rounded-xl"
-                />
-                <Label className="mt-3">URL</Label>
-                <Input
-                  value={formState.quotationUrl}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      quotationUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="https://"
-                  className="rounded-xl"
-                />
+                {formState.quotationFile ? (
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label className="text-xs text-[#666666]">
+                        Display Name
+                      </Label>
+                      <Input
+                        value={formState.quotationFile.name}
+                        onChange={(event) =>
+                          setFormState((prev) => ({
+                            ...prev,
+                            quotationFile: prev.quotationFile
+                              ? { ...prev.quotationFile, name: event.target.value }
+                              : prev.quotationFile,
+                          }))
+                        }
+                        className="rounded-xl"
+                        disabled={pending}
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm" asChild>
+                        <a
+                          href={formState.quotationFile.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View
+                        </a>
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => quotationFileInputRef.current?.click()}
+                        disabled={pending}
+                      >
+                        Replace
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          setFormState((prev) => ({
+                            ...prev,
+                            quotationFile: null,
+                          }))
+                        }
+                        disabled={pending}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                    <Input
+                      ref={quotationFileInputRef}
+                      type="file"
+                      className="hidden"
+                      onChange={(event) => {
+                        handleQuotationUpload(event.target.files);
+                        event.target.value = "";
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Label className="text-xs text-[#666666]">
+                      Upload new file
+                    </Label>
+                    <Input
+                      type="file"
+                      onChange={(event) => {
+                        handleQuotationUpload(event.target.files);
+                        event.target.value = "";
+                      }}
+                      disabled={pending}
+                      className="rounded-xl"
+                    />
+                    <p className="text-xs text-[#666666]">
+                      Upload the latest quotation document (PDF, image, etc). Uploading a new file will replace the existing one.
+                    </p>
+                  </div>
+                )}
               </div>
 
-              {[
-                { label: "Invoices", key: "invoicesJson" },
-                { label: "Permits", key: "permitsJson" },
-                { label: "Sign-offs", key: "signoffsJson" },
-              ].map((section) => (
-                <div
-                  key={section.key}
-                  className="space-y-2 rounded-2xl border border-[#E4E4E4] p-4"
-                >
-                  <h3 className="text-sm font-semibold text-[#333132]">
-                    {section.label} (JSON array)
-                  </h3>
-                  <Textarea
-                    rows={6}
-                    value={formState[section.key as keyof SimpleProjectForm] as string}
-                    onChange={(event) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        [section.key]: event.target.value,
-                      }))
-                    }
-                    className="rounded-xl font-mono text-xs"
-                  />
-                </div>
-              ))}
+              {documentSections.map((section) => {
+                const files = formState[section.key];
+                const uploadFn = handleFileRefUpload(section.key);
+                return (
+                  <div
+                    key={section.key}
+                    className="space-y-3 rounded-2xl border border-[#E4E4E4] p-4"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-sm font-semibold text-[#333132]">
+                        {section.label}
+                      </h3>
+                      <Input
+                        type="file"
+                        multiple
+                        onChange={(event) => {
+                          uploadFn(event.target.files);
+                          event.target.value = "";
+                        }}
+                        disabled={pending}
+                        className="w-auto rounded-xl text-sm"
+                      />
+                    </div>
+                    <p className="text-xs text-[#666666]">
+                      Upload one or more files. Use the name field to control how it appears to customers.
+                    </p>
+                    <div className="space-y-2">
+                      {files.length === 0 ? (
+                        <div className="rounded-xl border border-dashed border-[#D9D9D9] p-3 text-xs text-[#666666]">
+                          No files uploaded yet.
+                        </div>
+                      ) : (
+                        files.map((file, index) => (
+                          <div
+                            key={`${file.url}-${index}`}
+                            className="space-y-2 rounded-xl border border-[#E4E4E4] p-3"
+                          >
+                            <Input
+                              value={file.name}
+                              onChange={(event) =>
+                                updateFileRefAt(section.key, index, event.target.value)
+                              }
+                              className="rounded-xl"
+                              disabled={pending}
+                            />
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild>
+                                <a
+                                  href={file.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  View
+                                </a>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeFileRefAt(section.key, index)}
+                                disabled={pending}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </section>
 
             {[
               { label: "Materials (JSON array)", key: "materialsJson" },
               { label: "Milestones (JSON array)", key: "milestonesJson" },
-              { label: "Designs (JSON array)", key: "designsJson" },
-              { label: "Worksite Media (JSON array)", key: "worksiteMediaJson" },
             ].map((section) => (
               <div
                 key={section.key}
@@ -954,6 +1260,177 @@ export default function AdminProjects() {
                 </p>
               </div>
             ))}
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-3 rounded-2xl border border-[#E4E4E4] p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-[#333132]">
+                    Designs
+                  </h3>
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(event) => {
+                      handleDesignsUpload(event.target.files);
+                      event.target.value = "";
+                    }}
+                    disabled={pending}
+                    className="w-auto rounded-xl text-sm"
+                  />
+                </div>
+                <p className="text-xs text-[#666666]">
+                  Upload design renders or references. Update the title to control
+                  how it appears to customers.
+                </p>
+                <div className="space-y-3">
+                  {formState.designs.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-[#D9D9D9] p-3 text-xs text-[#666666]">
+                      No designs uploaded yet.
+                    </div>
+                  ) : (
+                    formState.designs.map((design, index) => {
+                      const designKey = design.id ?? `${design.url}-${index}`;
+                      const displayName =
+                        design.title?.trim() || extractNameFromUrl(design.url);
+                      return (
+                        <div
+                          key={designKey}
+                          className="space-y-2 rounded-xl border border-[#E4E4E4] p-3"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-sm font-medium text-[#333132] truncate">
+                              {displayName}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild>
+                                <a
+                                  href={design.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  View
+                                </a>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeDesignAt(index)}
+                                disabled={pending}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs text-[#666666]">Title</Label>
+                            <Input
+                              value={design.title ?? ""}
+                              onChange={(event) =>
+                                updateDesignTitle(index, event.target.value)
+                              }
+                              className="rounded-xl"
+                              disabled={pending}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-3 rounded-2xl border border-[#E4E4E4] p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-[#333132]">
+                    Worksite Media
+                  </h3>
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*,video/*"
+                    onChange={(event) => {
+                      handleMediaUpload("worksiteMedia")(event.target.files);
+                      event.target.value = "";
+                    }}
+                    disabled={pending}
+                    className="w-auto rounded-xl text-sm"
+                  />
+                </div>
+                <p className="text-xs text-[#666666]">
+                  Upload photos or videos captured during project execution.
+                </p>
+                <div className="space-y-3">
+                  {formState.worksiteMedia.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-[#D9D9D9] p-3 text-xs text-[#666666]">
+                      No worksite media uploaded yet.
+                    </div>
+                  ) : (
+                    formState.worksiteMedia.map((media, index) => {
+                      const mediaKey = media.id ?? `${media.url}-${index}`;
+                      const displayName =
+                        media.caption?.trim() || extractNameFromUrl(media.url);
+                      return (
+                        <div
+                          key={mediaKey}
+                          className="space-y-2 rounded-xl border border-[#E4E4E4] p-3"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className="capitalize border-[#D9D9D9] text-xs"
+                              >
+                                {media.kind}
+                              </Badge>
+                              <span className="text-sm font-medium text-[#333132] truncate">
+                                {displayName}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild>
+                                <a
+                                  href={media.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  View
+                                </a>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeMediaAt("worksiteMedia", index)}
+                                disabled={pending}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs text-[#666666]">
+                              Caption
+                            </Label>
+                            <Input
+                              value={media.caption ?? ""}
+                              onChange={(event) =>
+                                updateMediaCaption(
+                                  "worksiteMedia",
+                                  index,
+                                  event.target.value,
+                                )
+                              }
+                              className="rounded-xl"
+                              disabled={pending}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
 
             <section className="rounded-2xl border border-[#E4E4E4] p-4 space-y-4">
               <h3 className="text-sm font-semibold text-[#333132]">
@@ -1091,18 +1568,95 @@ export default function AdminProjects() {
               </div>
 
               <div className="space-y-2">
-                <Label>Final Media (JSON array)</Label>
-                <Textarea
-                  rows={5}
-                  value={formState.closureFinalMediaJson}
-                  onChange={(event) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      closureFinalMediaJson: event.target.value,
-                    }))
-                  }
-                  className="rounded-xl font-mono text-xs"
-                />
+                <div className="flex items-center justify-between gap-2">
+                  <Label>Final Media Uploads</Label>
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*,video/*"
+                    onChange={(event) => {
+                      handleMediaUpload("closureFinalMedia")(event.target.files);
+                      event.target.value = "";
+                    }}
+                    disabled={pending}
+                    className="w-auto rounded-xl text-sm"
+                  />
+                </div>
+                <p className="text-xs text-[#666666]">
+                  Upload the final media shared with the customer after project
+                  completion.
+                </p>
+                <div className="space-y-3">
+                  {formState.closureFinalMedia.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-[#D9D9D9] p-3 text-xs text-[#666666]">
+                      No final media uploaded yet.
+                    </div>
+                  ) : (
+                    formState.closureFinalMedia.map((media, index) => {
+                      const mediaKey = media.id ?? `${media.url}-${index}`;
+                      const displayName =
+                        media.caption?.trim() || extractNameFromUrl(media.url);
+                      return (
+                        <div
+                          key={mediaKey}
+                          className="space-y-2 rounded-xl border border-[#E4E4E4] p-3"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className="capitalize border-[#D9D9D9] text-xs"
+                              >
+                                {media.kind}
+                              </Badge>
+                              <span className="text-sm font-medium text-[#333132] truncate">
+                                {displayName}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild>
+                                <a
+                                  href={media.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  View
+                                </a>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  removeMediaAt("closureFinalMedia", index)
+                                }
+                                disabled={pending}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs text-[#666666]">
+                              Caption
+                            </Label>
+                            <Input
+                              value={media.caption ?? ""}
+                              onChange={(event) =>
+                                updateMediaCaption(
+                                  "closureFinalMedia",
+                                  index,
+                                  event.target.value,
+                                )
+                              }
+                              className="rounded-xl"
+                              disabled={pending}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </div>
             </section>
 

@@ -39,9 +39,18 @@ export default function AdminNavbar({
             <span className="text-[#C69B4B]">Buildora</span> <span className="text-[#333132]">Admin</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-[15px] text-[#666666]">
-            <Link to="/admin" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">Overview</Link>
-            <Link to="/admin/cta/leads" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">Leads</Link>
-            <Link to="/admin/cta/config" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">CTA Config</Link>
+            <Link to="/admin" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">
+              Overview
+            </Link>
+            <Link to="/admin/cta/leads" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">
+              Leads
+            </Link>
+            <Link to="/admin/projects" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">
+              Projects
+            </Link>
+            <Link to="/admin/cta/config" className="hover:text-[#C69B4B] min-h-[44px] inline-flex items-center">
+              CTA Config
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-2">

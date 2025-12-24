@@ -1,6 +1,5 @@
 import type { Request, RequestHandler } from "express";
 import { verifyAccessToken } from "../lib/jwt";
-import { verifyAccessToken } from "../lib/jwt";
 
 export type AuthedRequest = {
   user?: { id: string; role: "ADMIN" | "SALESMAN" | "CUSTOMER" };

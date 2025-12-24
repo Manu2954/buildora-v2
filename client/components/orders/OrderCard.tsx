@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export interface OrderItem {
   id: string;
   address: string;
-  type: "Villa" | "Apartment" | "Commercial";
+  type: string;
   startDate: string;
   completionDate: string;
   status: string;

@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/client";
 
 export async function findConfig(key: string) {
@@ -5,7 +6,12 @@ export async function findConfig(key: string) {
 }
 
 export async function upsertConfig(key: string, json: Record<string, unknown>) {
-  return prisma.ctaConfig.upsert({ where: { key }, create: { key, json }, update: { json } });
+  const payload = json as Prisma.JsonValue;
+  return prisma.ctaConfig.upsert({
+    where: { key },
+    create: { key, json: payload },
+    update: { json: payload },
+  });
 }
 
 export async function createLead(data: {
@@ -106,6 +112,17 @@ export async function listLeadNotes(leadId: string) {
   });
 }
 
-export async function logLeadEvent(params: { leadId: string; actorId?: string; type: string; data?: any }) {
-  return prisma.leadEvent.create({ data: { leadId: params.leadId, actorId: params.actorId, type: params.type, data: params.data } });
+export async function logLeadEvent(params: {
+  leadId: string;
+  actorId?: string;
+  type: string;
+  data?: unknown;
+}) {
+  const jsonData =
+    params.data === undefined
+      ? undefined
+      : (JSON.parse(JSON.stringify(params.data)) as Prisma.JsonValue);
+  return prisma.leadEvent.create({
+    data: { leadId: params.leadId, actorId: params.actorId, type: params.type, data: jsonData },
+  });
 }

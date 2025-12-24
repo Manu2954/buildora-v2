@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "../../modules/middleware/error";
-import { requireRole } from "../../modules/middleware/auth";
+import { requireAuth, requireRole } from "../../modules/middleware/auth";
 import { prisma } from "../../prisma/client";
 
 export const usersRouter = Router();
@@ -8,6 +8,7 @@ export const usersRouter = Router();
 // GET /api/core/users?role=SALESMAN
 usersRouter.get(
   "/users",
+  requireAuth,
   requireRole(["ADMIN"]),
   asyncHandler(async (req, res) => {
     const role = (req.query.role as string | undefined) ?? undefined;

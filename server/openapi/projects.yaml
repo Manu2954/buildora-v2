@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: Buildora Projects API
+  version: 1.0.0
+  description: Endpoints for managing interior design projects.
+paths:
+  /api/projects:
+    get:
+      summary: List projects
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/ProjectStatus'
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: startFrom
+          schema:
+            $ref: '#/components/schemas/DateString'
+        - in: query
+          name: startTo
+          schema:
+            $ref: '#/components/schemas/DateString'
+        - in: query
+          name: etaFrom
+          schema:
+            $ref: '#/components/schemas/DateString'
+        - in: query
+          name: etaTo
+          schema:
+            $ref: '#/components/schemas/DateString'
+      responses:
+        '200':
+          description: Paged list of projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  page:
+                    type: integer
+                  pageSize:
+                    type: integer
+                  total:
+                    type: integer
+                  totalPages:
+                    type: integer
+    post:
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateInput'
+      responses:
+        '201':
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}:
+    get:
+      summary: Get project by id
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Not found
+    put:
+      summary: Replace project
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateInput'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    patch:
+      summary: Update project
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateInput'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      summary: Soft delete project
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '204':
+          description: Deleted
+  /api/projects/{id}/milestones:
+    post:
+      summary: Add milestone
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MilestoneInput'
+      responses:
+        '201':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/milestones/{mid}:
+    patch:
+      summary: Update milestone
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - in: path
+          name: mid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MilestoneUpdate'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/materials:
+    post:
+      summary: Add materials
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialsBatch'
+      responses:
+        '201':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/designs:
+    post:
+      summary: Add designs
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesignsBatch'
+      responses:
+        '201':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/media:
+    post:
+      summary: Add media assets
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaBatch'
+      responses:
+        '201':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/files:
+    post:
+      summary: Attach project file
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileAttachment'
+      responses:
+        '201':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/projects/{id}/closure:
+    post:
+      summary: Upsert project closure
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectClosureInput'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+components:
+  parameters:
+    ProjectId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        pattern: '^[A-Z]{2,4}-\\d{4,6}$'
+  schemas:
+    DateString:
+      type: string
+      pattern: '^\\d{4}-\\d{2}-\\d{2}$'
+    FileRef:
+      type: object
+      required: [name, url]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+    ContactMini:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+    MediaAsset:
+      type: object
+      required: [id, kind, url]
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum: [image, video]
+        url:
+          type: string
+          format: uri
+        caption:
+          type: string
+    MediaAssetInput:
+      type: object
+      required: [url]
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum: [image, video]
+        url:
+          type: string
+          format: uri
+        caption:
+          type: string
+    MaterialLine:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        qty:
+          type: string
+        status:
+          type: string
+          enum: [Planned, Ordered, Delivered, Installed]
+    MaterialLineInput:
+      type: object
+      required: [type]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        qty:
+          type: string
+        status:
+          type: string
+          enum: [Planned, Ordered, Delivered, Installed]
+    Milestone:
+      type: object
+      required: [id, label, amount, status, approved]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        amount:
+          type: number
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        approved:
+          type: boolean
+        dueDate:
+          $ref: '#/components/schemas/DateString'
+    MilestoneInput:
+      type: object
+      required: [label, amount]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        amount:
+          type: number
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        approved:
+          type: boolean
+        dueDate:
+          $ref: '#/components/schemas/DateString'
+    MilestoneUpdate:
+      type: object
+      properties:
+        label:
+          type: string
+        amount:
+          type: number
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        approved:
+          type: boolean
+        dueDate:
+          $ref: '#/components/schemas/DateString'
+    ProjectClosure:
+      type: object
+      properties:
+        finalMedia:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaAsset'
+        certificate:
+          $ref: '#/components/schemas/FileRef'
+        warranty:
+          $ref: '#/components/schemas/FileRef'
+        afterSales:
+          $ref: '#/components/schemas/ContactMini'
+        handoverDate:
+          $ref: '#/components/schemas/DateString'
+        followupDate:
+          $ref: '#/components/schemas/DateString'
+    ProjectClosureInput:
+      type: object
+      required: [finalMedia]
+      properties:
+        finalMedia:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaAssetInput'
+        certificate:
+          $ref: '#/components/schemas/FileRef'
+        warranty:
+          $ref: '#/components/schemas/FileRef'
+        afterSales:
+          $ref: '#/components/schemas/ContactMini'
+        handoverDate:
+          $ref: '#/components/schemas/DateString'
+        followupDate:
+          $ref: '#/components/schemas/DateString'
+    ProjectStatus:
+      type: string
+      enum:
+        - Quotation Pending
+        - In Progress
+        - Material Procurement
+        - Execution
+        - Completed
+        - On Hold
+        - Cancelled
+    PaymentStatus:
+      type: string
+      enum:
+        - Pending
+        - Paid
+        - Partially Paid
+        - Overdue
+    Project:
+      type: object
+      required:
+        - id
+        - address
+        - type
+        - status
+        - discounts
+        - extras
+        - invoices
+        - milestones
+        - designs
+        - materials
+        - permits
+        - signoffs
+        - worksiteMedia
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        type:
+          type: string
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        salesman:
+          $ref: '#/components/schemas/ContactMini'
+        designer:
+          $ref: '#/components/schemas/ContactMini'
+        contractor:
+          $ref: '#/components/schemas/ContactMini'
+        startDate:
+          $ref: '#/components/schemas/DateString'
+        eta:
+          $ref: '#/components/schemas/DateString'
+        sitePhoto:
+          type: string
+          format: uri
+        quotationFile:
+          $ref: '#/components/schemas/FileRef'
+        discounts:
+          type: number
+        extras:
+          type: number
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        milestones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Milestone'
+        designs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DesignAsset'
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialLine'
+        permits:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        signoffs:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        worksiteMedia:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaAsset'
+        closure:
+          $ref: '#/components/schemas/ProjectClosure'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProjectCreateInput:
+      allOf:
+        - $ref: '#/components/schemas/ProjectUpdateInput'
+        - type: object
+          required: [address, type]
+    ProjectUpdateInput:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        address:
+          type: string
+        type:
+          type: string
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        salesman:
+          $ref: '#/components/schemas/ContactMini'
+        designer:
+          $ref: '#/components/schemas/ContactMini'
+        contractor:
+          $ref: '#/components/schemas/ContactMini'
+        startDate:
+          $ref: '#/components/schemas/DateString'
+        eta:
+          $ref: '#/components/schemas/DateString'
+        sitePhoto:
+          type: string
+          format: uri
+        quotationFile:
+          $ref: '#/components/schemas/FileRef'
+        discounts:
+          type: number
+        extras:
+          type: number
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        milestones:
+          type: array
+          items:
+            $ref: '#/components/schemas/MilestoneInput'
+        designs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DesignAssetInput'
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialLineInput'
+        permits:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        signoffs:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileRef'
+        worksiteMedia:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaAssetInput'
+        closure:
+          $ref: '#/components/schemas/ProjectClosureInput'
+    DesignAsset:
+      type: object
+      required: [id, url]
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        title:
+          type: string
+    DesignAssetInput:
+      type: object
+      required: [url]
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        title:
+          type: string
+    MaterialsBatch:
+      type: object
+      required: [materials]
+      properties:
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialLineInput'
+    DesignsBatch:
+      type: object
+      required: [designs]
+      properties:
+        designs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DesignAssetInput'
+    MediaBatch:
+      type: object
+      required: [media]
+      properties:
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaAssetInput'
+    FileAttachment:
+      type: object
+      required: [type, file]
+      properties:
+        type:
+          type: string
+          enum: [invoice, permit, signoff]
+        file:
+          $ref: '#/components/schemas/FileRef'

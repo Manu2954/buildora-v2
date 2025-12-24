@@ -15,7 +15,12 @@ function setAccessToken(token: string) {
 export async function apiFetch<T = any>(path: string, opts: ApiOptions = {}): Promise<T> {
   const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
   const headers = new Headers(opts.headers);
-  if (!headers.has("Content-Type") && opts.body) headers.set("Content-Type", "application/json");
+  const isFormData =
+    typeof FormData !== "undefined" && opts.body instanceof FormData;
+  const isBlob = typeof Blob !== "undefined" && opts.body instanceof Blob;
+  if (!headers.has("Content-Type") && opts.body && !isFormData && !isBlob) {
+    headers.set("Content-Type", "application/json");
+  }
   if (opts.auth) {
     const { accessToken } = getTokens();
     if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);

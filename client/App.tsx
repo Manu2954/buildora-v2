@@ -6,8 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Designs from "./pages/Designs";
+import DesignDetail from "./pages/DesignDetail";
 import Services from "./pages/Services";
-import Orders from "./pages/Orders";
+import Projects from "./pages/Orders";
 import Profile from "./pages/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
@@ -21,6 +23,7 @@ import CtaConfig from "./pages/admin/CtaConfig";
 import CtaAnalytics from "./pages/admin/CtaAnalytics";
 import Leads from "./pages/admin/Leads";
 import LeadDetail from "./pages/admin/LeadDetail";
+import AdminProjects from "./pages/admin/Projects";
 import PublicLayout from "./pages/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUp from "./pages/SignUp";
@@ -42,7 +45,7 @@ export default function App() {
             <Route element={<PublicLayout />}>
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/orders" element={<Orders />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/project/:id" element={<ProjectDetails />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/about" element={<About />} />
@@ -50,6 +53,8 @@ export default function App() {
               <Route path="/search" element={<Search />} />
               <Route path="/login" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/designs" element={<Designs />} />
+              <Route path="/designs/:id" element={<DesignDetail />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
@@ -57,13 +62,18 @@ export default function App() {
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin/*"
-              element={<ProtectedRoute roles={["ADMIN"]}><AdminLayout /></ProtectedRoute>}
+              element={
+                <ProtectedRoute roles={["ADMIN"]}>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
             >
               <Route index element={<AdminDashboard />} />
               <Route path="cta/config" element={<CtaConfig />} />
               <Route path="cta/analytics" element={<CtaAnalytics />} />
               <Route path="cta/leads" element={<Leads />} />
               <Route path="cta/leads/:id" element={<LeadDetail />} />
+              <Route path="projects" element={<AdminProjects />} />
             </Route>
 
             {/* Optionally, add an admin-specific 404 here later */}

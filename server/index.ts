@@ -13,6 +13,9 @@ import { registerMetrics } from "./routes/metrics";
 import { coreRouter } from "./api/core/auth.routes";
 import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
+import { projectRouter } from "./src/domains/project/routes";
+import { uploadsRouter } from "./api/uploads.routes";
+import { uploadsDir } from "./modules/uploads";
 
 export function createServer() {
   const app = express();
@@ -21,6 +24,7 @@ export function createServer() {
   const logger = pino({
     level: env.LOG_LEVEL,
   });
+  const ignoredLogPaths = new Set(["/healthz", "/readyz", "/metrics"]);
   app.use(
     pinoHttp({
       logger,
@@ -31,32 +35,46 @@ export function createServer() {
         return "info";
       },
       autoLogging: {
-        ignorePaths: ["/healthz", "/readyz", "/metrics"],
+        ignore: (req) => {
+          const url = (req.url || "").split("?")[0];
+          return ignoredLogPaths.has(url);
+        },
       },
-    })
+    }),
   );
 
   // API router (apply security only under /api to avoid interfering with Vite dev HTML)
   const api = express.Router();
-  const helmetOptions: Parameters<typeof helmet>[0] = env.NODE_ENV === "development"
-    ? { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }
-    : {};
+  const helmetOptions: Parameters<typeof helmet>[0] =
+    env.NODE_ENV === "development"
+      ? { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }
+      : {};
   api.use(helmet(helmetOptions));
   app.set("trust proxy", true);
-  const corsOrigins = env.CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean);
+  const corsOrigins = env.CORS_ORIGINS.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   api.use(
     cors({
       origin: (origin, cb) => {
-        if (!origin || corsOrigins.includes("*") || corsOrigins.includes(origin)) return cb(null, true);
+        if (
+          !origin ||
+          corsOrigins.includes("*") ||
+          corsOrigins.includes(origin)
+        )
+          return cb(null, true);
         return cb(new Error("Not allowed by CORS"));
       },
       credentials: true,
-    })
+    }),
   );
 
   // Parsers
   api.use(express.json({ limit: "1mb" }));
   api.use(express.urlencoded({ extended: true }));
+
+  // Static uploads
+  app.use("/uploads", express.static(uploadsDir));
 
   // Health + Metrics
   registerHealthRoutes(app);
@@ -68,9 +86,12 @@ export function createServer() {
   });
   // Removed demo route
 
+  api.use("/projects", projectRouter);
+
   // Core API (auth, protected features) - protected endpoints are inside router
   api.use("/core", coreRouter);
   api.use("/core", usersRouter);
+  api.use("/", uploadsRouter);
 
   // CTA API - public submit, admin endpoints; add public rate limit to CTA
   api.use("/cta", publicRateLimiter, ctaRouter);

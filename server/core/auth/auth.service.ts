@@ -2,8 +2,9 @@ import argon2 from "argon2";
 import * as crypto from "node:crypto";
 import { findUserByEmail, createUser, storeRefreshToken, findRefreshToken, findUserById, revokeRefreshToken } from "./auth.repo";
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from "../../modules/lib/jwt";
+import type { RegisterInput, LoginInput } from "./auth.schemas";
 
-export async function register(params: { email: string; password: string; role?: "ADMIN" | "SALESMAN" | "CUSTOMER" }) {
+export async function register(params: RegisterInput) {
   const existing = await findUserByEmail(params.email);
   if (existing) return { error: { status: 409, message: "Email already registered" } } as const;
   const hash = await argon2.hash(params.password);
@@ -13,7 +14,7 @@ export async function register(params: { email: string; password: string; role?:
   return { user: { id: user.id, email: user.email, role: user.role }, accessToken, refreshToken } as const;
 }
 
-export async function login(params: { email: string; password: string }) {
+export async function login(params: LoginInput) {
   const user = await findUserByEmail(params.email);
   if (!user) return { error: { status: 401, message: "Invalid credentials" } } as const;
   const ok = await argon2.verify(user.password, params.password);

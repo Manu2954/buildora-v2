@@ -1,4 +1,5 @@
 import { countLeadsBetween, createLead, findConfig, upsertConfig, listLeads, setLeadStatus, getLeadById, updateLead as updateLeadRepo, createLeadNote, listLeadNotes, logLeadEvent } from "./cta.repo";
+import type { SubmitInput, UpdateLeadInput } from "./cta.schemas";
 
 export async function getConfig(key: string) {
   const cfg = await findConfig(key);
@@ -10,28 +11,9 @@ export async function putConfig(key: string, config: Record<string, unknown>) {
   return { ok: true, key } as const;
 }
 
-export async function submitLead(input: {
-  name: string;
-  phone: string;
-  location: string;
-  requirement: string;
-  consent: true;
-  email?: string;
-  message?: string;
-  page?: string;
-  variant?: string;
-  source?: string;
-  utm?: {
-    source?: string;
-    medium?: string;
-    campaign?: string;
-    term?: string;
-    content?: string;
-  };
-  fingerprint?: string;
-  ip?: string;
-  userAgent?: string;
-}) {
+export async function submitLead(
+  input: SubmitInput & { ip?: string; userAgent?: string },
+) {
   const lead = await createLead({
     name: input.name,
     email: input.email,
@@ -92,7 +74,11 @@ export async function leadDetail(id: string) {
   return { lead, notes } as const;
 }
 
-export async function updateLead(id: string, data: Partial<{ assignedToId: string | null; followUpAt: string; priority: "LOW"|"MEDIUM"|"HIGH"; status: "NEW"|"CONTACTED"|"CLOSED" }>, actorId?: string) {
+export async function updateLead(
+  id: string,
+  data: UpdateLeadInput,
+  actorId?: string,
+) {
   const patch: any = {};
   if (data.assignedToId !== undefined) patch.assignedToId = data.assignedToId;
   if (data.followUpAt !== undefined) patch.followUpAt = data.followUpAt ? new Date(data.followUpAt) : null;

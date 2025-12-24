@@ -1,20 +1,32 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Sidebar } from "@/components/Sidebar";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { useSidebar } from "@/contexts/SidebarContext";
+import { ClipboardCheck, Eye, EyeOff, Home, Lock, Mail, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { login as loginApi } from "@/lib/api";
-import { beTokens } from "@/lib/beTokens";
 import { cn } from "@/lib/utils";
 
+const highlights = [
+  {
+    icon: Home,
+    title: "Project visibility",
+    description: "Track progress, timelines, and milestones in one place.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Service updates",
+    description: "Stay in the loop with instant updates from the team.",
+  },
+  {
+    icon: Sparkles,
+    title: "Design inspiration",
+    description: "Explore curated ideas for your next space.",
+  },
+];
+
 export default function Login() {
-  const { isCollapsed, toggle } = useSidebar();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -22,33 +34,30 @@ export default function Login() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Email validation
-  const isValidEmail = (email: string) => {
+  const isValidEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(value);
   };
 
-  // Form validation
   const validate = () => {
-    const e: Record<string, string> = {};
+    const next: Record<string, string> = {};
 
     if (!email.trim()) {
-      e.email = "Email is required";
+      next.email = "Email is required";
     } else if (!isValidEmail(email)) {
-      e.email = "Please enter a valid email address";
+      next.email = "Please enter a valid email address";
     }
 
     if (!password.trim()) {
-      e.password = "Password is required";
+      next.password = "Password is required";
     } else if (password.length < 6) {
-      e.password = "Password must be at least 6 characters";
+      next.password = "Password must be at least 6 characters";
     }
 
-    setErrors(e);
-    return Object.keys(e).length === 0;
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -69,240 +78,184 @@ export default function Login() {
   };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: beTokens.colors.background }}
-    >
-      {/* Mobile: Add top margin for navbar */}
-      <div className="pt-24 md:pt-16">
-        <div className="flex">
-          {/* Sidebar Navigation - Only on desktop */}
-          <div className="hidden xl:block">
-            <Sidebar isCollapsed={isCollapsed} onToggle={toggle} />
-          </div>
+    <div className="min-h-screen bg-[#EDE7DD] relative overflow-hidden">
+      <div className="absolute -top-20 -left-24 h-72 w-72 rounded-full bg-[#C69B4B]/20 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-[#333132]/15 blur-3xl" />
+      <div className="absolute top-1/2 right-1/3 h-48 w-48 rounded-full bg-white/60 blur-2xl" />
 
-          {/* Main Content */}
-          <main
-            className={cn(
-              "flex-1 transition-all duration-300 ease-in-out",
-              isCollapsed ? "xl:ml-16" : "xl:ml-[220px]",
-            )}
-          >
-            {/* Mobile: Bottom padding for bottom nav */}
-            <div className="min-h-screen flex flex-col pb-24 md:pb-0">
-              <div className="flex-1 flex items-center justify-center p-4 md:p-8">
-                {/* Login Card */}
-                <div className="w-full max-w-md">
-                  <div
-                    className="bg-white shadow-lg border border-gray-200 p-6 md:p-8"
-                    style={{
-                      borderRadius: beTokens.radii.card,
-                      color: beTokens.colors.text,
-                    }}
-                  >
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                      <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                        Welcome Back
-                      </h1>
-                      <p className="text-[#666666] text-sm md:text-base">
-                        Sign in to your BUILDORA ENTERPRISE account
-                      </p>
-                    </div>
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
+        <div className="w-full max-w-5xl rounded-[28px] border border-[#D9D9D9] bg-white/70 backdrop-blur fade-in-up shadow-[0_30px_80px_rgba(51,49,50,0.15)] overflow-hidden">
+          <div className="grid md:grid-cols-[1.05fr_0.95fr]">
+            <div className="bg-[#F5EFE6] px-8 py-10 md:px-12 md:py-14">
+              <div className="text-xs uppercase tracking-[0.35em] text-[#333132] font-semibold">
+                Buildora Enterprise
+              </div>
+              <h1 className="mt-3 text-3xl md:text-4xl font-['Playfair_Display'] text-[#333132]">
+                Welcome back to Buildora
+              </h1>
+              <p className="mt-3 text-sm text-[#666666]">
+                Sign in to manage your projects, approvals, and service updates.
+              </p>
 
-                    {/* Login Form */}
-                    <form
-                      onSubmit={handleSubmit}
-                      noValidate
-                      className="space-y-6"
+              <div className="mt-8 space-y-4 text-sm text-[#333132]">
+                {highlights.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.title}
+                      className="flex items-start gap-3 rounded-2xl bg-white/80 px-4 py-3 border border-white/60 fade-in-up"
+                      style={{ animationDelay: `${index * 80}ms` }}
                     >
-                      {/* Email Field */}
+                      <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-[#C69B4B]/15 text-[#B1873E]">
+                        <Icon className="h-4 w-4" />
+                      </div>
                       <div>
-                        <label
-                          htmlFor="email"
-                          className="block text-sm font-medium mb-2"
-                        >
-                          Email Address
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-[#666666]" />
-                          </div>
-                          <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={cn(
-                              "w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
-                              errors.email
-                                ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
-                            )}
-                            placeholder="Enter your email"
-                            aria-invalid={!!errors.email}
-                            aria-describedby={
-                              errors.email ? "email-error" : undefined
-                            }
-                          />
-                        </div>
-                        {errors.email && (
-                          <p
-                            id="email-error"
-                            className="mt-2 text-sm text-red-600"
-                          >
-                            {errors.email}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Password Field */}
-                      <div>
-                        <label
-                          htmlFor="password"
-                          className="block text-sm font-medium mb-2"
-                        >
-                          Password
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-[#666666]" />
-                          </div>
-                          <input
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={cn(
-                              "w-full pl-10 pr-12 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 transition-all duration-200",
-                              errors.password
-                                ? "border-red-500 focus:ring-red-500/20"
-                                : "border-gray-300 focus:ring-[#c59c46]/20 focus:border-[#c59c46]",
-                            )}
-                            placeholder="Enter your password"
-                            aria-invalid={!!errors.password}
-                            aria-describedby={
-                              errors.password ? "password-error" : undefined
-                            }
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#666666] hover:text-[#c59c46] transition-colors duration-200"
-                            aria-label={
-                              showPassword ? "Hide password" : "Show password"
-                            }
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-5 w-5" />
-                            ) : (
-                              <Eye className="h-5 w-5" />
-                            )}
-                          </button>
-                        </div>
-                        {errors.password && (
-                          <p
-                            id="password-error"
-                            className="mt-2 text-sm text-red-600"
-                          >
-                            {errors.password}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Remember Me Checkbox */}
-                      <div className="flex items-center justify-between">
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                            className="w-4 h-4 border-gray-300 rounded focus:ring-[#c59c46] focus:ring-2"
-                            style={{ accentColor: beTokens.colors.gold }}
-                          />
-                          <span className="text-sm text-[#666666]">
-                            Remember me
-                          </span>
-                        </label>
-
-                        <Link
-                          to="/forgot-password"
-                          className="text-sm hover:underline transition-colors duration-200"
-                          style={{ color: beTokens.colors.gold }}
-                        >
-                          Forgot password?
-                        </Link>
-                      </div>
-
-                      {/* Submit Button */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className={cn(
-                          "w-full py-3 font-semibold text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200",
-                          isSubmitting
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:opacity-90 active:transform active:scale-[0.98]",
-                        )}
-                        style={{
-                          backgroundColor: beTokens.colors.gold,
-                          borderRadius: beTokens.radii.button,
-                        }}
-                      >
-                        {isSubmitting ? "Signing in..." : "Sign In"}
-                      </button>
-                    </form>
-
-                    {/* Sign Up Link */}
-                    <div className="mt-8 text-center">
-                      <p className="text-sm text-[#666666]">
-                        Don't have an account?{" "}
-                        <Link
-                          to="/sign-up"
-                          className="font-medium hover:underline transition-colors duration-200"
-                          style={{ color: beTokens.colors.gold }}
-                        >
-                          Create Account
-                        </Link>
-                      </p>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="mt-8 relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-200" />
-                      </div>
-                      <div className="relative flex justify-center text-sm">
-                        <span className="px-4 bg-white text-[#666666]">
-                          Transform your space today
-                        </span>
+                        <div className="font-medium">{item.title}</div>
+                        <div className="text-xs text-[#666666]">{item.description}</div>
                       </div>
                     </div>
-
-                    {/* CTA Link */}
-                    <div className="mt-6 text-center">
-                      <Link
-                        to="/cta"
-                        className="inline-flex items-center justify-center w-full py-3 px-4 text-sm font-medium border-2 rounded-lg hover:bg-[#f8f8f8] transition-all duration-200"
-                        style={{
-                          borderColor: beTokens.colors.gold,
-                          color: beTokens.colors.gold,
-                          borderRadius: beTokens.radii.button,
-                        }}
-                      >
-                        Get Free Quote Instead
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </div>
-          </main>
+
+            <div className="bg-white px-8 py-10 md:px-12 md:py-14">
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.25em] text-[#B1873E] font-medium">
+                    Sign in
+                  </div>
+                  <h2 className="mt-2 text-2xl font-semibold text-[#333132]">
+                    Customer login
+                  </h2>
+                  <p className="mt-2 text-sm text-[#666666]">
+                    Access your Buildora Enterprise account.
+                  </p>
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm mb-1 text-[#666666]">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Mail className="h-4 w-4 text-[#666666]" />
+                    </div>
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={cn(
+                        "w-full border border-[#D9D9D9] rounded-xl px-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C69B4B]/40",
+                        errors.email && "border-red-500 focus:ring-red-500/30",
+                      )}
+                      placeholder="name@company.com"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "email-error" : undefined}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p id="email-error" className="mt-1 text-xs text-red-600">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="block text-sm mb-1 text-[#666666]">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-4 w-4 text-[#666666]" />
+                    </div>
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={cn(
+                        "w-full border border-[#D9D9D9] rounded-xl px-9 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C69B4B]/40",
+                        errors.password && "border-red-500 focus:ring-red-500/30",
+                      )}
+                      placeholder="••••••••"
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#666666] hover:text-[#B1873E]"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p id="password-error" className="mt-1 text-xs text-red-600">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-sm text-[#666666]">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="h-4 w-4 rounded border border-[#D9D9D9]"
+                    />
+                    Remember me
+                  </label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-[#B1873E] hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full rounded-xl bg-[#C69B4B] text-[#333132] py-2.5 text-sm font-semibold hover:bg-[#B1873E] transition-colors disabled:opacity-60"
+                >
+                  {isSubmitting ? "Signing in..." : "Sign in"}
+                </button>
+
+                <div className="text-sm text-[#666666]">
+                  Don't have an account?{" "}
+                  <Link to="/sign-up" className="text-[#B1873E] hover:underline">
+                    Create account
+                  </Link>
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-[#E6E1D8]" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-3 bg-white text-[#999189]">Transform your space today</span>
+                  </div>
+                </div>
+
+                <Link
+                  to="/cta"
+                  className="inline-flex items-center justify-center w-full rounded-xl border-2 border-[#C69B4B] py-2.5 text-sm font-medium text-[#B1873E] hover:bg-[#F8F3EA] transition-colors"
+                >
+                  Get free quote instead
+                </Link>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
     </div>
   );
 }

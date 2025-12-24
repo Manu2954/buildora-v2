@@ -1,40 +1,27 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BarChart3, Settings, ShieldCheck } from "lucide-react";
-import { login } from "@/lib/api";
+import { Mail, ShieldCheck, UserCheck } from "lucide-react";
+import { login, logout } from "@/lib/api";
 
-const highlights = [
-  {
-    icon: ShieldCheck,
-    title: "Secure access",
-    description: "Admin-only tools protected by role checks.",
-  },
-  {
-    icon: BarChart3,
-    title: "Lead oversight",
-    description: "Monitor CTA performance and pipeline health.",
-  },
-  {
-    icon: Settings,
-    title: "Operational control",
-    description: "Configure settings and manage projects quickly.",
-  },
-];
-
-export default function AdminLogin() {
+export default function SalesmanLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
-      await login(email, password);
-      nav("/admin/cta/config");
+      const user = await login(email, password);
+      if (user?.role !== "SALESMAN") {
+        logout();
+        setError("This account does not have salesman access.");
+        return;
+      }
+      navigate("/salesman/leads", { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -44,29 +31,45 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-[#EDE7DD] relative overflow-hidden">
-      <div className="absolute -top-20 -left-24 h-72 w-72 rounded-full bg-[#C69B4B]/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-[#333132]/15 blur-3xl" />
+      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#C69B4B]/25 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#333132]/15 blur-3xl" />
       <div className="absolute top-1/2 right-1/3 h-48 w-48 rounded-full bg-white/60 blur-2xl" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
         <div className="w-full max-w-5xl rounded-[28px] border border-[#D9D9D9] bg-white/70 backdrop-blur fade-in-up shadow-[0_30px_80px_rgba(51,49,50,0.15)] overflow-hidden">
-          <div className="grid md:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid md:grid-cols-[1.1fr_0.9fr]">
             <div className="bg-[#F5EFE6] px-8 py-10 md:px-12 md:py-14">
               <div className="text-xs uppercase tracking-[0.35em] text-[#333132] font-semibold">
                 Buildora Enterprise
               </div>
               <div className="mt-2 text-xs uppercase tracking-[0.3em] text-[#B1873E] font-medium">
-                Admin Console
+                Sales Team
               </div>
               <h1 className="mt-3 text-3xl md:text-4xl font-['Playfair_Display'] text-[#333132]">
-                Administrative access
+                Salesman Portal
               </h1>
               <p className="mt-3 text-sm text-[#666666]">
-                Manage leads, track performance, and keep operations on target.
+                Capture leads, log daily activity, and stay accountable without the admin overhead.
               </p>
 
               <div className="mt-8 space-y-4 text-sm text-[#333132]">
-                {highlights.map((item, index) => {
+                {[
+                  {
+                    icon: UserCheck,
+                    title: "Lead capture",
+                    description: "Submit new leads in seconds with verified consent.",
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: "Daily entries",
+                    description: "Track start and end times with optional notes.",
+                  },
+                  {
+                    icon: Mail,
+                    title: "Follow ups",
+                    description: "Keep your pipeline visible and clean.",
+                  },
+                ].map((item, index) => {
                   const Icon = item.icon;
                   return (
                     <div
@@ -94,10 +97,10 @@ export default function AdminLogin() {
                     Sign in
                   </div>
                   <h2 className="mt-2 text-2xl font-semibold text-[#333132]">
-                    Admin login
+                    Welcome back
                   </h2>
                   <p className="mt-2 text-sm text-[#666666]">
-                    Use your Buildora admin credentials.
+                    Use your Buildora salesman credentials to continue.
                   </p>
                 </div>
 
@@ -135,7 +138,7 @@ export default function AdminLogin() {
                   {loading ? "Signing in..." : "Sign in"}
                 </button>
                 <div className="text-xs text-[#666666]">
-                  Not an admin?{" "}
+                  Need the customer login instead?{" "}
                   <Link to="/login" className="text-[#B1873E] hover:underline">
                     Go to customer login
                   </Link>

@@ -46,9 +46,11 @@ model User {
   refreshTokens RefreshToken[]
   // Back-relations
   assignedLeads Lead[]         @relation("LeadAssignedToUser")
+  leadsCreated  Lead[]         @relation("LeadCreatedBy")
   leadNotes     LeadNote[]     @relation("LeadNoteAuthor")
   leadEvents    LeadEvent[]    @relation("LeadEventActor")
   projects      Project[]      @relation("ProjectCustomer")
+  salesmanEntries SalesmanEntry[]
 }
 
 model RefreshToken {
@@ -86,9 +88,24 @@ model Lead {
   followUpAt   DateTime?
   assignedTo   User?        @relation("LeadAssignedToUser", fields: [assignedToId], references: [id])
   assignedToId String?
+  createdById  String?
+  createdBy    User?        @relation("LeadCreatedBy", fields: [createdById], references: [id])
   createdAt    DateTime     @default(now())
   notes        LeadNote[]
   events       LeadEvent[]
+}
+
+model SalesmanEntry {
+  id         String   @id @default(cuid())
+  salesmanId String
+  salesman   User     @relation(fields: [salesmanId], references: [id])
+  entryDate  DateTime @default(now())
+  startTime  DateTime
+  endTime    DateTime?
+  notes      String?
+  location   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model CtaConfig {

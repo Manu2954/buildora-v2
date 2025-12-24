@@ -1,0 +1,15 @@
+meta {
+  name: register-user
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/core/auth/register
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

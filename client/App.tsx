@@ -24,6 +24,14 @@ import CtaAnalytics from "./pages/admin/CtaAnalytics";
 import Leads from "./pages/admin/Leads";
 import LeadDetail from "./pages/admin/LeadDetail";
 import AdminProjects from "./pages/admin/Projects";
+import AdminSalesmen from "./pages/admin/Salesmen";
+import AdminSalesmanLeads from "./pages/admin/SalesmanLeadsAdmin";
+import AdminSalesmanEntries from "./pages/admin/SalesmanEntriesAdmin";
+import SalesmanLayout from "./pages/salesman/SalesmanLayout";
+import SalesmanEntry from "./pages/salesman/SalesmanEntry";
+import SalesmanLeadForm from "./pages/salesman/SalesmanLeadForm";
+import SalesmanLeads from "./pages/salesman/SalesmanLeads";
+import SalesmanLogin from "./pages/salesman/SalesmanLogin";
 import PublicLayout from "./pages/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUp from "./pages/SignUp";
@@ -74,6 +82,27 @@ export default function App() {
               <Route path="cta/leads" element={<Leads />} />
               <Route path="cta/leads/:id" element={<LeadDetail />} />
               <Route path="projects" element={<AdminProjects />} />
+              <Route path="salesmen" element={<AdminSalesmen />} />
+              <Route path="salesmen/:id/leads" element={<AdminSalesmanLeads />} />
+              <Route path="salesman-entries" element={<AdminSalesmanEntries />} />
+            </Route>
+
+            {/* Salesman login */}
+            <Route path="/salesman/login" element={<SalesmanLogin />} />
+
+            {/* Salesman routes (own layout) */}
+            <Route
+              path="/salesman/*"
+              element={
+                <ProtectedRoute roles={["SALESMAN"]}>
+                  <SalesmanLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<SalesmanLeads />} />
+              <Route path="entry" element={<SalesmanEntry />} />
+              <Route path="leads/new" element={<SalesmanLeadForm />} />
+              <Route path="leads" element={<SalesmanLeads />} />
             </Route>
 
             {/* Optionally, add an admin-specific 404 here later */}

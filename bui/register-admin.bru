@@ -1,0 +1,25 @@
+meta {
+  name: register-admin
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/core/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "salesman@buildora.com",
+    "password": "password",
+    "role": "SALESMAN"
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

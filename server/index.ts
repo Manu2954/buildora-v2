@@ -13,6 +13,7 @@ import { registerMetrics } from "./routes/metrics";
 import { coreRouter } from "./api/core/auth.routes";
 import { usersRouter } from "./api/core/users.routes";
 import { ctaRouter } from "./api/cta/cta.routes";
+import { salesmanRouter } from "./api/salesman/salesman.routes";
 import { projectRouter } from "./src/domains/project/routes";
 import { uploadsRouter } from "./api/uploads.routes";
 import { uploadsDir } from "./modules/uploads";
@@ -95,6 +96,9 @@ export function createServer() {
 
   // CTA API - public submit, admin endpoints; add public rate limit to CTA
   api.use("/cta", publicRateLimiter, ctaRouter);
+
+  // Salesman API
+  api.use("/salesman", salesmanRouter);
 
   // Mount API router
   app.use("/api", api);
